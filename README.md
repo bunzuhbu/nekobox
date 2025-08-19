@@ -21,6 +21,9 @@ Apple platforms have a very strict security policy and since Throne does not hav
 ### RPM repository
 [Throne RPM repository](https://parhelia512.github.io/) for Fedora/RHEL and openSUSE/SLE.
 
+### [Open Build System](https://openbuildservice.org/) repositories (kindly uploaded by @qr243vbi)
+[Throne OBS repository](https://software.opensuse.org//download.html?project=home%3Ajuzbun%3AThrone&package=throne) for openSUSE/SLE, Fedora, Mageia, Arch Linux, Debian, Raspbian, openEuler, Ubuntu
+
 ## Supported protocols
 
 - SOCKS
