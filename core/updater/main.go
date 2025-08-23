@@ -30,7 +30,7 @@ func main() {
 				time.Sleep(time.Second)
 				Updater()
 				// 3. start
-				exec.Command("./Throne.exe").Start()
+				exec.Command("./nekoray.exe").Start()
 			} else {
 				// 1. Throne stop itself and run "updater.exe"
 				Copy("./updater.exe", "./updater.old")
@@ -40,7 +40,7 @@ func main() {
 			// 1. update files
 			Updater()
 			// 2. start
-			exec.Command("./Throne").Start()
+			exec.Command("./nekoray").Start()
 		}
 		return
 	}

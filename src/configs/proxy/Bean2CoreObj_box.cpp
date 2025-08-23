@@ -282,7 +282,7 @@ namespace Configs {
     CoreObjOutboundBuildResult WireguardBean::BuildCoreObjSingBox() {
         CoreObjOutboundBuildResult result;
 
-        auto tun_name = "throne-wg";
+        auto tun_name = "nekoray-wg";
 #ifdef Q_OS_MACOS
         tun_name = "";
 #endif

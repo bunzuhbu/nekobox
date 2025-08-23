@@ -9,7 +9,7 @@
 #include <QFileInfo>
 namespace Configs {
     QString genTunName() {
-        auto tun_name = "throne-tun";
+        auto tun_name = "nekoray-tun";
 #ifdef Q_OS_MACOS
         tun_name = "";
 #endif
@@ -783,7 +783,7 @@ namespace Configs {
         if (Configs::dataStore->adblock_enable) {
             ruleSetArray += QJsonObject{
                 {"type", "remote"},
-                {"tag", "throne-adblocksingbox"},
+                {"tag", "nekoray-adblocksingbox"},
                 {"format", "binary"},
                 {"url", get_jsdelivr_link("https://raw.githubusercontent.com/217heidai/adblockfilters/main/rules/adblocksingbox.srs")},
             };

@@ -327,7 +327,7 @@ namespace Configs {
         if (isDefault) {
             QString version = SubStrBefore(NKR_VERSION, "-");
             if (!version.contains(".")) version = "2.0";
-            return "Throne" + version + " (Prefer ClashMeta Format)";
+            return "nekoray" + version + " (Prefer ClashMeta Format)";
         }
         return user_agent;
     }
