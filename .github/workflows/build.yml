@@ -163,6 +163,7 @@ jobs:
           cp .\script\windows_installer.nsi .
           makensis windows_installer.nsi
           cp nekoray_setup.exe deployment/
+
       - name: Linux - Generate MakeFile and Build
         shell: bash
         if: contains( matrix.platform, 'ubuntu' )
