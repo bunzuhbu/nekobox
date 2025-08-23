@@ -12,13 +12,11 @@ jobs:
   build-go:
     permissions:
       contents: read
-    needs:
-      - build-go
     strategy:
       matrix:
         include:
           - cross_os: linux
-            cross_arch: arm64
+            cross_arch: amd64
             go_version: "1.25.0"
           - cross_os: windowslegacy
             cross_arch: amd64
@@ -65,7 +63,7 @@ jobs:
         shell: bash
         run: |
           GOOS=${{ matrix.cross_os }} GOARCH=${{ matrix.cross_arch }} ./script/build_go.sh
-          [ ${{ matrix.cross_os }} != linux ] || [ ${{ matrix.cross_arch }} != arm64 ] || bash -x ./script/deploy_vendor.sh
+          [ ${{ matrix.cross_os }} != linux ] || [ ${{ matrix.cross_arch }} != amd64 ] || bash -x ./script/deploy_vendor.sh
       - name: Tar files
         if: steps.cache-common.outputs.cache-hit != 'true'
         run: tar czvf artifacts.tgz ./deployment
@@ -77,12 +75,14 @@ jobs:
   build-cpp:
     permissions:
       contents: read
+    needs:
+      - build-go
     strategy:
       matrix:
         include:
-          - platform: ubuntu-24.04-arm
+          - platform: ubuntu-24.04
             qt_version: "6.9.0"
-            target: arm64
+            target: amd64
           - platform: windows-latest
             qt_version: "6.2.12"
             target: x86_64
@@ -270,15 +270,15 @@ jobs:
       - name: Clean Up
         run: |
           cd deployment
-          rm -rf windows-arm64
-          rm -rf linux-arm64
-          rm -rf linux-amd64
-          rm -rf windows64
-          rm -rf windows32
-          rm -rf windowslegacy64
-          rm -rf macos-amd64
-          rm -rf macos-arm64
-          rm -rf *.pdb
+          rm -rf windows-arm64 ||:
+          rm -rf linux-arm64 ||:
+          rm -rf linux-amd64 ||:
+          rm -rf windows64 ||:
+          rm -rf windows32 ||:
+          rm -rf windowslegacy64 ||:
+          rm -rf macos-amd64 ||:
+          rm -rf macos-arm64 ||:
+          rm -rf *.pdb ||:
       - name: Uploading Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
