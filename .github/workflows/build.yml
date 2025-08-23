@@ -317,8 +317,8 @@ jobs:
             rm -rf macos-amd64 nekobox
           fi
           ####
-          apt-get install -y osc
-          env TOKEN=${{ secrets.obs_hook_token }} USERNAME=${{ secrets.obs_username }} PASSWORD=${{ secrets.obs_password }} "HOME=${HOME}" bash -x ./script/obs_hook.sh ||:
+          sudo apt-get install -y osc
+          env TOKEN=${{ secrets.OBS_HOOK_TOKEN }} USERNAME=${{ secrets.OBS_USER }} PASSWORD=${{ secrets.obs_password }} "HOME=${HOME}" bash -x ./script/obs_hook.sh ||:
       - name: Clean Up
         run: |
           cd deployment
