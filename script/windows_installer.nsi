@@ -1,9 +1,9 @@
 Name "nekoray"
 
 !ifdef OUTFILE
-    OutFile $OutputFile "$OUTFILE.exe"
+    OutFile "$OUTFILE.exe"
 !else
-    OutFile $OutputFile "nekoray_setup.exe"
+    OutFile "nekoray_setup.exe"
 !endif
 InstallDir $APPDATA\nekoray
 RequestExecutionLevel user
