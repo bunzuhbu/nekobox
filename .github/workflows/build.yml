@@ -163,23 +163,23 @@ jobs:
         run: |
           cp .\script\windows_installer.nsi .
           makensis windows_installer.nsi
-          cp nekoray_setup32.exe deployment/
+          install -D nekoray_setup.exe deployment/nekoray_setup.exe
 
       - name: Build Installer with NSIS for windows32
         shell: cmd
         if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target == 'i686'
         run: |
           cp .\script\windows_installer.nsi .
-          makensis "/DOUTPUT=nekoray_setup_legacy" "/DDIRECTORY=windows32"  windows_installer.nsi
-          cp nekoray_setup32.exe deployment/
+          makensis "/DDIRECTORY=windows32"  windows_installer.nsi
+          install -D nekoray_setup.exe deployment/nekoray_setup32.exe
 
       - name: Build Installer with NSIS for windowslegacy64
         shell: cmd
         if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target != 'i686'
         run: |
           cp .\script\windows_installer.nsi .
-          makensis "/DOUTPUT=nekoray_setup_legacy" "/DDIRECTORY=windowslegacy64" windows_installer.nsi
-          cp nekoray_setup_legacy.exe deployment/
+          makensis "/DDIRECTORY=windowslegacy64" windows_installer.nsi
+          install -D nekoray_setup.exe deployment/nekoray_setup_legacy.exe
 
       - name: Linux - Generate MakeFile and Build
         shell: bash
