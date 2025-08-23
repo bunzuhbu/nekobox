@@ -358,7 +358,7 @@ namespace Configs {
     // System Utils
 
     QString FindCoreRealPath() {
-        auto fn = QApplication::applicationDirPath() + "/Core";
+        auto fn = QApplication::applicationDirPath() + "/nekoray_core";
         auto fi = QFileInfo(fn);
         if (fi.isSymLink()) return fi.symLinkTarget();
         return fn;
