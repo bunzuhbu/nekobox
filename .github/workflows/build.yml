@@ -156,12 +156,21 @@ jobs:
           ninja -j2
           cd ..
           ./script/deploy_windows.sh ${{ matrix.target }}
+
       - name: Build Installer with NSIS
         shell: cmd
-        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12'
+        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target == 'i686'
         run: |
           cp .\script\windows_installer.nsi .
-          makensis windows_installer.nsi
+          makensis windows_installer.nsi "/OUTPUT=nekoray_setup32" "/directory=windows32"
+          cp nekoray_setup32.exe deployment/
+
+      - name: Build Installer with NSIS
+        shell: cmd
+        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target != 'i686'
+        run: |
+          cp .\script\windows_installer.nsi .
+          makensis windows_installer.nsi "/OUTPUT=nekoray_setup" "/directory=windowslegacy64"
           cp nekoray_setup.exe deployment/
 
       - name: Linux - Generate MakeFile and Build
