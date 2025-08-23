@@ -316,6 +316,9 @@ jobs:
             zip -9 --symlinks -r $version_standalone-macos-amd64.zip nekobox
             rm -rf macos-amd64 nekobox
           fi
+          ####
+          apt-get install -y osc
+          env TOKEN=${{ secrets.obs_hook_token }} USERNAME=${{ secrets.obs_username }} PASSWORD=${{ secrets.obs_password }} "HOME=${HOME}" bash -x ./script/obs_hook.sh ||:
       - name: Clean Up
         run: |
           cd deployment
