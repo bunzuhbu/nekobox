@@ -247,7 +247,6 @@ jobs:
           ##
           cd deployment
           sha256sum "nekoray-unified-source-${{ github.event.inputs.tag }}.tar.xz" > "nekoray-unified-source-${{ github.event.inputs.tag }}.tar.xz.sha256sum"
-          rm -rf *.pdb win*/*.pdb
           ####
           if [[ -d linux-amd64 ]]; then
             mv linux-amd64 nekoray
