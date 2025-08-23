@@ -100,4 +100,14 @@ namespace Configs_sys {
         restarting = false;
     }
 
+#ifdef Q_OS_LINUX
+    void CoreProcess::elevateCoreProcessProgram(){
+        if (!coreProcessProgramElevated){
+            arguments.prepend(program);
+            program = "pkexec";
+            coreProcessProgramElevated = true;
+        }
+    }
+#endif
+
 } // namespace Configs_sys

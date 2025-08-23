@@ -970,7 +970,9 @@ bool MainWindow::get_elevated_permissions(int reason) {
     }
     auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please give the core root privileges"), QMessageBox::Yes | QMessageBox::No);
     if (n == QMessageBox::Yes) {
-        runOnNewThread([=,this]
+        StopVPNProcess();
+        core_process->elevateCoreProcessProgram();
+        /*runOnNewThread([=,this]
         {
             auto chownArgs = QString("root:root " + Configs::FindCoreRealPath());
             auto ret = Linux_Run_Command("chown", chownArgs);
@@ -985,6 +987,7 @@ bool MainWindow::get_elevated_permissions(int reason) {
                 MW_show_log(QString("Failed to run chmod %1").arg(chmodArgs));
             }
         });
+        */
         return false;
     }
 #endif

@@ -20,6 +20,10 @@ namespace Configs_sys {
 
         void Kill();
 
+#ifdef Q_OS_LINUX
+        void elevateCoreProcessProgram();
+#endif
+
         CoreProcess(const QString &core_path, const QStringList &args);
 
         void Restart();
@@ -32,6 +36,10 @@ namespace Configs_sys {
         bool restarting = false;
 
         QElapsedTimer coreRestartTimer;
+
+#ifdef Q_OS_LINUX
+        bool coreProcessProgramElevated = false;
+#endif
 
     protected:
         bool started = false;
