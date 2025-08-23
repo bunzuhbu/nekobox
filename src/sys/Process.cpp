@@ -104,6 +104,9 @@ namespace Configs_sys {
     void CoreProcess::elevateCoreProcessProgram(){
         if (!coreProcessProgramElevated){
             arguments.prepend(program);
+            arguments.prepend("exec \"$0\" \"$@\"");
+            arguments.prepend("-c");
+            arguments.prepend("sh");
             program = "pkexec";
             coreProcessProgramElevated = true;
         }
