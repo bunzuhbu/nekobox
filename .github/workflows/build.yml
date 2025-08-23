@@ -316,9 +316,6 @@ jobs:
             zip -9 --symlinks -r $version_standalone-macos-amd64.zip nekobox
             rm -rf macos-amd64 nekobox
           fi
-          ####
-          sudo apt-get install -y osc
-          env TOKEN=${{ secrets.OBS_HOOK_TOKEN }} USERNAME=${{ secrets.OBS_USER }} PASSWORD=${{ secrets.obs_password }} "HOME=${HOME}" bash -x ./script/obs_hook.sh ||:
       - name: Clean Up
         run: |
           cd deployment
@@ -336,3 +333,14 @@ jobs:
         if: github.event.inputs.publish == 'r'
         run: |
           ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" deployment
+          sudo apt-get install -y osc
+          ####
+          echo '[general]' > oscrc
+          echo 'apiurl=https://api.opensuse.org' >> oscrc
+          echo '[https://api.opensuse.org]' >> oscrc
+          echo 'user=${{ secrets.OBS_USER }}' >> oscrc
+          echo 'pass=${{ secrets.OBS_PASSWORD }}' >> oscrc
+          echo 'credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManager' >> oscrc
+          ####
+          install -Dm644 oscrc "$HOME"/.config/osc/oscrc
+          osc token --trigger "${{ secrets.OBS_HOOK_TOKEN }}"
