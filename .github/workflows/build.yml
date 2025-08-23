@@ -170,7 +170,7 @@ jobs:
         if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target != 'i686'
         run: |
           cp .\script\windows_installer.nsi .
-          makensis windows_installer.nsi "/OUTPUT=nekoray_setup_legacy" "/directory=windowslegacy64"
+          makensis "/DOUTPUT=nekoray_setup_legacy" "/DDIRECTORY=windowslegacy64" windows_installer.nsi
           cp nekoray_setup_legacy.exe deployment/
 
       - name: Linux - Generate MakeFile and Build
