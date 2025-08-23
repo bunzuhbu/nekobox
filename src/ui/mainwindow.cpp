@@ -2319,7 +2319,7 @@ bool MainWindow::StopVPNProcess() {
 
 bool isNewer(QString assetName) {
     if (QString(NKR_VERSION).isEmpty()) return false;
-    assetName = assetName.mid(7); // take out Throne-
+    assetName = assetName.mid(8); // take out nekoray-
     QString version;
     auto spl = assetName.split('-');
     version += spl[0]; // version: 1.2.3
