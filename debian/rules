@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	cmake -S . -B ./b
+
+override_dh_auto_install:
+	ls
+	ls b
+	install -Dm755 throne.sh        debian/nekobox/bin/nekobox
+	install -Dm644 throne.desktop   debian/nekobox/usr/share/applications/nekobox.desktop
+	install -Dm755 ./b/nekobox      debian/nekobox/opt/nekobox/nekobox
+	install -Dm755 ./c/nekobox_core debian/nekobox/opt/nekobox/nekobox_core
+	install -Dm644 res/nekobox.ico  debian/nekobox/usr/share/icons/nekobox.ico
+	patchelf --remove-rpath         debian/nekobox/opt/nekobox/nekobox
+
+override_dh_auto_build:
+	cmake --build ./b
+	ls ./b
+	bash -x -c "DEST=`realpath ./c` GOARCH='' GOOS=darwin GOFLAGS='-mod=vendor' VERSION_SINGBOX=`cat SingBox.Version` . script/build_go.sh"
+	ls ./c
+	echo '[Desktop Entry]' > throne.desktop
+	echo 'Version=1.0' >> throne.desktop
+	echo 'Terminal=false' >> throne.desktop
+	echo 'Type=Application' >> throne.desktop
+	echo 'Name=nekobox' >> throne.desktop
+	echo 'Categories=Network;' >> throne.desktop
+	echo 'Comment=Qt based cross-platform GUI proxy configuration manager (backend: sing-box)' >> throne.desktop
+	echo 'Comment[zh_CN]=基于 Qt 的跨平台代理配置管理器 (后端 sing-box)' >> throne.desktop
+	echo 'Keywords=Internet;VPN;Proxy;sing-box;' >> throne.desktop
+	echo 'Exec=/bin/throne' >> throne.desktop
+	echo 'Icon=/usr/share/icons/nekobox.ico' >> throne.desktop
+	echo '#!/bin/sh' > throne.sh
+	echo '/opt/nekobox/nekobox -appdata "${@}"' >> throne.sh
