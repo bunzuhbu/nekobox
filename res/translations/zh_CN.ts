@@ -2026,8 +2026,8 @@ https://matsuridayo.github.io/n-configuration/#vpn-tun</translation>
 </translation>
     </message>
     <message>
-        <source>Please run nekoray as admin</source>
-        <translation>请以管理员身份运行 nekoray</translation>
+        <source>Please run nekobox as admin</source>
+        <translation>请以管理员身份运行 nekobox</translation>
     </message>
     <message>
         <source>A reset of assets is already in progress</source>

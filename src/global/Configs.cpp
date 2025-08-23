@@ -327,7 +327,7 @@ namespace Configs {
         if (isDefault) {
             QString version = SubStrBefore(NKR_VERSION, "-");
             if (!version.contains(".")) version = "2.0";
-            return "nekoray" + version + " (Prefer ClashMeta Format)";
+            return "nekobox" + version + " (Prefer ClashMeta Format)";
         }
         return user_agent;
     }
@@ -358,7 +358,7 @@ namespace Configs {
     // System Utils
 
     QString FindCoreRealPath() {
-        auto fn = QApplication::applicationDirPath() + "/nekoray_core";
+        auto fn = QApplication::applicationDirPath() + "/nekobox_core";
         auto fi = QFileInfo(fn);
         if (fi.isSymLink()) return fi.symLinkTarget();
         return fn;

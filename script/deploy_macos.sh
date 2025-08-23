@@ -18,16 +18,16 @@ cd *darwin-$ARCH
 tar xvzf artifacts.tgz -C ../../
 cd ../..
 
-mv deployment/macos-$ARCH/* $BUILD/nekoray.app/Contents/MacOS
+mv deployment/macos-$ARCH/* $BUILD/nekobox.app/Contents/MacOS
 
 #### download srslist ####
-curl -fLso $BUILD/nekoray.app/Contents/MacOS/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list"
+curl -fLso $BUILD/nekobox.app/Contents/MacOS/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list"
 
 #### deploy qt & DLL runtime => .app ####
 pushd $BUILD
-macdeployqt nekoray.app -verbose=3
+macdeployqt nekobox.app -verbose=3
 popd
 
-codesign --force --deep --sign - $BUILD/nekoray.app
+codesign --force --deep --sign - $BUILD/nekobox.app
 
-mv $BUILD/nekoray.app $DEST
+mv $BUILD/nekobox.app $DEST

@@ -136,7 +136,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if (Configs::dataStore->core_port <= 0) Configs::dataStore->core_port = 19810;
 
     auto core_path = QApplication::applicationDirPath() + "/";
-    core_path += "nekoray_core";
+    core_path += "nekobox_core";
 
     QStringList args;
     args.push_back("-port");
@@ -207,11 +207,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
 
     // software_name
-    software_name = "nekoray";
+    software_name = "nekobox";
     software_core_name = "sing-box";
     //
     if (auto dashDir = QDir("dashboard"); !dashDir.exists("dashboard") && QDir().mkdir("dashboard")) {
-        if (auto dashFile = QFile(":/nekoray/dashboard-notice.html"); dashFile.exists() && dashFile.open(QIODevice::ReadOnly))
+        if (auto dashFile = QFile(":/nekobox/dashboard-notice.html"); dashFile.exists() && dashFile.open(QIODevice::ReadOnly))
         {
             auto data = dashFile.readAll();
             if (auto dest = QFile("dashboard/index.html"); dest.open(QIODevice::Truncate | QIODevice::WriteOnly))
@@ -989,7 +989,7 @@ bool MainWindow::get_elevated_permissions(int reason) {
     }
 #endif
 #ifdef Q_OS_WIN
-    auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please run nekoray as admin"), QMessageBox::Yes | QMessageBox::No);
+    auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please run nekobox as admin"), QMessageBox::Yes | QMessageBox::No);
     if (n == QMessageBox::Yes) {
         this->exit_reason = reason;
         on_menu_exit_triggered();
@@ -1571,7 +1571,7 @@ void MainWindow::on_menu_clone_triggered() {
 
     QStringList sls;
     for (const auto &ent: ents) {
-        sls << ent->bean->ToNekorayShareLink(ent->type);
+        sls << ent->bean->TonekoboxShareLink(ent->type);
     }
 
     Subscription::groupUpdater->AsyncUpdate(sls.join("\n"));
@@ -1648,7 +1648,7 @@ void MainWindow::on_menu_copy_links_nkr_triggered() {
     auto ents = get_now_selected_list();
     QStringList links;
     for (const auto &ent: ents) {
-        links += ent->bean->ToNekorayShareLink(ent->type);
+        links += ent->bean->TonekoboxShareLink(ent->type);
     }
     if (links.length() == 0) return;
     QApplication::clipboard()->setText(links.join("\n"));
@@ -1760,7 +1760,7 @@ void MainWindow::display_qr_link(bool nkrFormat) {
     };
 
     auto link = ents.first()->bean->ToShareLink();
-    auto link_nk = ents.first()->bean->ToNekorayShareLink(ents.first()->type);
+    auto link_nk = ents.first()->bean->TonekoboxShareLink(ents.first()->type);
     auto w = new W(link, link_nk);
     w->setWindowTitle(ents.first()->bean->DisplayTypeAndName());
     w->exec();
@@ -2240,7 +2240,7 @@ void MainWindow::start_select_mode(QObject *context, const std::function<void(in
 
 // 连接列表
 
-inline QJsonArray last_arr; // format is nekoray_connections_json
+inline QJsonArray last_arr; // format is nekobox_connections_json
 
 // Hotkey
 
@@ -2319,7 +2319,7 @@ bool MainWindow::StopVPNProcess() {
 
 bool isNewer(QString assetName) {
     if (QString(NKR_VERSION).isEmpty()) return false;
-    assetName = assetName.mid(8); // take out nekoray-
+    assetName = assetName.mid(8); // take out nekobox-
     QString version;
     auto spl = assetName.split('-');
     version += spl[0]; // version: 1.2.3
@@ -2419,7 +2419,7 @@ void MainWindow::CheckUpdate() {
         return;
     }
 
-    auto resp = NetworkRequestHelper::HttpGet("https://api.github.com/repos/qr243vbi/nekoray/releases");
+    auto resp = NetworkRequestHelper::HttpGet("https://api.github.com/repos/qr243vbi/nekobox/releases");
     if (!resp.error.isEmpty()) {
         runOnUiThread([=,this] {
             MessageBoxWarning(QObject::tr("Update"), QObject::tr("Requesting update error: %1").arg(resp.error + "\n" + resp.data));
@@ -2478,7 +2478,7 @@ void MainWindow::CheckUpdate() {
                 }
                 QString errors;
                 if (!release_download_url.isEmpty()) {
-                    auto res = NetworkRequestHelper::DownloadAsset(release_download_url, "nekoray.zip");
+                    auto res = NetworkRequestHelper::DownloadAsset(release_download_url, "nekobox.zip");
                     if (!res.isEmpty()) {
                         errors += res;
                     }

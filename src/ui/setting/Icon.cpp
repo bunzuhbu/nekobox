@@ -9,32 +9,32 @@ QPixmap Icon::GetTrayIcon(TrayIconStatus status) {
 
     if (status == NONE)
     {
-        auto pixmap_read = QPixmap(QString(":/nekoray/") + "Off" + ".png");
+        auto pixmap_read = QPixmap(QString(":/nekobox/") + "Off" + ".png");
         if (!pixmap_read.isNull()) pixmap = pixmap_read;
     } else if (status == RUNNING)
     {
-        auto pixmap_read = QPixmap(QString(":/nekoray/") + "nekoray" + ".png");
+        auto pixmap_read = QPixmap(QString(":/nekobox/") + "nekobox" + ".png");
         if (!pixmap_read.isNull()) pixmap = pixmap_read;
     } else if (status == SYSTEM_PROXY_DNS)
     {
-        auto pixmap_read = QPixmap(QString(":/nekoray/") + "Proxy-Dns" + ".png");
+        auto pixmap_read = QPixmap(QString(":/nekobox/") + "Proxy-Dns" + ".png");
         if (!pixmap_read.isNull()) pixmap = pixmap_read;
     } else if (status == SYSTEM_PROXY)
     {
-        auto pixmap_read = QPixmap(QString(":/nekoray/") + "Proxy" + ".png");
+        auto pixmap_read = QPixmap(QString(":/nekobox/") + "Proxy" + ".png");
         if (!pixmap_read.isNull()) pixmap = pixmap_read;
     } else if (status == DNS)
     {
-        auto pixmap_read = QPixmap(QString(":/nekoray/") + "Dns" + ".png");
+        auto pixmap_read = QPixmap(QString(":/nekobox/") + "Dns" + ".png");
         if (!pixmap_read.isNull()) pixmap = pixmap_read;
     } else if (status == VPN)
     {
-        auto pixmap_read = QPixmap(QString(":/nekoray/") + "Tun" + ".png");
+        auto pixmap_read = QPixmap(QString(":/nekobox/") + "Tun" + ".png");
         if (!pixmap_read.isNull()) pixmap = pixmap_read;
     } else
     {
         MW_show_log("Icon::GetTrayIcon: Unknown status");
-        auto pixmap_read = QPixmap(QString(":/nekoray/") + "Off" + ".png");
+        auto pixmap_read = QPixmap(QString(":/nekobox/") + "Off" + ".png");
         if (!pixmap_read.isNull()) pixmap = pixmap_read;
     }
 

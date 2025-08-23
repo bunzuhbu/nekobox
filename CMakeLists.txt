@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(nekoray VERSION 5.0.0)
+project(nekobox VERSION 5.0.0)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -195,7 +195,7 @@ set(PROJECT_SOURCES
         include/ui/setting/RouteItem.h
         include/ui/setting/RouteItem.ui
 
-        res/nekoray.qrc
+        res/nekobox.qrc
         ${QV2RAY_RC}
         include/dataStore/RouteEntity.h
         src/dataStore/RouteEntity.cpp
@@ -222,30 +222,30 @@ set(PROJECT_SOURCES
 )
 
 # Qt exe
-qt_add_executable(nekoray
+qt_add_executable(nekobox
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 )
 
 # Target
 
-set_property(TARGET nekoray PROPERTY AUTOUIC ON)
-set_property(TARGET nekoray PROPERTY AUTOMOC ON)
-set_property(TARGET nekoray PROPERTY AUTORCC ON)
+set_property(TARGET nekobox PROPERTY AUTOUIC ON)
+set_property(TARGET nekobox PROPERTY AUTOMOC ON)
+set_property(TARGET nekobox PROPERTY AUTORCC ON)
 
 
 # Target Source macOS
 
-set(MACOSX_ICON ${CMAKE_SOURCE_DIR}/res/nekoray.icns)
+set(MACOSX_ICON ${CMAKE_SOURCE_DIR}/res/nekobox.icns)
 if (APPLE)
-    target_sources(nekoray PRIVATE ${MACOSX_ICON})
+    target_sources(nekobox PRIVATE ${MACOSX_ICON})
 endif ()
 
-set_target_properties(nekoray PROPERTIES
-        MACOSX_BUNDLE_ICON_FILE "nekoray.icns"
+set_target_properties(nekobox PROPERTIES
+        MACOSX_BUNDLE_ICON_FILE "nekobox.icns"
         RESOURCE ${MACOSX_ICON}
         MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/res/MacOSXBundleInfo.plist
-        MACOSX_BUNDLE_GUI_IDENTIFIER moe.nekoray.macosx
+        MACOSX_BUNDLE_GUI_IDENTIFIER moe.nekobox.macosx
         MACOSX_BUNDLE TRUE
         WIN32_EXECUTABLE TRUE
 
@@ -261,19 +261,19 @@ set(TS_FILES
 set(LUPDATE_OPTIONS
         -locations none -no-obsolete
 )
-qt_add_lupdate(nekoray TS_FILES ${TS_FILES} OPTIONS ${LUPDATE_OPTIONS})
-qt_add_lrelease(nekoray TS_FILES ${TS_FILES} QM_FILES_OUTPUT_VARIABLE QM_FILES)
+qt_add_lupdate(nekobox TS_FILES ${TS_FILES} OPTIONS ${LUPDATE_OPTIONS})
+qt_add_lrelease(nekobox TS_FILES ${TS_FILES} QM_FILES_OUTPUT_VARIABLE QM_FILES)
 
 configure_file(res/translations/translations.qrc ${CMAKE_BINARY_DIR} COPYONLY)
-target_sources(nekoray PRIVATE ${CMAKE_BINARY_DIR}/translations.qrc)
+target_sources(nekobox PRIVATE ${CMAKE_BINARY_DIR}/translations.qrc)
 
 # Target Link
 
-target_link_libraries(nekoray PRIVATE
+target_link_libraries(nekobox PRIVATE
         Qt6::Widgets Qt6::Network Qt6::DBus
         Threads::Threads
         ${NKR_EXTERNAL_TARGETS}
         ${PLATFORM_LIBRARIES}
 )
 
-qt_finalize_executable(nekoray)
+qt_finalize_executable(nekobox)

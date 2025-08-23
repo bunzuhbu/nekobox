@@ -1,4 +1,4 @@
-name: nekoray build matrix
+name: nekobox build matrix
 on:
   workflow_dispatch:
     inputs:
@@ -70,7 +70,7 @@ jobs:
       - name: Uploading Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: nekoray-${{ github.sha }}-Common-${{ matrix.cross_os }}-${{ matrix.cross_arch }}
+          name: nekobox-${{ github.sha }}-Common-${{ matrix.cross_os }}-${{ matrix.cross_arch }}
           path: artifacts.tgz
   build-cpp:
     permissions:
@@ -163,7 +163,7 @@ jobs:
         run: |
           cp .\script\windows_installer.nsi .
           makensis windows_installer.nsi
-          install -D nekoray_setup.exe deployment/nekoray_setup.exe
+          install -D nekobox_setup.exe deployment/nekobox_setup.exe
 
       - name: Build Installer with NSIS for windows32
         shell: cmd
@@ -171,7 +171,7 @@ jobs:
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windows32"  windows_installer.nsi
-          install -D nekoray_setup.exe deployment/nekoray_setup32.exe
+          install -D nekobox_setup.exe deployment/nekobox_setup32.exe
 
       - name: Build Installer with NSIS for windowslegacy64
         shell: cmd
@@ -179,7 +179,7 @@ jobs:
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windowslegacy64" windows_installer.nsi
-          install -D nekoray_setup.exe deployment/nekoray_setup_legacy.exe
+          install -D nekobox_setup.exe deployment/nekobox_setup_legacy.exe
 
       - name: Linux - Generate MakeFile and Build
         shell: bash
@@ -209,7 +209,7 @@ jobs:
       - name: Uploading Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: nekoray-${{ github.sha }}-${{ matrix.platform }}-${{ matrix.target }}-Qt${{ matrix.qt_version }}
+          name: nekobox-${{ github.sha }}-${{ matrix.platform }}-${{ matrix.target }}-Qt${{ matrix.qt_version }}
           path: artifacts.tgz
 
   publish:
@@ -243,54 +243,54 @@ jobs:
           mv deployment/gen/*.go core/server/gen/
           git add -f core/server/gen/*.go core/server/vendor SingBox.Version
           ##
-          git ls-files --recurse-submodules | tar --transform="s,^,nekoray-unified-source-${{ github.event.inputs.tag }}/,S" -c --xz -f "deployment/nekoray-unified-source-${{ github.event.inputs.tag }}.tar.xz" -T-
+          git ls-files --recurse-submodules | tar --transform="s,^,nekobox-unified-source-${{ github.event.inputs.tag }}/,S" -c --xz -f "deployment/nekobox-unified-source-${{ github.event.inputs.tag }}.tar.xz" -T-
           ##
           cd deployment
-          sha256sum "nekoray-unified-source-${{ github.event.inputs.tag }}.tar.xz" > "nekoray-unified-source-${{ github.event.inputs.tag }}.tar.xz.sha256sum"
+          sha256sum "nekobox-unified-source-${{ github.event.inputs.tag }}.tar.xz" > "nekobox-unified-source-${{ github.event.inputs.tag }}.tar.xz.sha256sum"
           ####
           if [[ -d linux-amd64 ]]; then
-            mv linux-amd64 nekoray
-            zip -9 -r $version_standalone-linux-amd64.zip nekoray
-            rm -rf nekoray linux-amd64
+            mv linux-amd64 nekobox
+            zip -9 -r $version_standalone-linux-amd64.zip nekobox
+            rm -rf nekobox linux-amd64
           fi
           ####
           if [[ -d linux-arm64 ]]; then
-            mv linux-arm64 nekoray
-            zip -9 -r $version_standalone-linux-arm64.zip nekoray
-            rm -rf nekoray linux-arm64
+            mv linux-arm64 nekobox
+            zip -9 -r $version_standalone-linux-arm64.zip nekobox
+            rm -rf nekobox linux-arm64
           fi
           ####
-          if [[ -f nekoray_setup.exe ]]; then
-            mv nekoray_setup.exe $version_standalone-windows64-installer.exe
-            mv windows64 nekoray
-            zip -9 -r $version_standalone-windows64.zip nekoray
-            rm -rf nekoray windows64
+          if [[ -f nekobox_setup.exe ]]; then
+            mv nekobox_setup.exe $version_standalone-windows64-installer.exe
+            mv windows64 nekobox
+            zip -9 -r $version_standalone-windows64.zip nekobox
+            rm -rf nekobox windows64
           fi
           ####
-          if [[ -f nekoray_setup32.exe ]]; then
-            mv nekoray_setup32.exe $version_standalone-windows32-installer.exe
-            mv windows32 nekoray
-            zip -9 -r $version_standalone-windows32.zip nekoray
-            rm -rf nekoray windows32
+          if [[ -f nekobox_setup32.exe ]]; then
+            mv nekobox_setup32.exe $version_standalone-windows32-installer.exe
+            mv windows32 nekobox
+            zip -9 -r $version_standalone-windows32.zip nekobox
+            rm -rf nekobox windows32
           fi
           ####
-          if [[ -f nekoray_setup_legacy.exe ]]; then
-            mv nekoray_setup_legacy.exe $version_standalone-windowslegacy64-installer.exe
-            mv windowslegacy64 nekoray
-            zip -9 -r $version_standalone-windowslegacy64.zip nekoray
-            rm -rf nekoray windowslegacy64
+          if [[ -f nekobox_setup_legacy.exe ]]; then
+            mv nekobox_setup_legacy.exe $version_standalone-windowslegacy64-installer.exe
+            mv windowslegacy64 nekobox
+            zip -9 -r $version_standalone-windowslegacy64.zip nekobox
+            rm -rf nekobox windowslegacy64
           fi
           ####
           if [[ -f macos-arm64 ]]; then
-            install -D macos-arm64/nekoray.app nekoray/nekoray.app
-            zip -9 --symlinks -r $version_standalone-macos-arm64.zip nekoray
-            rm -rf macos-arm64 nekoray
+            install -D macos-arm64/nekobox.app nekobox/nekobox.app
+            zip -9 --symlinks -r $version_standalone-macos-arm64.zip nekobox
+            rm -rf macos-arm64 nekobox
           fi
           ####
           if [[ -f macos-amd64 ]]; then
-            install -D macos-amd64/nekoray.app nekoray/nekoray.app
-            zip -9 --symlinks -r $version_standalone-macos-amd64.zip nekoray
-            rm -rf macos-amd64 nekoray
+            install -D macos-amd64/nekobox.app nekobox/nekobox.app
+            zip -9 --symlinks -r $version_standalone-macos-amd64.zip nekobox
+            rm -rf macos-amd64 nekobox
           fi
       - name: Clean Up
         run: |

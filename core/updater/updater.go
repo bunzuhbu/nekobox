@@ -16,17 +16,17 @@ func Updater() {
 		if runtime.GOOS == "linux" {
 			os.RemoveAll("./usr")
 		}
-		os.RemoveAll("./nekoray_update")
+		os.RemoveAll("./nekobox_update")
 	}
 
 	// find update package
 	var updatePackagePath string
 	if len(os.Args) == 2 && Exist(os.Args[1]) {
 		updatePackagePath = os.Args[1]
-	} else if Exist("./nekoray.zip") {
-		updatePackagePath = "./nekoray.zip"
-	} else if Exist("./nekoray.tar.gz") {
-		updatePackagePath = "./nekoray.tar.gz"
+	} else if Exist("./nekobox.zip") {
+		updatePackagePath = "./nekobox.zip"
+	} else if Exist("./nekobox.tar.gz") {
+		updatePackagePath = "./nekobox.tar.gz"
 	} else {
 		log.Fatalln("no update")
 	}
@@ -43,7 +43,7 @@ func Updater() {
 		if err != nil {
 			log.Fatalln(err.Error())
 		}
-		err = extract.Zip(context.Background(), f, dir+string(os.PathSeparator)+"nekoray_update", nil)
+		err = extract.Zip(context.Background(), f, dir+string(os.PathSeparator)+"nekobox_update", nil)
 		if err != nil {
 			log.Fatalln(err.Error())
 		}
@@ -54,7 +54,7 @@ func Updater() {
 		if err != nil {
 			log.Fatalln(err.Error())
 		}
-		err = extract.Gz(context.Background(), f, dir+string(os.PathSeparator)+"nekoray_update", nil)
+		err = extract.Gz(context.Background(), f, dir+string(os.PathSeparator)+"nekobox_update", nil)
 		if err != nil {
 			log.Fatalln(err.Error())
 		}
@@ -66,15 +66,15 @@ func Updater() {
 	removeAll("./*.dmp")
 
 	// update move
-	err = Mv("./nekoray_update/nekoray", "./")
+	err = Mv("./nekobox_update/nekobox", "./")
 	if err != nil {
-		MessageBoxPlain("Nekoray Updater", "Update failed. Please close the running instance and run the updater again.\n\n"+err.Error())
+		MessageBoxPlain("nekobox Updater", "Update failed. Please close the running instance and run the updater again.\n\n"+err.Error())
 		log.Fatalln(err.Error())
 	}
 
-	os.RemoveAll("./nekoray_update")
-	os.RemoveAll("./nekoray.zip")
-	os.RemoveAll("./nekoray.tar.gz")
+	os.RemoveAll("./nekobox_update")
+	os.RemoveAll("./nekobox.zip")
+	os.RemoveAll("./nekobox.tar.gz")
 }
 
 func Exist(path string) bool {

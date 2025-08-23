@@ -571,7 +571,7 @@ namespace Configs {
             QJsonObject obj;
             obj["action"] = "reject";
             QJsonArray jarray;
-            jarray.append("nekoray-adblocksingbox");
+            jarray.append("nekobox-adblocksingbox");
             obj["rule_set"] = jarray;
             res += obj;
         }

@@ -15,10 +15,10 @@ rm -rf $DEST
 mkdir -p $DEST
 
 #### copy binary ####
-cp $BUILD/nekoray $DEST
+cp $BUILD/nekobox $DEST
 
-#### copy nekoray.png ####
-cp ./res/public/nekoray.png $DEST
+#### copy nekobox.png ####
+cp ./res/public/nekobox.png $DEST
 
 #### download srslist ####
 curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list"
@@ -37,7 +37,7 @@ chmod +x linuxdeploy-$ARCH1.AppImage linuxdeploy-plugin-qt-$ARCH1.AppImage
 
 export EXTRA_QT_PLUGINS="iconengines;wayland-shell-integration;wayland-decoration-client;"
 export EXTRA_PLATFORM_PLUGINS="libqwayland-generic.so;"
-./linuxdeploy-$ARCH1.AppImage --appdir $DEST --executable $DEST/nekoray --plugin qt
+./linuxdeploy-$ARCH1.AppImage --appdir $DEST --executable $DEST/nekobox --plugin qt
 rm linuxdeploy-$ARCH1.AppImage linuxdeploy-plugin-qt-$ARCH1.AppImage
 cd $DEST
 rm -r ./usr/translations ./usr/bin ./usr/share ./apprun-hooks
@@ -68,4 +68,4 @@ mv ./usr/lib2 ./usr/lib
 
 # fix lib rpath
 cd $DEST
-patchelf --set-rpath '$ORIGIN/usr/lib' ./nekoray
+patchelf --set-rpath '$ORIGIN/usr/lib' ./nekobox
