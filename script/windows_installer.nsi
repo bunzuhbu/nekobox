@@ -27,22 +27,9 @@ RequestExecutionLevel user
 UninstallText "This will uninstall nekoray. Do you wish to continue?"
 UninstallIcon "res\nekoray_del.ico"
 
-!macro AbortOnRunningApp EXEName
-  killModule:
-  FindProcDLL::FindProc ${EXEName}
-  Pop $R0
-  IntCmp $R0 1 0 notRunning
-    FindProcDLL::KillProc ${EXEName}
-    Sleep 1000
-    Goto killModule
-  notRunning:
-!macroend
-
 Section "Install"
   SetOutPath "$INSTDIR"
   SetOverwrite on
-
-  !insertmacro AbortOnRunningApp "$INSTDIR\nekoray.exe"
 
   !ifdef DIRECTORY
     File /r ".\deployment\$DIRECTORY\*"
@@ -64,8 +51,6 @@ Section "Install"
 SectionEnd
 
 Section "Uninstall"
-
-  !insertmacro AbortOnRunningApp "$INSTDIR\nekoray.exe"
 
   Delete "$SMPROGRAMS\nekoray.lnk"
   Delete "$desktop\nekoray.lnk"
