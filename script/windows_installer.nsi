@@ -1,7 +1,7 @@
 Name "nekoray"
 
 !ifdef OUTFILE
-    OutFile "$OUTFILE.exe"
+    OutFile "${OUTFILE}.exe"
 !else
     OutFile "nekoray_setup.exe"
 !endif
@@ -32,7 +32,7 @@ Section "Install"
   SetOverwrite on
 
   !ifdef DIRECTORY
-    File /r ".\deployment\$DIRECTORY\*"
+    File /r ".\deployment\${DIRECTORY}\*"
   !else
     File /r ".\deployment\windows64\*"
   !endif

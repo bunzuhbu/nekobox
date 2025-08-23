@@ -157,15 +157,23 @@ jobs:
           cd ..
           ./script/deploy_windows.sh ${{ matrix.target }}
 
-      - name: Build Installer with NSIS
+      - name: Build Installer with NSIS for windows64
+        shell: cmd
+        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12'
+        run: |
+          cp .\script\windows_installer.nsi .
+          makensis windows_installer.nsi
+          cp nekoray_setup32.exe deployment/
+
+      - name: Build Installer with NSIS for windows32
         shell: cmd
         if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target == 'i686'
         run: |
           cp .\script\windows_installer.nsi .
-          makensis windows_installer.nsi "/OUTPUT=nekoray_setup32" "/directory=windows32"
+          makensis "/DOUTPUT=nekoray_setup_legacy" "/DDIRECTORY=windows32"  windows_installer.nsi
           cp nekoray_setup32.exe deployment/
 
-      - name: Build Installer with NSIS
+      - name: Build Installer with NSIS for windowslegacy64
         shell: cmd
         if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target != 'i686'
         run: |
