@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-if [[ $(uname -m) == 'aarch64' || $(uname -m) == 'arm64' ]]; then
+UNAME="$(uname -m)"
+
+if [[ "${UNAME}" == 'aarch64' || "${UNAME}" == 'arm64' ]]; then
   ARCH="arm64"
   ARCH1="aarch64"
 else

@@ -10,8 +10,13 @@ else
     ARCH="windowslegacy-amd64"
     DEST=$DEPLOYMENT/windowslegacy64
   else
-    ARCH="windows-amd64"
-    DEST=$DEPLOYMENT/windows64
+    if [[ $1 == "arm64" ]]; then
+      ARCH="windowslegacy-arm64"
+      DEST=$DEPLOYMENT/windowslegacy-arm64
+    else 
+      ARCH="windows64"
+      DEST=$DEPLOYMENT/windows64
+    fi
   fi
 fi
 rm -rf $DEST
