@@ -12,6 +12,8 @@ jobs:
   build-go:
     permissions:
       contents: read
+    needs:
+      - build-cpp
     strategy:
       matrix:
         include:
@@ -75,8 +77,6 @@ jobs:
   build-cpp:
     permissions:
       contents: read
-    needs:
-      - build-go
     strategy:
       matrix:
         include:
