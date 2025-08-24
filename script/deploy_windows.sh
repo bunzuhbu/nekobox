@@ -40,6 +40,7 @@ curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprof
 cp $BUILD/nekobox.exe $DEST
 
 cd download-artifact
+ls
 cd *$ARCH
 tar xvzf artifacts.tgz -C ../../
 cd ../..
