@@ -358,4 +358,4 @@ jobs:
           echo 'credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManager' >> oscrc
           ####
           install -Dm644 oscrc "$HOME"/.config/osc/oscrc
-          python3 -m osc token --trigger "${{ secrets.OBS_HOOK_TOKEN }}"
+          osc token --trigger "${{ secrets.OBS_HOOK_TOKEN }}"
