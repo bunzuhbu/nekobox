@@ -49,4 +49,4 @@ NekoBox's built-in update functionallity downloads the new release, removes the 
 Also the `System DNS` feature will change your system's DNS settings, which is also considered a dangerous action by some Anti-Virus applications.
 
 **Is setting the `SUID` bit really needed on Linux?** <br/>
-No, it is not needed, but if `SUID` does not configured properly, the NekoBox shall ask for administrator password to order to restart nekobox_core with administrator privilegies, if NekoBox is not already running as root. NekoBox will ask for password for once, and will not configure `SUID`.
+No, it is not needed, but if `SUID` does not configured properly, the NekoBox will ask for administrator password to order to restart nekobox_core with administrator privilegies, if NekoBox is not already running as root. NekoBox will ask for password for once, and will not configure `SUID`.
