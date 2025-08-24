@@ -10,8 +10,6 @@ on:
         required: false
 jobs:
   build-go:
-    needs:
-      - webhook
     permissions:
       contents: read
     strategy:
@@ -23,9 +21,6 @@ jobs:
           - cross_os: linux
             cross_arch: arm64
             go_version: "1.25.0"
-   #       - cross_os: windowslegacy
-    #        cross_arch: arm64
-     #       go_version: "1.25.0"
           - cross_os: windowslegacy
             cross_arch: amd64
             go_version: "1.25.0"
@@ -109,9 +104,6 @@ jobs:
           - platform: windows-latest
             qt_version: "6.2.12"
             target: x86_64
-  #        - platform: windows-latest
-   #         qt_version: "6.2.12"
-    #        target: arm64
           - platform: windows-latest
             qt_version: "6.2.12"
             target: i686
@@ -339,6 +331,8 @@ jobs:
   webhook:
     name: Trigger Open Build Service
     runs-on: ubuntu-latest
+    needs:
+      - publish
     permissions:
       contents: read
       actions: read
