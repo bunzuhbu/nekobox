@@ -3,7 +3,7 @@ Qt based Desktop cross-platform GUI proxy utility, empowered by [Sing-box](https
 
 Supports Windows 11/10/8/7 / Linux / MacOS out of the box.
 
-### GitHub Releases (Portable ZIP)
+### GitHub Releases (Portable ZIPs, Windows installers)
 
 [![GitHub All Releases](https://img.shields.io/github/downloads/qr243vbi/nekobox/total?label=downloads-total&logo=github&style=flat-square)](https://github.com/qr243vbi/nekobox/releases)
 
