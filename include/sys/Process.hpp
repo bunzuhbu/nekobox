@@ -20,7 +20,7 @@ namespace Configs_sys {
 
         void Kill();
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
         void elevateCoreProcessProgram();
 #endif
 
@@ -37,7 +37,7 @@ namespace Configs_sys {
 
         QElapsedTimer coreRestartTimer;
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
         bool coreProcessProgramElevated = false;
 #endif
 

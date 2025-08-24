@@ -986,16 +986,18 @@ bool MainWindow::get_elevated_permissions(int reason) {
             } else {
                 MW_show_log(QString("Failed to run chmod %1").arg(chmodArgs));
             }
-        });
-        */
+        });*/
         return false;
     }
 #endif
 #ifdef Q_OS_WIN
-    auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please run nekobox as admin"), QMessageBox::Yes | QMessageBox::No);
+    auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please give the core root privileges"), QMessageBox::Yes | QMessageBox::No);
     if (n == QMessageBox::Yes) {
-        this->exit_reason = reason;
-        on_menu_exit_triggered();
+        StopVPNProcess();
+        core_process->elevateCoreProcessProgram();
+        /*this->exit_reason = reason;
+        on_menu_exit_triggered();*/
+        return false;
     }
 #endif
 
