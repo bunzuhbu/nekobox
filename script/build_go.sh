@@ -37,7 +37,7 @@ export CGO_ENABLED=0
 [ "$GOOS" == "darwin" ] || [ "$SKIP_UPDATER" == yes ] || (
 cd core/updater
 $GOCMD build -o $DEST/updater"${EXT}" -trimpath -ldflags "-w -s"
-)
+) ||:
 
 #### Go: core ####
 pushd core/server
