@@ -2,17 +2,20 @@
 set -e
 
 source script/env_deploy.sh
-[ "$GOOS" == "windows" ] && [ "$GOARCH" == "amd64" ] && DEST=$DEPLOYMENT/windows64 || true
-[ "$GOOS" == "windows" ] && [ "$GOARCH" == "arm64" ] && DEST=$DEPLOYMENT/windows-arm64 || true
-[ "$GOOS" == "windows" ] && [ "$GOARCH" == "386" ] && DEST=$DEPLOYMENT/windowsnew32 || true
-[ "$GOOS" == "windowslegacy" ] && [ "$GOARCH" == "amd64" ] && DEST=$DEPLOYMENT/windowslegacy64 || true
-[ "$GOOS" == "windowslegacy" ] && [ "$GOARCH" == "arm64" ] && DEST=$DEPLOYMENT/windowslegacy-arm64 || true
-[ "$GOOS" == "windowslegacy" ] && [ "$GOARCH" == "386" ] && DEST=$DEPLOYMENT/windows32 || true
-[ "$GOOS" == "linux" ] && [ "$GOARCH" == "amd64" ] && DEST=$DEPLOYMENT/linux-amd64 || true
-[ "$GOOS" == "linux" ] && [ "$GOARCH" == "arm64" ] && DEST=$DEPLOYMENT/linux-arm64 || true
-[ "$GOOS" == "linux" ] && [ "$GOARCH" == "386" ] && DEST=$DEPLOYMENT/linux-i386 || true
-[ "$GOOS" == "darwin" ] && [ "$GOARCH" == "amd64" ] && DEST=$DEPLOYMENT/macos-amd64 || true
-[ "$GOOS" == "darwin" ] && [ "$GOARCH" == "arm64" ] && DEST=$DEPLOYMENT/macos-arm64 || true
+[ "$GOOS" == "windows" ]        && [ "$GOARCH" == "amd64" ]     && DEST=$DEPLOYMENT/windows64 || true
+[ "$GOOS" == "windows" ]        && [ "$GOARCH" == "arm64" ]     && DEST=$DEPLOYMENT/windows-arm64 || true
+[ "$GOOS" == "windows" ]        && [ "$GOARCH" == "386" ]       && DEST=$DEPLOYMENT/windowsnew32 || true
+[ "$GOOS" == "windowslegacy" ]  && [ "$GOARCH" == "amd64" ]     && DEST=$DEPLOYMENT/windowslegacy64 || true
+[ "$GOOS" == "windowslegacy" ]  && [ "$GOARCH" == "arm64" ]     && DEST=$DEPLOYMENT/windowslegacy-arm64 || true
+[ "$GOOS" == "windowslegacy" ]  && [ "$GOARCH" == "386" ]       && DEST=$DEPLOYMENT/windows32 || true
+[ "$GOOS" == "linux" ]          && [ "$GOARCH" == "amd64" ]     && DEST=$DEPLOYMENT/linux-amd64 || true
+[ "$GOOS" == "linux" ]          && [ "$GOARCH" == "arm64" ]     && DEST=$DEPLOYMENT/linux-arm64 || true
+[ "$GOOS" == "linux" ]          && [ "$GOARCH" == "386" ]       && DEST=$DEPLOYMENT/linux-i386 || true
+[ "$GOOS" == "darwin" ]         && [ "$GOARCH" == "amd64" ]     && DEST=$DEPLOYMENT/macos-amd64 || true
+[ "$GOOS" == "darwin" ]         && [ "$GOARCH" == "arm64" ]     && DEST=$DEPLOYMENT/macos-arm64 || true
+
+echo "DESTINATION IS $DEST FOR MACHINE $GOARCH with platform $GOOS"
+
 
 if [[ "$GOOS" == "windowslegacy" ]]; then
   GOOS="windows"
@@ -25,6 +28,7 @@ if [ -z $DEST ]; then
   echo "Please set GOOS GOARCH"
   exit 1
 fi
+
 rm -rf $DEST
 mkdir -p $DEST
 
