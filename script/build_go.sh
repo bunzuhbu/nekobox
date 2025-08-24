@@ -8,7 +8,6 @@ source script/env_deploy.sh
 [ "$GOOS" == "windowslegacy" ] && [ "$GOARCH" == "amd64" ] && DEST=$DEPLOYMENT/windowslegacy64 || true
 [ "$GOOS" == "windowslegacy" ] && [ "$GOARCH" == "arm64" ] && DEST=$DEPLOYMENT/windowslegacy-arm64 || true
 [ "$GOOS" == "windowslegacy" ] && [ "$GOARCH" == "386" ] && DEST=$DEPLOYMENT/windows32 || true
-[ "$GOOS" == "windows" ] && [ "$GOARCH" == "arm64" ] && DEST=$DEPLOYMENT/windows-arm64 || true
 [ "$GOOS" == "linux" ] && [ "$GOARCH" == "amd64" ] && DEST=$DEPLOYMENT/linux-amd64 || true
 [ "$GOOS" == "linux" ] && [ "$GOARCH" == "arm64" ] && DEST=$DEPLOYMENT/linux-arm64 || true
 [ "$GOOS" == "linux" ] && [ "$GOARCH" == "386" ] && DEST=$DEPLOYMENT/linux-i386 || true

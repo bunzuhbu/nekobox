@@ -36,6 +36,9 @@ jobs:
           - cross_os: darwin
             cross_arch: arm64
             go_version: "1.25.0"
+          - cross_os: public
+            cross_arch: public
+            go_version: "1.25.0"
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
@@ -71,11 +74,15 @@ jobs:
           go install github.com/golang/protobuf/protoc-gen-go@latest
           go install github.com/chai2010/protorpc/protoc-gen-protorpc@latest
       - name: Build golang parts
-        if: steps.cache-common.outputs.cache-hit != 'true'
+        if: steps.cache-common.outputs.cache-hit != 'true' && matrix.cross_os != 'public'
         shell: bash
         run: |
           GOOS=${{ matrix.cross_os }} GOARCH=${{ matrix.cross_arch }} ./script/build_go.sh
-          [ ${{ matrix.cross_os }} != linux ] || [ ${{ matrix.cross_arch }} != amd64 ] || bash -x ./script/deploy_vendor.sh
+      - name: Build vendor
+        if: steps.cache-common.outputs.cache-hit != 'true' && matrix.cross_os == 'public'
+        shell: bash
+        run: |
+          bash -x ./script/deploy_vendor.sh
       - name: Tar files
         if: steps.cache-common.outputs.cache-hit != 'true'
         run: tar czvf artifacts.tgz ./deployment
