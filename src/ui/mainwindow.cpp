@@ -993,11 +993,8 @@ bool MainWindow::get_elevated_permissions(int reason) {
 #ifdef Q_OS_WIN
     auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please give the core root privileges"), QMessageBox::Yes | QMessageBox::No);
     if (n == QMessageBox::Yes) {
-        StopVPNProcess();
-        core_process->elevateCoreProcessProgram();
-        /*this->exit_reason = reason;
-        on_menu_exit_triggered();*/
-        return false;
+        this->exit_reason = reason;
+        on_menu_exit_triggered();
     }
 #endif
 
