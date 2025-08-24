@@ -2,8 +2,8 @@ source script/env_deploy.sh
 
 pushd "$SRC_ROOT"/core/server
 go mod vendor
-mv -T vendor "$DEPLOYMENT/vendor"
 mkdir -p "$DEPLOYMENT/gen"
+mv -T vendor "$DEPLOYMENT/vendor"
 pushd gen
   protoc -I . --go_out="$DEPLOYMENT/gen" --protorpc_out="$DEPLOYMENT/gen" libcore.proto
 popd
