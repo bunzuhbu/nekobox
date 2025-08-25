@@ -229,11 +229,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->toolButton_server->setMenu(ui->menu_server);
     ui->toolButton_routing->setMenu(ui->menuRouting_Menu);
     ui->menubar->setVisible(false);
+#ifndef SKIP_UPDATE_BUTTON
     connect(ui->toolButton_update, &QToolButton::clicked, this, [=,this] { runOnNewThread([=,this] { CheckUpdate(); }); });
     if (!QFile::exists(QApplication::applicationDirPath() + "/updater") && !QFile::exists(QApplication::applicationDirPath() + "/updater.exe"))
     {
+#endif
         ui->toolButton_update->hide();
+#ifndef SKIP_UPDATE_BUTTON
     }
+#endif
 
     // setup connection UI
     setupConnectionList();
@@ -2388,6 +2392,7 @@ bool isNewer(QString assetName) {
     return false;
 }
 
+#ifndef SKIP_UPDATE_BUTTON
 void MainWindow::CheckUpdate() {
     QString search;
 #ifdef Q_OS_WIN32
@@ -2504,3 +2509,4 @@ void MainWindow::CheckUpdate() {
         }
     });
 }
+#endif

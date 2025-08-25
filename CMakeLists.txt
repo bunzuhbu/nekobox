@@ -46,6 +46,12 @@ include("cmake/QHotkey.cmake")
 
 find_package(Threads)
 
+option(SKIP_UPDATE_BUTTON "Always hide update button" OFF)
+
+if(SKIP_UPDATE_BUTTON)
+    add_definitions(-DSKIP_UPDATE_BUTTON)
+endif()
+
 if (NKR_PACKAGE OR NKR_PACKAGE_MACOS)
     nkr_add_compile_definitions(NKR_CPP_USE_APPDATA)
 endif ()

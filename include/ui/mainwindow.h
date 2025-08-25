@@ -249,9 +249,9 @@ private:
     void runSpeedTest(const QString& config, bool useDefault, bool testCurrent, const QStringList& outboundTags, const QMap<QString, int>& tag2entID, int entID = -1);
 
     bool set_system_dns(bool set, bool save_set = true);
-
+#ifndef SKIP_UPDATE_BUTTON
     void CheckUpdate();
-
+#endif
     void setupConnectionList();
 
 protected:
