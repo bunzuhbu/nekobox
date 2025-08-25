@@ -8,6 +8,9 @@ on:
       publish:
         description: "r for normal release, p for prerelease, leave empty to not publish anything"
         required: false
+      source:
+        description: "skip building binaries, distribute only unified source"
+        required: false
 jobs:
   build-go:
     permissions:
@@ -59,7 +62,7 @@ jobs:
             core/server/go.sum
             core/updater/go.sum
       - name: Install Golang For Legacy Windows
-        if: matrix.cross_os == 'windowslegacy'
+        if: matrix.cross_os == 'windowslegacy' && github.event.inputs.source != 'y'
         run: |
           curl -L -o go.7z https://github.com/throneproj/env_windows_legacy/releases/download/latest/go.7z
           7z x go.7z
@@ -74,7 +77,7 @@ jobs:
           go install github.com/golang/protobuf/protoc-gen-go@latest
           go install github.com/chai2010/protorpc/protoc-gen-protorpc@latest
       - name: Build golang parts
-        if: steps.cache-common.outputs.cache-hit != 'true' && matrix.cross_os != 'public'
+        if: steps.cache-common.outputs.cache-hit != 'true' && matrix.cross_os != 'public' && github.event.inputs.source != 'y'
         shell: bash
         run: |
           GOOS=${{ matrix.cross_os }} GOARCH=${{ matrix.cross_arch }} ./script/build_go.sh
@@ -127,33 +130,35 @@ jobs:
       INPUT_VERSION: ${{ github.event.inputs.tag }}
     steps:
       - name: Checking out sources
+        if: github.event.inputs.source != 'y'
         uses: actions/checkout@v4.2.2
         with:
           submodules: "recursive"
       - name: Install mingw
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows-latest' && github.event.inputs.source != 'y'
         uses: bwoodsend/setup-winlibs-action@v1.15
         with:
           architecture: ${{ matrix.target }}
       - name: Download Artifacts
+        if: github.event.inputs.source != 'y'
         uses: actions/download-artifact@v4.3.0
         with:
           path: download-artifact
       # ========================================================================================================= Qt Install
       - name: Qt static Cache
         id: cache-static-Qt
-        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12'
+        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
         uses: actions/cache@v4.2.3
         with:
           path: qt6/build
           key: QtStaticCache-${{ matrix.platform }}-${{ matrix.target }}-Qt${{ matrix.qt_version }}
       - name: Install Qt Windows
         shell: powershell
-        if: matrix.platform == 'windows-latest' && steps.cache-static-Qt.outputs.cache-hit != 'true' && matrix.qt_version != '6.2.12'
+        if: matrix.platform == 'windows-latest' && steps.cache-static-Qt.outputs.cache-hit != 'true' && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
         run: ./script/build_qt_static_windows.bat ${{ matrix.qt_version }}
       - name: Install Qt
         uses: jurplel/install-qt-action@v4.3.0
-        if: matrix.platform != 'windows-latest'
+        if: matrix.platform != 'windows-latest' && github.event.inputs.source != 'y'
         with:
           version: ${{ matrix.qt_version }}
           setup-python: true
@@ -162,7 +167,7 @@ jobs:
       # ========================================================================================================= Generate MakeFile and Build
       - name: Windows - Generate MakeFile and Build
         shell: bash
-        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12'
+        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
         run: |
           export CMAKE_PREFIX_PATH=$PWD/qt6/build/lib/cmake
           mkdir build
@@ -173,7 +178,7 @@ jobs:
           ./script/deploy_windows.sh
       - name: Legacy Windows - Generate MakeFile and Build
         shell: bash
-        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12'
+        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && github.event.inputs.source != 'y'
         run: |
           curl -L -o qt.7z https://github.com/throneproj/env_windows_legacy/releases/download/latest/qt-${{ matrix.target }}.7z
           7z x qt.7z
@@ -187,34 +192,30 @@ jobs:
           ninja -j2
           cd ..
           ./script/deploy_windows.sh ${{ matrix.target }}
-
       - name: Build Installer with NSIS for windows64
         shell: cmd
-        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12'
+        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup.exe
-
       - name: Build Installer with NSIS for windows32
         shell: cmd
-        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target == 'i686'
+        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target == 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windows32"  windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup32.exe
-
       - name: Build Installer with NSIS for windowslegacy64
         shell: cmd
-        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target != 'i686'
+        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target != 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windowslegacy64" windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup_legacy.exe
-
       - name: Linux - Generate MakeFile and Build
         shell: bash
-        if: contains( matrix.platform, 'ubuntu' )
+        if: contains( matrix.platform, 'ubuntu' ) && github.event.inputs.source != 'y'
         run: |
           sudo apt update && sudo apt upgrade -y
           mkdir build
@@ -225,7 +226,7 @@ jobs:
           ./script/deploy_linux64.sh
       - name: macOS - Generate MakeFile and Build
         shell: bash
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-latest' && github.event.inputs.source != 'y'
         run: |
           mkdir build
           cd build
@@ -235,9 +236,11 @@ jobs:
           ./script/deploy_macos.sh ${{ matrix.target }}
       # ========================================================================================================= Deployments
       - name: Tar files
+        if: github.event.inputs.source != 'y'
         shell: bash
         run: tar czvf artifacts.tgz ./deployment
       - name: Uploading Artifact
+        if: github.event.inputs.source != 'y'
         uses: actions/upload-artifact@v4.6.2
         with:
           name: nekobox-${{ github.sha }}-${{ matrix.platform }}-${{ matrix.target }}-Qt${{ matrix.qt_version }}
