@@ -50,7 +50,7 @@ export CGO_ENABLED=0
 [ "$GOOS" == "windows" ] && EXT=".exe" || EXT=''
 
 #### Go: updater ####
-[ "$GOOS" == "darwin" ] || [ "$SKIP_UPDATER" == yes ] || (
+[ "$GOOS" == "darwin" ] || [ "$SKIP_UPDATER" == y ] || (
 cd core/updater
 $GOCMD build -o $DEST/updater"${EXT}" -trimpath -ldflags "-w -s"
 ) ||:
