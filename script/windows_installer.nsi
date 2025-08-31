@@ -24,9 +24,6 @@ RequestExecutionLevel user
 
 !insertmacro MUI_LANGUAGE "English"
 
-UninstallText "This will uninstall nekobox. Do you wish to continue?"
-UninstallIcon "res\nekobox_del.ico"
-
 Section "Install"
   SetOutPath "$INSTDIR"
   SetOverwrite on
@@ -38,10 +35,11 @@ Section "Install"
   !endif
 
 
-
   CreateShortcut "$desktop\nekobox.lnk" "$instdir\nekobox.exe"
   CreateShortcut "$SMPROGRAMS\nekobox.lnk" "$INSTDIR\nekobox.exe" "" "$INSTDIR\nekobox.exe" 0
-  
+
+  WriteRegStr HKCU "Software\nekobox" "InstallPath" "$INSTDIR"
+
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\nekobox" "DisplayName" "nekobox"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\nekobox" "UninstallString" "$INSTDIR\uninstall.exe"
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\nekobox" "InstallLocation" "$INSTDIR"

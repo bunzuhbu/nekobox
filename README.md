@@ -50,3 +50,9 @@ Also the `System DNS` feature will change your system's DNS settings, which is a
 
 **Is setting the `SUID` bit really needed on Linux?** <br/>
 No, it is not needed, but if `SUID` does not configured properly, the NekoBox will ask for administrator password to order to restart nekobox_core with administrator privilegies, if NekoBox is not already running as root. NekoBox will ask for password for once, and will not configure `SUID`.
+
+**Why does my internet stop working after I force quit NekoBox?** <br/>
+If NekoBox is force-quit while `System proxy` is enabled, the process ends immediately and NekoBox cannot reset the proxy. <br/>
+Solution:
+- Always close NekoBox normally.
+- If you force quit by accident, open nekobox again, enable `System proxy`, then disable it- this will reset the settings.

@@ -240,6 +240,20 @@ namespace Configs {
             outbound["recv_window_conn"] = connectionReceiveWindow;
             outbound["up_mbps"] = uploadMbps;
             outbound["down_mbps"] = downloadMbps;
+            if (!serverPorts.empty())
+            {
+                outbound.remove("server_port");
+                QStringList modifiedPorts;
+                for (const QString& port : serverPorts) {
+                    if (port.contains(":")) {
+                        modifiedPorts.append(port);
+                    } else {
+                        modifiedPorts.append(port + ":" + port);
+                    }
+                }
+                outbound["server_ports"] = QListStr2QJsonArray(modifiedPorts);
+                if (!hop_interval.isEmpty()) outbound["hop_interval"] = hop_interval;
+            }
 
             if (authPayloadType == hysteria_auth_base64) outbound["auth"] = authPayload;
             if (authPayloadType == hysteria_auth_string) outbound["auth_str"] = authPayload;
@@ -251,7 +265,15 @@ namespace Configs {
             if (!serverPorts.empty())
             {
                 outbound.remove("server_port");
-                outbound["server_ports"] = QListStr2QJsonArray(serverPorts);
+                QStringList modifiedPorts;
+                for (const QString& port : serverPorts) {
+                    if (port.contains(":")) {
+                        modifiedPorts.append(port);
+                    } else {
+                        modifiedPorts.append(port + ":" + port);
+                    }
+                }
+                outbound["server_ports"] = QListStr2QJsonArray(modifiedPorts);
                 if (!hop_interval.isEmpty()) outbound["hop_interval"] = hop_interval;
             }
 

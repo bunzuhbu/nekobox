@@ -30,9 +30,12 @@ fi; fi; fi; fi; fi; fi; fi; fi; fi; fi; fi;
 echo "DESTINATION IS $DEST FOR MACHINE $GOARCH with platform $GOOS"
 
 
+TAGS="with_clash_api,with_gvisor,with_quic,with_wireguard,with_utls,with_dhcp,with_tailscale"
+
 if [[ "$GOOS" == "windowslegacy" ]]; then
   GOOS="windows"
   GOCMD="$PWD/go/bin/go"
+  TAGS="$TAGS,with_legacy"
 else
   GOCMD="go"
 fi
@@ -62,7 +65,5 @@ cd gen
 protoc -I . --go_out=. --protorpc_out=. libcore.proto
 ) || :
 VERSION_SINGBOX="${VERSION_SINGBOX:-$(go list -m -f '{{.Version}}' github.com/sagernet/sing-box)}"
-$GOCMD build -v -o $DEST/nekobox_core"${EXT}" -trimpath -ldflags "-w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}'" -tags "with_clash_api,with_gvisor,with_quic,with_wireguard,with_utls,with_dhcp,with_tailscale"
+$GOCMD build -v -o $DEST -trimpath -ldflags "-w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}'" -tags "$TAGS"
 popd
-
-ls $DEST
