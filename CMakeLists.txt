@@ -50,6 +50,8 @@ option(SKIP_UPDATE_BUTTON "Always hide update button" OFF)
 
 if(SKIP_UPDATE_BUTTON)
     add_definitions(-DSKIP_UPDATE_BUTTON)
+else()
+    add_subdirectory("3rdparty/lua")
 endif()
 
 if (NKR_PACKAGE OR NKR_PACKAGE_MACOS)
