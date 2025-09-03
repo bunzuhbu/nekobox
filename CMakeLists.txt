@@ -48,12 +48,6 @@ find_package(Threads)
 
 option(SKIP_UPDATE_BUTTON "Always hide update button" OFF)
 
-if(SKIP_UPDATE_BUTTON)
-    add_definitions(-DSKIP_UPDATE_BUTTON)
-else()
-    add_subdirectory("3rdparty/lua")
-endif()
-
 if (NKR_PACKAGE OR NKR_PACKAGE_MACOS)
     nkr_add_compile_definitions(NKR_CPP_USE_APPDATA)
 endif ()
@@ -234,6 +228,13 @@ qt_add_executable(nekobox
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 )
+
+if(SKIP_UPDATE_BUTTON)
+    add_definitions(-DSKIP_UPDATE_BUTTON)
+else()
+    add_subdirectory("3rdparty/lua")
+    target_link_libraries(nekobox PRIVATE lua::lua)
+endif()
 
 # Target
 

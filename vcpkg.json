@@ -1,0 +1,6 @@
+{
+  "dependencies": [
+    "dukglue",
+    "qt"
+  ]
+}
