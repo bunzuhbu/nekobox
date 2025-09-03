@@ -42,6 +42,7 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [fkYAML](https://github.com/fktn-k/fkYAML)
 - [quirc](https://github.com/dlbeer/quirc)
 - [QHotkey](https://github.com/Skycoder42/QHotkey)
+- [simple-protobuf](https://github.com/tonda-kriz/simple-protobuf)
 
 ## FAQ
 **Why does my Anti-Virus detect NekoBox as malware?** <br/>
