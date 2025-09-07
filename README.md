@@ -44,6 +44,7 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [QHotkey](https://github.com/Skycoder42/QHotkey)
 - [simple-protobuf](https://github.com/tonda-kriz/simple-protobuf)
 - [quickjs](https://quickjs-ng.github.io/quickjs)
+- [qrcodegen](https://www.nayuki.io/page/qr-code-generator-library)
 
 ## FAQ
 **Why does my Anti-Virus detect NekoBox as malware?** <br/>
