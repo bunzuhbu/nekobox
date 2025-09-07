@@ -2480,7 +2480,7 @@ void MainWindow::CheckUpdate() {
                                   QString * release_download_url,
                                   QString * release_url,
                                   QString * release_note,
-                                  QString * note_pre_release
+                                  QString * note_pre_release,
                                   QString * archive_name){
             jsUpdater(
                 bQueue,
