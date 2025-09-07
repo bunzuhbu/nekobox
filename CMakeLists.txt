@@ -294,7 +294,8 @@ target_link_libraries(nekobox PRIVATE
 )
 
 if (MSVC)
-    target_compile_options(nekobox PRIVATE "/std:c++20")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi")  # Enable debug info
+    target_compile_options(nekobox PRIVATE "/std:c++20")       # add c++20 feature
 endif ()
 
 qt_finalize_executable(nekobox)
