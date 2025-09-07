@@ -28,11 +28,11 @@ rm -rf cv2pdb-0.53.zip cv2pdb ||:
 cd build
 strip -s nekobox.exe ||:
 cd ..
-rm tmp.exe
-mv nekobox.pdb $DEST
+rm tmp.exe ||:
+mv nekobox.pdb $DEST ||:
 
 #### download srslist ####
-curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list"
+curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list" ||:
 
 #### copy exe ####
 cp $CURDIR/check_new_release.js $DEST
