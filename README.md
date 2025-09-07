@@ -48,6 +48,7 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [Setup MinGW Github Action](https://github.com/bwoodsend/setup-winlibs-action)
 - [Setup MSVC Github Action](https://github.com/ilammy/msvc-dev-cmd)
 - [Setup Ninja Github Action](https://github.com/seanmiddleditch/gha-setup-ninja)
+- [Cache Apt Pkgs Github Action](https://github.com/awalsh128/cache-apt-pkgs-action)
 - [Setup Qt Github Action](https://github.com/jurplel/install-qt-action)
 
 ## FAQ
