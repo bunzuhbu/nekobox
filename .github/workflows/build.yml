@@ -150,7 +150,7 @@ jobs:
           submodules: "recursive"
 
       - name: Install mingw
-        if: matrix.qt_version != '6.9.0' && matrix.platform == 'windows-latest' && github.event.inputs.source != 'y'
+        if: matrix.qt_version != '6.9.0' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
         uses: bwoodsend/setup-winlibs-action@v1.15
         with:
           architecture: ${{ matrix.target }}
@@ -193,7 +193,7 @@ jobs:
       # ========================================================================================================= Generate MakeFile and Build
       - name: Windows - Generate MakeFile and Build
         shell: bash
-        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
+        if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
         run: |
           export CMAKE_PREFIX_PATH=$PWD/qt6/build/lib/cmake
           mkdir build
@@ -205,7 +205,7 @@ jobs:
           ./script/deploy_windows.sh new-${{ matrix.target }}
       - name: Legacy Windows - Generate MakeFile and Build
         shell: bash
-        if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && github.event.inputs.source != 'y'
+        if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version == '6.2.12' && github.event.inputs.source != 'y'
         run: |
           curl -L -o qt.7z https://github.com/throneproj/env_windows_legacy/releases/download/latest/qt-${{ matrix.target }}.7z
           7z x qt.7z
