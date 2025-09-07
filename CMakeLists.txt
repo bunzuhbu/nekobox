@@ -293,4 +293,8 @@ target_link_libraries(nekobox PRIVATE
         ${PLATFORM_LIBRARIES}
 )
 
+if (MSVC)
+    target_compile_options(nekobox PRIVATE "/std:c++20")
+endif ()
+
 qt_finalize_executable(nekobox)
