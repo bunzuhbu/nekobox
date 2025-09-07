@@ -54,6 +54,8 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [throneproj](https://github.com/throneproj/Throne)
 - [MinGW](https://www.mingw-w64.org)
 - [MSVC](https://visualstudio.microsoft.com/)
+- [nekoray](https://github.com/MatsuriDayo/nekoray)
+- and many others...
 
 ## FAQ
 **Why does my Anti-Virus detect NekoBox as malware?** <br/>
