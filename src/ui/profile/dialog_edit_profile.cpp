@@ -23,14 +23,13 @@
 #include <QToolTip>
 #include <QtGlobal>
 #include <QtCore/qglobal.h>
-#include <QtVersionChecks>
 #include <QObject>
 #include <QString>
 #include <QDebug>
 #include <QApplication>
 
 #include <QStyle>
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+#ifndef USE_LEGACY_QT
 #define stateChanged checkStateChanged
 #endif
 

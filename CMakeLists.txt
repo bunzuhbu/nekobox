@@ -47,8 +47,8 @@ include("cmake/QHotkey.cmake")
 find_package(Threads)
 
 option(SKIP_UPDATE_BUTTON "Always hide update button" OFF)
-option(SKIP_JS_UPDATER "Skip JS updater" OFF)
-#option(USE_LEGACY_QT "Use legacy QT" OFF)
+option(SKIP_JS_UPDATER "Skip JS update checker" OFF)
+option(USE_LEGACY_QT "Use legacy QT" OFF)
 
 if (NKR_PACKAGE OR NKR_PACKAGE_MACOS)
     nkr_add_compile_definitions(NKR_CPP_USE_APPDATA)
@@ -237,9 +237,9 @@ set_property(TARGET nekobox PROPERTY AUTOUIC ON)
 set_property(TARGET nekobox PROPERTY AUTOMOC ON)
 set_property(TARGET nekobox PROPERTY AUTORCC ON)
 
-#if(USE_LEGACY_QT)
-#    add_definitions(-DUSE_LEGACY_QT)
-#endif()
+if(USE_LEGACY_QT)
+    add_definitions(-DUSE_LEGACY_QT)
+endif()
 
 if(SKIP_UPDATE_BUTTON)
     add_definitions(-DSKIP_UPDATE_BUTTON)
