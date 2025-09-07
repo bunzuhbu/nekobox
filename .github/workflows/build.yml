@@ -249,11 +249,18 @@ jobs:
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windowslegacy64" windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup_legacy.exe
+
+      - name: Linux - Install apt dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        if: contains( matrix.platform, 'ubuntu' ) && github.event.inputs.source != 'y'
+        with:
+          packages: libfuse2 patchelf
+          version: 1.0
+
       - name: Linux - Generate MakeFile and Build
         shell: bash
         if: contains( matrix.platform, 'ubuntu' ) && github.event.inputs.source != 'y'
         run: |
-          sudo apt update && sudo apt upgrade -y
           mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
