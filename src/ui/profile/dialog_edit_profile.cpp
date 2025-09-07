@@ -22,8 +22,15 @@
 #include <QInputDialog>
 #include <QToolTip>
 #include <QtGlobal>
+#include <QtCore/qglobal.h>
+#include <QtVersionChecks>
+#include <QObject>
+#include <QString>
+#include <QDebug>
+#include <QApplication>
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+#include <QStyle>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 #define stateChanged checkStateChanged
 #endif
 

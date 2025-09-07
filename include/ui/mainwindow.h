@@ -97,7 +97,6 @@ signals:
     void profile_selected(int id);
 
 public slots:
-
     void on_commitDataRequest();
 
     void on_menu_exit_triggered();

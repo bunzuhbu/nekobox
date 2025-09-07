@@ -3,8 +3,13 @@
 #include "include/dataStore/ProfileFilter.hpp"
 #include "include/configs/ConfigBuilder.hpp"
 #include "include/configs/sub/GroupUpdater.hpp"
+#include "include/global/Utils.hpp"
 #include "include/sys/Process.hpp"
 #include "include/sys/AutoRun.hpp"
+
+#include <QQueue>
+#include <QMutex>
+#include <QWaitCondition>
 
 #include "include/ui/setting/ThemeManager.hpp"
 #include "include/ui/setting/Icon.hpp"
@@ -2317,19 +2322,30 @@ bool MainWindow::StopVPNProcess() {
     }, DS_cores);
     waitStop.lock();
     waitStop.unlock();
-
     return true;
 }
 
 bool isNewer(QString assetName) {
     if (QString(NKR_VERSION).isEmpty()) return false;
-    assetName = assetName.mid(8); // take out nekobox-
+  //  assetName = assetName.mid(8); // take out nekobox-
     QString version;
+
     auto spl = assetName.split('-');
-    version += spl[0]; // version: 1.2.3
-    if (spl[1].contains("beta") || spl[1].contains("alpha") || spl[1].contains("rc")) version += "."+spl[1]; // .beta.13
+    auto spl_size = spl.size();
+    if (spl_size < 2){
+        return false;
+    }
+
+    version += spl[1]; // version: 1.2.3
+    if (spl_size < 3){
+        auto & spl_2 = spl[2];
+        if (spl_2.contains("beta") || spl_2.contains("alpha") || spl_2.contains("rc")) {
+            version += "."+spl_2;
+        }// .beta.13
+    }
     auto parts = version.split("."); // [1,2,3,beta,13]
     auto currentParts = QString(NKR_VERSION).replace("-", ".").split('.');
+
     if (parts.size() < 3 || currentParts.size() < 3)
     {
         MW_show_log("Version strings seem to be invalid" + QString(NKR_VERSION) + " and " + version);
@@ -2391,8 +2407,21 @@ bool isNewer(QString assetName) {
 }
 
 #ifndef SKIP_UPDATE_BUTTON
+#ifndef SKIP_JS_UPDATER
+#define MAINWINDOW_H_DEFINED
+#include <thread>
+#include "include/js_updater.hpp"
+#endif
 void MainWindow::CheckUpdate() {
-    QString search;
+
+    QString
+        assets_version          = "",
+        release_download_url    = "",
+        release_url             = "",
+        release_note            = "",
+        note_pre_release        = "",
+        search                  = "";
+
 #ifdef Q_OS_WIN32
 #  ifdef Q_OS_WIN64
     if (WinVersion::IsBuildNumGreaterOrEqual(BuildNumber::Windows_10_1809))
@@ -2417,6 +2446,83 @@ void MainWindow::CheckUpdate() {
 	search = "macos-arm64";
 #  endif
 #endif
+
+
+#ifndef SKIP_JS_UPDATER
+    BlockingQueue<QueuePart> bQueue;
+    QString updater_js = "";
+    {
+        QFile file(QApplication::applicationDirPath() + "/updater.js");
+
+        if (!file.exists()) {
+            goto skip1;
+        }
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            goto skip1;
+        }
+        QTextStream in(&file);
+        updater_js = in.readAll().toUtf8().constData();
+        std::cout << updater_js.toStdString() << std::endl;
+        file.close();
+    }
+
+
+    {
+        std::thread updater(  []( BlockingQueue<QueuePart>* bQueue,
+                                  QString * updater_js,
+                                  QString * search,
+                                  QString * assets_version,
+                                  QString * release_download_url,
+                                  QString * release_url,
+                                  QString * release_note,
+                                  QString * note_pre_release){
+    if (jsUpdater(
+        bQueue,
+        updater_js,
+        search,
+        assets_version,
+        release_download_url,
+        release_url,
+        release_note,
+        note_pre_release
+    )) {
+        *search = "released";
+    }
+    bQueue->push(QueuePart{"", "", 0});
+    }, &bQueue,
+    &updater_js,
+    &search,
+    &assets_version,
+    &release_download_url,
+    &release_url,
+    &release_note,
+    &note_pre_release);
+
+    do {
+        QueuePart part = bQueue.pop();
+        auto type = part.type;
+
+        if (type == 0){
+            break;
+        } else if (type == 1){
+            auto & title = part.title;
+            auto & message = part.message;
+            if (title.isEmpty()){
+                MW_show_log(message);
+            } else {
+                MW_show_log("["+title+"]: "+message);
+            }
+        } else if (type == 2){
+            runOnUiThread([=,this] { MessageBoxWarning(part.title, part.message); });
+        } else if (type == 3){
+            runOnUiThread([=,this] { MessageBoxInfo(part.title, part.message); });
+        }
+    } while (true);
+        updater.join();
+    }
+#endif
+    skip1:
+
     if (search.isEmpty()) {
         runOnUiThread([=,this] {
             MessageBoxWarning(QObject::tr("Update"), QObject::tr("Not official support platform"));
@@ -2424,35 +2530,47 @@ void MainWindow::CheckUpdate() {
         return;
     }
 
-    auto resp = NetworkRequestHelper::HttpGet("https://api.github.com/repos/qr243vbi/nekobox/releases");
-    if (!resp.error.isEmpty()) {
-        runOnUiThread([=,this] {
-            MessageBoxWarning(QObject::tr("Update"), QObject::tr("Requesting update error: %1").arg(resp.error + "\n" + resp.data));
-        });
-        return;
-    }
-
-    QString assets_name, release_download_url, release_url, release_note, note_pre_release;
-    bool exitFlag = false;
-    QJsonArray array = QString2QJsonArray(resp.data);
-    for (const QJsonValue value : array) {
-        QJsonObject release = value.toObject();
-        if (release["prerelease"].toBool() && !Configs::dataStore->allow_beta_update) continue;
-        for (const QJsonValue asset : release["assets"].toArray()) {
-            if (asset["name"].toString().contains(search) && asset["name"].toString().section('.', -1) == QString("zip")) {
-                note_pre_release = release["prerelease"].toBool() ? " (Pre-release)" : "";
-                release_url = release["html_url"].toString();
-                release_note = release["body"].toString();
-                assets_name = asset["name"].toString();
-                release_download_url = asset["browser_download_url"].toString();
-                exitFlag = true;
-                break;
-            }
+    if (search != "released"){
+        auto resp = NetworkRequestHelper::HttpGet("https://api.github.com/repos/qr243vbi/nekobox/releases");
+        if (!resp.error.isEmpty()) {
+            runOnUiThread([=,this] {
+                MessageBoxWarning(QObject::tr("Update"), QObject::tr("Requesting update error: %1").arg(resp.error + "\n" + resp.data));
+            });
+            return;
         }
-        if (exitFlag) break;
+
+        bool exitFlag = false;
+        QJsonArray array = QString2QJsonArray(resp.data);
+        for (const QJsonValue value : array) {
+            QJsonObject release = value.toObject();
+            if (release["prerelease"].toBool() && !Configs::dataStore->allow_beta_update) continue;
+            for (const QJsonValue asset : release["assets"].toArray()) {
+                if (asset["name"].toString().contains(search) && asset["name"].toString().section('.', -1) == QString("zip")) {
+                    note_pre_release = release["prerelease"].toBool() ? " (Pre-release)" : "";
+                    release_url = release["html_url"].toString();
+                    release_note = release["body"].toString();
+                    assets_version = asset["name"].toString();
+                    release_download_url = asset["browser_download_url"].toString();
+                    exitFlag = true;
+                    break;
+                }
+            }
+            if (exitFlag) break;
+        }
     }
 
-    if (release_download_url.isEmpty() || !isNewer(assets_name)) {
+    bool is_newer = !assets_version.isEmpty();
+    if (is_newer){
+        is_newer = isNewer(assets_version);
+    }
+
+    if (!is_newer){
+        MW_show_log("[Warn]: assets_version is not newer ");
+    } else {
+        MW_show_log("[Warn]: assets_version is newer ");
+    }
+
+    if (release_download_url.isEmpty() || !is_newer) {
         runOnUiThread([=,this] {
             MessageBoxInfo(QObject::tr("Update"), QObject::tr("No update"));
         });
@@ -2462,7 +2580,7 @@ void MainWindow::CheckUpdate() {
     runOnUiThread([=,this] {
         auto allow_updater = !Configs::dataStore->flag_use_appdata;
         QMessageBox box(QMessageBox::Question, QObject::tr("Update") + note_pre_release,
-                        QObject::tr("Update found: %1\nRelease note:\n%2").arg(assets_name, release_note));
+                        QObject::tr("Update found: %1\nRelease note:\n%2").arg(assets_version, release_note));
         //
         QAbstractButton *btn1 = nullptr;
         if (allow_updater) {
