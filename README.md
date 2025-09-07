@@ -47,6 +47,7 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [qrcodegen](https://www.nayuki.io/page/qr-code-generator-library)
 - [Setup MinGW Github Action](bwoodsend/setup-winlibs-action)
 - [Setup MSVC Github Action](https://github.com/ilammy/msvc-dev-cmd)
+- [Setup Qt Github Action](https://github.com/jurplel/install-qt-action)
 
 ## FAQ
 **Why does my Anti-Virus detect NekoBox as malware?** <br/>
