@@ -446,7 +446,7 @@ bool jsUpdater(BlockingQueue<QueuePart> * window,
 
         ((BlockingQueue<QueuePart>*)reinterpret_cast<void*>(pointer))->push(QueuePart{
             "Update",
-            QObject::tr("updater.js throws exception %1, the script is: %2").arg(error, script),
+            QObject::tr("updater.js throws exception %1, the script is: %2").arg(error, script.c_str()),
             2
         });
         JS_FreeCString(ctx, error);
