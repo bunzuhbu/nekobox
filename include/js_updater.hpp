@@ -390,8 +390,8 @@ bool jsUpdater(BlockingQueue<QueuePart> * window,
                QString * release_download_url,
                QString * release_url,
                QString * release_note,
-               QString * note_pre_release
-
+               QString * note_pre_release,
+               QString * archive_name
 ){
 
     size_t pointer = 0;
@@ -461,6 +461,7 @@ bool jsUpdater(BlockingQueue<QueuePart> * window,
     getString(ctx, global_obj, "release_url", release_url);
     getString(ctx, global_obj, "release_note", release_note);
     getString(ctx, global_obj, "note_pre_release", note_pre_release);
+    getString(ctx, global_obj, "archive_name", archive_name);
 
     /*
      assets_name = JS_ToCString(ctx, );

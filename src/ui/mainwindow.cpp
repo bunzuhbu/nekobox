@@ -2419,6 +2419,7 @@ bool isNewer(QString assetName) {
 void MainWindow::CheckUpdate() {
 
     QString
+        archive_name            = "nekobox.zip",
         assets_version          = "",
         release_download_url    = "",
         release_url             = "",
@@ -2479,7 +2480,8 @@ void MainWindow::CheckUpdate() {
                                   QString * release_download_url,
                                   QString * release_url,
                                   QString * release_note,
-                                  QString * note_pre_release){
+                                  QString * note_pre_release
+                                  QString * archive_name){
             jsUpdater(
                 bQueue,
                 updater_js,
@@ -2488,7 +2490,8 @@ void MainWindow::CheckUpdate() {
                 release_download_url,
                 release_url,
                 release_note,
-                note_pre_release
+                note_pre_release,
+                archive_name
             );
             bQueue->push(QueuePart{"", "", 0});
         },
@@ -2499,7 +2502,8 @@ void MainWindow::CheckUpdate() {
         &release_download_url,
         &release_url,
         &release_note,
-        &note_pre_release);
+        &note_pre_release,
+        &archive_name);
 
         do {
             QueuePart part = bQueue.pop();
@@ -2604,7 +2608,7 @@ void MainWindow::CheckUpdate() {
                 }
                 QString errors;
                 if (!release_download_url.isEmpty()) {
-                    auto res = NetworkRequestHelper::DownloadAsset(release_download_url, "nekobox.zip");
+                    auto res = NetworkRequestHelper::DownloadAsset(release_download_url, archive_name);
                     if (!res.isEmpty()) {
                         errors += res;
                     }
