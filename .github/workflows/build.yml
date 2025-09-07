@@ -131,7 +131,7 @@ jobs:
           - platform: windows-latest
             qt_version: "6.9.0"
             target: x86_64
-          - platform: windows-latest
+          - platform: windows-11-arm
             qt_version: "6.9.0"
             target: arm64
           - platform: windows-latest
@@ -155,15 +155,15 @@ jobs:
         with:
           architecture: ${{ matrix.target }}
 
-      - name: Install MSVC compiler
-        if: matrix.qt_version != '6.2.12' && matrix.platform == 'windows-latest' && github.event.inputs.source != 'y'
-        uses: ilammy/msvc-dev-cmd@v1.13.0
-        with:
-          architecture: ${{ matrix.target }}
+  #    - name: Install MSVC compiler
+  #      if: matrix.qt_version != '6.2.12' && matrix.platform == 'windows-latest' && github.event.inputs.source != 'y'
+  #      uses: ilammy/msvc-dev-cmd@v1.13.0
+  #      with:
+  #        architecture: ${{ matrix.target }}
 
-      - name: Install ninja-build tool
-        if: matrix.qt_version != '6.2.12' && matrix.platform == 'windows-latest' && github.event.inputs.source != 'y'
-        uses: seanmiddleditch/gha-setup-ninja@v5
+#      - name: Install ninja-build tool
+#        if: matrix.qt_version != '6.2.12' && matrix.platform == 'windows-latest' && github.event.inputs.source != 'y'
+#        uses: seanmiddleditch/gha-setup-ninja@v5
 
       - name: Download Artifacts
         if: github.event.inputs.source != 'y'
@@ -237,7 +237,7 @@ jobs:
           install -D nekobox_setup.exe deployment/nekobox_setup32.exe
       - name: Build Installer with NSIS for windows-arm64
         shell: cmd
-        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && github.event.inputs.source != 'y'
+        if: matrix.platform == 'windows-11-arm' && matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windows-arm64" windows_installer.nsi
