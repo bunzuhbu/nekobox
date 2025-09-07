@@ -2429,10 +2429,11 @@ void MainWindow::CheckUpdate() {
 
 #ifdef Q_OS_WIN32
 #  ifdef Q_OS_WIN64
-    if (WinVersion::IsBuildNumGreaterOrEqual(BuildNumber::Windows_10_1809))
+#    ifndef USE_LEGACY_QT
         search = "windows64";
-    else
+#    else
 	    search = "windowslegacy64";
+#    endif
 #  else
 	search = "windows32";
 #  endif
