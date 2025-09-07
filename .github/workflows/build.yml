@@ -223,7 +223,7 @@ jobs:
           ./script/deploy_windows.sh ${{ matrix.target }}
       - name: Build Installer with NSIS for windows64
         shell: cmd
-        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
+        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis windows_installer.nsi
