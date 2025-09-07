@@ -54,6 +54,7 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [throneproj](https://github.com/throneproj/Throne)
 - [MinGW](https://www.mingw-w64.org)
 - [MSVC](https://visualstudio.microsoft.com/)
+- [go](https://go.dev/)
 - [nekoray](https://github.com/MatsuriDayo/nekoray)
 - and many others...
 
