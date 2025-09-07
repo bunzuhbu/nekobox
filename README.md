@@ -45,8 +45,9 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [simple-protobuf](https://github.com/tonda-kriz/simple-protobuf)
 - [quickjs](https://quickjs-ng.github.io/quickjs)
 - [qrcodegen](https://www.nayuki.io/page/qr-code-generator-library)
-- [Setup MinGW Github Action](bwoodsend/setup-winlibs-action)
+- [Setup MinGW Github Action](https://github.com/bwoodsend/setup-winlibs-action)
 - [Setup MSVC Github Action](https://github.com/ilammy/msvc-dev-cmd)
+- [Setup Ninja Github Action](https://github.com/seanmiddleditch/gha-setup-ninja)
 - [Setup Qt Github Action](https://github.com/jurplel/install-qt-action)
 
 ## FAQ
