@@ -156,8 +156,16 @@ jobs:
           architecture: ${{ matrix.target }}
 
       - name: Install MSVC compiler
-        if: matrix.qt_version != '6.2.12' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
+        if: matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
         uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install MSVC compiler
+        if: matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: arm64
      #   uses: TheMrMilchmann/setup-msvc-dev@v4
      #   with:
      #     arch: x64
