@@ -236,8 +236,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->menubar->setVisible(false);
 #ifndef SKIP_UPDATE_BUTTON
     connect(ui->toolButton_update, &QToolButton::clicked, this, [=,this] { runOnNewThread([=,this] { CheckUpdate(); }); });
-    if (!QFile::exists(QApplication::applicationDirPath() + "/updater") && !QFile::exists(QApplication::applicationDirPath() + "/updater.exe"))
-    {
+    if ((!QFile::exists(QApplication::applicationDirPath() + "/updater")
+      && !QFile::exists(QApplication::applicationDirPath() + "/updater.exe"))
+#ifndef SKIP_JS_UPDATER
+      || !QFile::exists(QApplication::applicationDirPath() + "/check_new_release.js")
+#endif
+    ) {
 #endif
         ui->toolButton_update->hide();
 #ifndef SKIP_UPDATE_BUTTON
@@ -2452,7 +2456,7 @@ void MainWindow::CheckUpdate() {
     BlockingQueue<QueuePart> bQueue;
     QString updater_js = "";
     {
-        QFile file(QApplication::applicationDirPath() + "/updater.js");
+        QFile file(QApplication::applicationDirPath() + "/check_new_release.js");
 
         if (!file.exists()) {
             goto skip1;
@@ -2527,8 +2531,6 @@ void MainWindow::CheckUpdate() {
         });
         return;
     }
-
-
 #ifdef SKIP_JS_UPDATER
     {
         auto resp = NetworkRequestHelper::HttpGet("https://api.github.com/repos/qr243vbi/nekobox/releases");

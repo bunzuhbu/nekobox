@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+export CURDIR=$PWD
 
 UNAME="$(uname -m)"
 
@@ -69,5 +70,6 @@ rm -r ./usr/lib
 mv ./usr/lib2 ./usr/lib
 
 # fix lib rpath
+cp $CURDIR/check_new_release.js $DEST
 cd $DEST
 patchelf --set-rpath '$ORIGIN/usr/lib' ./nekobox

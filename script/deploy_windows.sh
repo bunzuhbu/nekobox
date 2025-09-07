@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+export CURDIR=$PWD
 
 source script/env_deploy.sh
 if [[ $1 == "new-x86_64" || -z $1 ]]; then
@@ -34,6 +35,7 @@ mv nekobox.pdb $DEST
 curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list"
 
 #### copy exe ####
+cp $CURDIR/check_new_release.js $DEST
 cp $BUILD/nekobox.exe $DEST
 
 cd download-artifact
