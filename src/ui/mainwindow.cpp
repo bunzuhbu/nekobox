@@ -2429,11 +2429,19 @@ void MainWindow::CheckUpdate() {
 
 #ifdef Q_OS_WIN32
 #  ifdef Q_OS_WIN64
+#   ifdef Q_PROCESSOR_X86_64
 #    ifndef USE_LEGACY_QT
         search = "windows64";
 #    else
 	    search = "windowslegacy64";
 #    endif
+#   else
+#    ifndef USE_LEGACY_QT
+        search = "windows-arm64";
+#    else
+	    search = "windowslegacy-arm64";
+#    endif
+#   endif
 #  else
 	search = "windows32";
 #  endif

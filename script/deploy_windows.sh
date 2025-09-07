@@ -6,6 +6,9 @@ source script/env_deploy.sh
 if [[ $1 == "new-x86_64" || -z $1 ]]; then
   ARCH="windows-amd64"
   DEST=$DEPLOYMENT/windows64
+else if [[ $1 == "new-arm64" || -z $1 ]]; then
+  ARCH="windows-arm64"
+  DEST=$DEPLOYMENT/windows-arm64
 else if [[ $1 == 'i686' ]]; then
   ARCH="windowslegacy-386"
   DEST=$DEPLOYMENT/windows32
@@ -15,7 +18,7 @@ else if [[ $1 == 'x86_64' ]]; then
 else if [[ $1 == "arm64" ]]; then
   ARCH="windowslegacy-arm64"
   DEST=$DEPLOYMENT/windowslegacy-arm64
-fi; fi; fi; fi;
+fi; fi; fi; fi; fi;
 
 rm -rf $DEST
 mkdir -p $DEST

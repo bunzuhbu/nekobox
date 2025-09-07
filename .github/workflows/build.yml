@@ -33,6 +33,9 @@ jobs:
           - cross_os: windows
             cross_arch: amd64
             go_version: "1.25.0"
+          - cross_os: windows
+            cross_arch: arm64
+            go_version: "1.25.0"
           - cross_os: windowslegacy
             cross_arch: 386
             go_version: "1.25.0"
@@ -129,6 +132,9 @@ jobs:
             qt_version: "6.9.0"
             target: x86_64
           - platform: windows-latest
+            qt_version: "6.9.0"
+            target: arm64
+          - platform: windows-latest
             qt_version: "6.2.12"
             target: i686
       fail-fast: false
@@ -193,10 +199,10 @@ jobs:
           mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
-          cmake -GNinja "-DSKIP_UPDATE_BUTTON=${SKIP_UPDATE_BUTTON}" -DCMAKE_BUILD_TYPE=Debug ..
+          cmake -GNinja "-DSKIP_UPDATE_BUTTON=${SKIP_UPDATE_BUTTON}" -DCMAKE_BUILD_TYPE=Release ..
           ninja -j2
           cd ..
-          ./script/deploy_windows.sh
+          ./script/deploy_windows.sh new-${{ matrix.target }}
       - name: Legacy Windows - Generate MakeFile and Build
         shell: bash
         if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && github.event.inputs.source != 'y'
@@ -229,6 +235,13 @@ jobs:
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windows32"  windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup32.exe
+      - name: Build Installer with NSIS for windows-arm64
+        shell: cmd
+        if: matrix.platform == 'windows-latest' && matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && github.event.inputs.source != 'y'
+        run: |
+          cp .\script\windows_installer.nsi .
+          makensis "/DDIRECTORY=windows-arm64" windows_installer.nsi
+          install -D nekobox_setup.exe deployment/nekobox_setup_arm64.exe
       - name: Build Installer with NSIS for windowslegacy64
         shell: cmd
         if: matrix.platform == 'windows-latest' && matrix.qt_version == '6.2.12' && matrix.target != 'i686' && github.event.inputs.source != 'y'
@@ -324,6 +337,13 @@ jobs:
             mv windows64 nekobox
             zip -9 -r $version_standalone-windows64.zip nekobox
             rm -rf nekobox windows64
+          fi
+          ####
+          if [[ -f nekobox_setup_arm64.exe ]]; then
+            mv nekobox_setup_arm64.exe $version_standalone-windows-arm64-installer.exe
+            mv windows-arm64 nekobox
+            zip -9 -r $version_standalone-windows-arm64.zip nekobox
+            rm -rf nekobox windows-arm64
           fi
           ####
           if [[ -f nekobox_setup32.exe ]]; then
