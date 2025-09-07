@@ -176,9 +176,9 @@ jobs:
   #      with:
  #         arch: x64_arm
 
- #     - name: Install ninja-build tool
- #       if: matrix.qt_version != '6.2.12' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
-  #      uses: seanmiddleditch/gha-setup-ninja@v6
+      - name: Install ninja-build tool
+        if: matrix.qt_version != '6.2.12' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
+        uses: seanmiddleditch/gha-setup-ninja@v6
 
       - name: Download Artifacts
         if: github.event.inputs.source != 'y'
@@ -214,7 +214,7 @@ jobs:
           mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
-          cmake "-DSKIP_UPDATE_BUTTON=${SKIP_UPDATE_BUTTON}" -DCMAKE_BUILD_TYPE=Release ..
+          cmake -GNinja "-DSKIP_UPDATE_BUTTON=${SKIP_UPDATE_BUTTON}" -DCMAKE_BUILD_TYPE=Release ..
           ninja -j2
           cd ..
           ./script/deploy_windows.sh new-${{ matrix.target }}
