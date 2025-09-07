@@ -50,6 +50,8 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [Setup Ninja Github Action](https://github.com/seanmiddleditch/gha-setup-ninja)
 - [Cache Apt Pkgs Github Action](https://github.com/awalsh128/cache-apt-pkgs-action)
 - [Setup Qt Github Action](https://github.com/jurplel/install-qt-action)
+- [linuxdeploy](https://github.com/linuxdeploy/linuxdeploy)
+- [throneproj](https://github.com/throneproj/Throne)
 
 ## FAQ
 **Why does my Anti-Virus detect NekoBox as malware?** <br/>
