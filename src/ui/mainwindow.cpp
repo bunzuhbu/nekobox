@@ -2352,9 +2352,9 @@ bool isNewer(QString assetName) {
 
     if (parts.size() < 3 || currentParts.size() < 3)
     {
-        MW_show_log("Version strings seem to be invalid" + QString(NKR_VERSION) + " and " + version);
         return false;
     }
+
     std::vector<int> verNums;
     std::vector<int> currNums;
     // add base version first

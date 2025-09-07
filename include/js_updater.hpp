@@ -410,6 +410,7 @@ bool jsUpdater(BlockingQueue<QueuePart> * window,
     JS_SetPropertyStr(ctx, global_obj, "HTTPResponse", js_point_init(ctx));
     JS_SetPropertyStr(ctx, global_obj, "window", JS_NewBigUint64(ctx, pointer));
     JS_SetPropertyStr(ctx, global_obj, "search", JS_NewString(ctx, search->toUtf8().constData()));
+    JS_SetPropertyStr(ctx, global_obj, "archive_name", JS_NewString(ctx, "nekobox.zip"));
     JS_SetPropertyFunctionList(ctx, global_obj, js_global_funcs, countof(js_global_funcs));
 
     // Run a JavaScript script to test the Point class
@@ -462,6 +463,7 @@ bool jsUpdater(BlockingQueue<QueuePart> * window,
     getString(ctx, global_obj, "release_note", release_note);
     getString(ctx, global_obj, "note_pre_release", note_pre_release);
     getString(ctx, global_obj, "archive_name", archive_name);
+    getString(ctx, global_obj, "search", search);
 
     /*
      assets_name = JS_ToCString(ctx, );
