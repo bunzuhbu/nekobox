@@ -269,10 +269,10 @@ static std::set<size_t> MainWindowSet;
 static JSValue is_window(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     // Check if an argument is provided
     if (argc > 0) {
-        size_t win;
+        uint64_t win;
         JS_ToBigUint64(ctx, &win, argv[0]);
         bool iswin = false;
-        if (MainWindowSet.contains(win)){
+        if (MainWindowSet.contains((size_t)win)){
             iswin = true;
         }
         return JS_NewBool(ctx, iswin);
@@ -285,12 +285,12 @@ static JSValue is_window(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 static JSValue print_log(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     // Check if an argument is provided
     if (argc > 1) {
-        size_t win;
+        uint64_t win;
         JS_ToBigUint64(ctx, &win, argv[0]);
-        if (MainWindowSet.contains(win)){
+        if (MainWindowSet.contains((size_t)win)){
             const char * arg = JS_ToCString(ctx, argv[1]);
             if (arg != nullptr){
-                ((BlockingQueue<QueuePart>*)reinterpret_cast<void*>(win))->push(QueuePart{
+                ((BlockingQueue<QueuePart>*)reinterpret_cast<void*>((size_t)win))->push(QueuePart{
                     "",
                     arg,
                     1
@@ -315,18 +315,18 @@ static JSValue show_message(JSContext *ctx,
             title = "Updater";
         }
         message = JS_ToCString(ctx, argv[1]);
-        size_t pointer;
-        JS_ToBigUint64(ctx, (uint64_t*)&pointer, argv[0]);
-        if (MainWindowSet.contains(pointer)){
+        uint64_t pointer;
+        JS_ToBigUint64(ctx, &pointer, argv[0]);
+        if (MainWindowSet.contains((size_t)pointer)){
             if (isWarning){
-                ((BlockingQueue<QueuePart>*)reinterpret_cast<void*>(pointer))->push(QueuePart{
+                ((BlockingQueue<QueuePart>*)reinterpret_cast<void*>((size_t)pointer))->push(QueuePart{
                     title,
                     message,
                     2
                 });
       //          window->showMessageBoxWarning(title, message);
             } else {
-                ((BlockingQueue<QueuePart>*)reinterpret_cast<void*>(pointer))->push(QueuePart{
+                ((BlockingQueue<QueuePart>*)reinterpret_cast<void*>((size_t)pointer))->push(QueuePart{
                     title,
                     message,
                     3
