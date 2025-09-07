@@ -56,6 +56,8 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [MSVC](https://visualstudio.microsoft.com/)
 - [go](https://go.dev/)
 - [nekoray](https://github.com/MatsuriDayo/nekoray)
+- [Open Build Service](https://openbuildservice.org/)
+- [Github](https://github.com)
 - and many others...
 
 ## FAQ
