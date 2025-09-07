@@ -2476,48 +2476,46 @@ void MainWindow::CheckUpdate() {
                                   QString * release_url,
                                   QString * release_note,
                                   QString * note_pre_release){
-    if (jsUpdater(
-        bQueue,
-        updater_js,
-        search,
-        assets_version,
-        release_download_url,
-        release_url,
-        release_note,
-        note_pre_release
-    )) {
-        *search = "released";
-    }
-    bQueue->push(QueuePart{"", "", 0});
-    }, &bQueue,
-    &updater_js,
-    &search,
-    &assets_version,
-    &release_download_url,
-    &release_url,
-    &release_note,
-    &note_pre_release);
+            jsUpdater(
+                bQueue,
+                updater_js,
+                search,
+                assets_version,
+                release_download_url,
+                release_url,
+                release_note,
+                note_pre_release
+            );
+            bQueue->push(QueuePart{"", "", 0});
+        },
+        &bQueue,
+        &updater_js,
+        &search,
+        &assets_version,
+        &release_download_url,
+        &release_url,
+        &release_note,
+        &note_pre_release);
 
-    do {
-        QueuePart part = bQueue.pop();
-        auto type = part.type;
-
-        if (type == 0){
-            break;
-        } else if (type == 1){
-            auto & title = part.title;
-            auto & message = part.message;
-            if (title.isEmpty()){
-                MW_show_log(message);
-            } else {
-                MW_show_log("["+title+"]: "+message);
+        do {
+            QueuePart part = bQueue.pop();
+            auto type = part.type;
+            if (type == 0){
+                break;
+            } else if (type == 1){
+                auto & title = part.title;
+                auto & message = part.message;
+                if (title.isEmpty()){
+                    MW_show_log(message);
+                } else {
+                    MW_show_log("["+title+"]: "+message);
+                }
+            } else if (type == 2){
+                runOnUiThread([=,this] { MessageBoxWarning(part.title, part.message); });
+            } else if (type == 3){
+                runOnUiThread([=,this] { MessageBoxInfo(part.title, part.message); });
             }
-        } else if (type == 2){
-            runOnUiThread([=,this] { MessageBoxWarning(part.title, part.message); });
-        } else if (type == 3){
-            runOnUiThread([=,this] { MessageBoxInfo(part.title, part.message); });
-        }
-    } while (true);
+        } while (true);
         updater.join();
     }
 #endif
@@ -2530,7 +2528,9 @@ void MainWindow::CheckUpdate() {
         return;
     }
 
-    if (search != "released"){
+
+#ifdef SKIP_JS_UPDATER
+    {
         auto resp = NetworkRequestHelper::HttpGet("https://api.github.com/repos/qr243vbi/nekobox/releases");
         if (!resp.error.isEmpty()) {
             runOnUiThread([=,this] {
@@ -2558,6 +2558,7 @@ void MainWindow::CheckUpdate() {
             if (exitFlag) break;
         }
     }
+#endif
 
     bool is_newer = !assets_version.isEmpty();
     if (is_newer){
