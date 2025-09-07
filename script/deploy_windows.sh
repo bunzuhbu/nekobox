@@ -21,15 +21,17 @@ rm -rf $DEST
 mkdir -p $DEST
 
 #### get the pdb ####
+if [[ "$COMPILER" == "MinGW" ]];
 curl -fLJO https://github.com/rainers/cv2pdb/releases/download/v0.53/cv2pdb-0.53.zip
 7z x cv2pdb-0.53.zip -ocv2pdb
-./cv2pdb/cv2pdb64.exe ./build/nekobox.exe ./tmp.exe ./nekobox.pdb ||:
-rm -rf cv2pdb-0.53.zip cv2pdb ||:
+./cv2pdb/cv2pdb64.exe ./build/nekobox.exe ./tmp.exe ./nekobox.pdb
+rm -rf cv2pdb-0.53.zip cv2pdb
 cd build
-strip -s nekobox.exe ||:
+strip -s nekobox.exe
 cd ..
 rm tmp.exe ||:
-mv nekobox.pdb $DEST ||:
+mv nekobox.pdb $DEST
+fi
 
 #### download srslist ####
 curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list" ||:
@@ -37,6 +39,13 @@ curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprof
 #### copy exe ####
 cp $CURDIR/check_new_release.js $DEST
 cp $BUILD/nekobox.exe $DEST
+
+if [[ "$COMPILER" != "MinGW" ]];
+pushd $DEST
+windeployqt nekobox.exe --no-translations --no-system-d3d-compiler --no-compiler-runtime --no-opengl-sw --verbose 2 ||:
+rm -rf dxcompiler.dll dxil.dll ||:
+popd
+fi
 
 cd download-artifact
 ls
