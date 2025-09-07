@@ -150,16 +150,16 @@ jobs:
           submodules: "recursive"
 
       - name: Install mingw
-        if: matrix.qt_version != '6.9.0' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
+        if: matrix.qt_version == '6.2.12' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
         uses: bwoodsend/setup-winlibs-action@v1.15
         with:
           architecture: ${{ matrix.target }}
 
-  #    - name: Install MSVC compiler
-  #      if: matrix.qt_version != '6.2.12' && matrix.platform == 'windows-latest' && github.event.inputs.source != 'y'
-  #      uses: ilammy/msvc-dev-cmd@v1.13.0
-  #      with:
-  #        architecture: ${{ matrix.target }}
+      - name: Install MSVC compiler
+        if: matrix.qt_version != '6.2.12' && (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
+        uses: TheMrMilchmann/setup-msvc-dev@v4
+        with:
+          arch: x64
 
 #      - name: Install ninja-build tool
 #        if: matrix.qt_version != '6.2.12' && matrix.platform == 'windows-latest' && github.event.inputs.source != 'y'
