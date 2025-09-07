@@ -42,7 +42,7 @@ cp $BUILD/nekobox.exe $DEST
 
 if [[ "$COMPILER" != "MinGW" ]];
 pushd $DEST
-windeployqt nekobox.exe --no-translations --no-system-d3d-compiler --no-compiler-runtime --no-opengl-sw --verbose 2 ||:
+windeployqt nekobox.exe --no-translations --no-system-d3d-compiler --no-compiler-runtime --no-opengl-sw --verbose 2
 rm -rf dxcompiler.dll dxil.dll ||:
 popd
 fi
