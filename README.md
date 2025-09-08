@@ -59,6 +59,8 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [Open Build Service](https://openbuildservice.org/)
 - [Github](https://github.com)
 - [cv2pdb](https://github.com/rainers/cv2pdb)
+- [cmake](https://gitlab.kitware.com/cmake/cmake)
+- [ninja-build](https://ninja-build.org/)
 - and many others...
 
 ## FAQ
