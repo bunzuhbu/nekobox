@@ -15,7 +15,7 @@
         <file>icon/material/delete.png</file>
         <file>icon/material/swap-horizontal.png</file>
     </qresource>
-    <qresource prefix="/nekobox">
+    <qresource prefix="/systray">
         <file alias="On.png">public/nekobox.png</file>
         <file alias="Dns.png">public/Dns.png</file>
         <file alias="Off.png">public/Off.png</file>
