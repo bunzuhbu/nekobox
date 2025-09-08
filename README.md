@@ -61,6 +61,7 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [cv2pdb](https://github.com/rainers/cv2pdb)
 - [cmake](https://gitlab.kitware.com/cmake/cmake)
 - [ninja-build](https://ninja-build.org/)
+- [codeclysm/extract](https://github.com/codeclysm/extract)
 - and many others...
 
 ## FAQ
