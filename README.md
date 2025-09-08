@@ -58,6 +58,7 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [nekoray](https://github.com/MatsuriDayo/nekoray)
 - [Open Build Service](https://openbuildservice.org/)
 - [Github](https://github.com)
+- [cv2pdb](https://github.com/rainers/cv2pdb)
 - and many others...
 
 ## FAQ
