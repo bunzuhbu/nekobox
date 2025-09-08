@@ -16,7 +16,7 @@
         <file>icon/material/swap-horizontal.png</file>
     </qresource>
     <qresource prefix="/nekobox">
-        <file alias="On.png">public/On.png</file>
+        <file alias="On.png">public/nekobox.png</file>
         <file alias="Dns.png">public/Dns.png</file>
         <file alias="Off.png">public/Off.png</file>
         <file alias="Proxy.png">public/Proxy.png</file>
