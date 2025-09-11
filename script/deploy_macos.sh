@@ -21,7 +21,7 @@ cd ../..
 mv deployment/macos-$ARCH/* $BUILD/nekobox.app/Contents/MacOS
 
 #### copy srslist ####
-cp download-artifact/*public*public*/srslist $BUILD/nekobox.app/Contents/MacOS/srslist
+cp download-artifact/*public*/srslist $BUILD/nekobox.app/Contents/MacOS/srslist
 #### deploy qt & DLL runtime => .app ####
 pushd $BUILD
 macdeployqt nekobox.app -verbose=3
