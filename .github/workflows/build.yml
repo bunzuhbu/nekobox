@@ -96,8 +96,6 @@ jobs:
         shell: bash
         run: |
           bash -x ./script/deploy_vendor.sh
-          curl -fLso ./deployment/srslist.h "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/srslist.h"
-          curl -fLso ./deployment/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list" ||:
       - name: Tar files
         if: ( matrix.cross_os == 'public' || github.event.inputs.source != 'y' ) && steps.cache-common.outputs.cache-hit != 'true'
         run: tar czvf artifacts.tgz ./deployment
