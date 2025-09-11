@@ -339,7 +339,8 @@ jobs:
           mv deployment/Sagernet.SingBox.Version.txt SingBox.Version
           mv -T deployment/vendor core/server/vendor
           mv deployment/gen/*.go core/server/gen/
-          git add -f core/server/gen/*.go core/server/vendor SingBox.Version
+          mv deployment/srslist* ./
+          git add -f srslist* core/server/gen/*.go core/server/vendor SingBox.Version
           ##
           git ls-files --recurse-submodules | tar --transform="s,^,nekobox-unified-source-${{ github.event.inputs.tag }}/,S" -c --xz -f "deployment/nekobox-unified-source-${{ github.event.inputs.tag }}.tar.xz" -T-
           ##
