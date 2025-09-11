@@ -23,9 +23,6 @@ cp $BUILD/nekobox $DEST
 #### copy nekobox.png ####
 cp ./res/public/nekobox.png $DEST
 
-#### download srslist ####
-curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list"
-
 cd download-artifact
 cd *linux-$ARCH
 tar xvzf artifacts.tgz -C ../../

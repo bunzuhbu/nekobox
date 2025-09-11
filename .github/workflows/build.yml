@@ -96,6 +96,8 @@ jobs:
         shell: bash
         run: |
           bash -x ./script/deploy_vendor.sh
+          curl -fLso ./deployment/srslist.h "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/srslist.h"
+          curl -fLso ./deployment/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list" ||:
       - name: Tar files
         if: ( matrix.cross_os == 'public' || github.event.inputs.source != 'y' ) && steps.cache-common.outputs.cache-hit != 'true'
         run: tar czvf artifacts.tgz ./deployment
@@ -214,6 +216,7 @@ jobs:
           mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
+          cp ../download-artifact/srslist.h ./
           cmake -GNinja "-DSKIP_UPDATE_BUTTON=${SKIP_UPDATE_BUTTON}" -DCMAKE_BUILD_TYPE=Release ..
           ninja -j2
           cd ..
@@ -231,6 +234,7 @@ jobs:
           mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
+          cp ../download-artifact/srslist.h ./
           cmake -GNinja "-DSKIP_UPDATE_BUTTON=${SKIP_UPDATE_BUTTON}" -DUSE_LEGACY_QT=ON -DCMAKE_CXX_FLAGS="-static" -DCMAKE_BUILD_TYPE=Debug ..
           ninja -j2
           cd ..
@@ -279,6 +283,7 @@ jobs:
           mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
+          cp ../download-artifact/srslist.h ./
           cmake -GNinja -DSKIP_UPDATE_BUTTON="${SKIP_UPDATE_BUTTON}" -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" ..
           ninja
           cd ..
@@ -289,6 +294,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          cp ../download-artifact/srslist.h ./
           cmake -GNinja -DSKIP_UPDATE_BUTTON=ON -DCMAKE_BUILD_TYPE=Release -DNKR_PACKAGE_MACOS=1 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=${{ matrix.target }} ..
           ninja
           cd ..

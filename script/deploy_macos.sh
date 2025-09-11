@@ -20,9 +20,8 @@ cd ../..
 
 mv deployment/macos-$ARCH/* $BUILD/nekobox.app/Contents/MacOS
 
-#### download srslist ####
-curl -fLso $BUILD/nekobox.app/Contents/MacOS/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list"
-
+#### copy srslist ####
+cp download-artifact/srslist $BUILD/nekobox.app/Contents/MacOS/srslist
 #### deploy qt & DLL runtime => .app ####
 pushd $BUILD
 macdeployqt nekobox.app -verbose=3

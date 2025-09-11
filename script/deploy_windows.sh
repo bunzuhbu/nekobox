@@ -37,8 +37,8 @@ rm tmp.exe ||:
 mv nekobox.pdb $DEST
 fi
 
-#### download srslist ####
-curl -fLso $DEST/srslist "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list" ||:
+#### copy srslist ####
+cp download-artifact/srslist $DEST/srslist
 
 #### copy exe ####
 cp $CURDIR/check_new_release.js $DEST
