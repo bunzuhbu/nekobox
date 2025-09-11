@@ -206,15 +206,22 @@ jobs:
           cache: true
           cache-key-prefix: QtCache-${{ matrix.platform }}-${{ matrix.target }}
       # ========================================================================================================= Generate MakeFile and Build
+      - name: Download Srslist
+        shell: bash
+        if: github.event.inputs.source != 'y'
+        run: |
+          curl -fLso "srslist.h" "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/srslist.h"
+          curl -fLso "srslist" "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/list"
+          mkdir build
+          mv "srslist.h" build
+          
       - name: Windows - Generate MakeFile and Build
         shell: bash
         if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
         run: |
           export CMAKE_PREFIX_PATH=$PWD/qt6/build/lib/cmake
-          mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
-          cp ../download-artifact/*-public-public/deployment/srslist.h ./
           cmake -GNinja "-DSKIP_UPDATE_BUTTON=${SKIP_UPDATE_BUTTON}" -DCMAKE_BUILD_TYPE=Release ..
           ninja -j2
           cd ..
@@ -229,10 +236,8 @@ jobs:
           7z x openssl.7z
           export CMAKE_PREFIX_PATH=$PWD/Qt/lib/cmake
           export OPENSSL_ROOT_DIR=$PWD/openssl
-          mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
-          cp ../download-artifact/*-public-public/deployment/srslist.h ./
           cmake -GNinja "-DSKIP_UPDATE_BUTTON=${SKIP_UPDATE_BUTTON}" -DUSE_LEGACY_QT=ON -DCMAKE_CXX_FLAGS="-static" -DCMAKE_BUILD_TYPE=Debug ..
           ninja -j2
           cd ..
@@ -278,10 +283,8 @@ jobs:
         shell: bash
         if: contains( matrix.platform, 'ubuntu' ) && github.event.inputs.source != 'y'
         run: |
-          mkdir build
           cd build
           if [[ ${{ github.event.inputs.updater }}es == yes ]]; then export SKIP_UPDATE_BUTTON=ON; else export SKIP_UPDATE_BUTTON=OFF; fi
-          cp ../download-artifact/*-public-public/deployment/srslist.h ./
           cmake -GNinja -DSKIP_UPDATE_BUTTON="${SKIP_UPDATE_BUTTON}" -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" ..
           ninja
           cd ..
@@ -290,11 +293,7 @@ jobs:
         shell: bash
         if: matrix.platform == 'macos-latest' && github.event.inputs.source != 'y'
         run: |
-          mkdir build
           cd build
-          ls ../download-artifact/*-public-public
-          ls ../download-artifact/*-public-public/deployment
-          cp ../download-artifact/*-public-public/deployment/srslist.h ./
           cmake -GNinja -DSKIP_UPDATE_BUTTON=ON -DCMAKE_BUILD_TYPE=Release -DNKR_PACKAGE_MACOS=1 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=${{ matrix.target }} ..
           ninja
           cd ..
