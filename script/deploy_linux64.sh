@@ -18,7 +18,7 @@ rm -rf $DEST
 mkdir -p $DEST
 
 #### copy srslist ####
-cp download-artifact/*-public-public/deployment/srslist $DEST/srslist
+cp srslist $DEST/srslist
 
 #### copy binary ####
 cp $BUILD/nekobox $DEST
