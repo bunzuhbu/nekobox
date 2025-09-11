@@ -38,7 +38,7 @@ mv nekobox.pdb $DEST
 fi
 
 #### copy srslist ####
-cp download-artifact/srslist $DEST/srslist
+cp download-artifact/*public*public*/srslist $DEST/srslist
 
 #### copy exe ####
 cp $CURDIR/check_new_release.js $DEST
