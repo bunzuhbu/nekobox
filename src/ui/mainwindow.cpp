@@ -942,7 +942,7 @@ void MainWindow::toggle_system_proxy() {
     }
 }
 
-bool MainWindow::get_elevated_permissions(int reason) {
+bool MainWindow::get_elevated_permissions(int reason, void * pointer) {
     if (Configs::dataStore->disable_privilege_req)
     {
         MW_show_log(tr("User opted for no privilege req, some features may not work"));
@@ -958,21 +958,17 @@ bool MainWindow::get_elevated_permissions(int reason) {
     if (n == QMessageBox::Yes) {
         StopVPNProcess();
         core_process->elevateCoreProcessProgram();
-        /*runOnNewThread([=,this]
+  //      runOnNewThread([=,this]
         {
-            auto chownArgs = QString("root:root " + Configs::FindCoreRealPath());
-            auto ret = Linux_Run_Command("chown", chownArgs);
-            if (ret != 0) {
-                MW_show_log(QString("Failed to run chown %1 code is %2").arg(chownArgs).arg(ret));
+            if (reason == 3){
+                bool save = false;
+                if (pointer != nullptr){
+                    save = *((bool*) pointer);
+                }
+                set_spmode_vpn(true, save, false);
             }
-            auto chmodArgs = QString("u+s " + Configs::FindCoreRealPath());
-            ret = Linux_Run_Command("chmod", chmodArgs);
-            if (ret == 0) {
-                StopVPNProcess();
-            } else {
-                MW_show_log(QString("Failed to run chmod %1").arg(chmodArgs));
-            }
-        });*/
+        }
+  //      );
         return false;
     }
 #endif
@@ -1008,13 +1004,13 @@ bool MainWindow::get_elevated_permissions(int reason) {
     return false;
 }
 
-void MainWindow::set_spmode_vpn(bool enable, bool save) {
+void MainWindow::set_spmode_vpn(bool enable, bool save, bool requestAdmin) {
     if (enable == Configs::dataStore->spmode_vpn) return;
 
-    if (enable) {
+    if (enable && requestAdmin) {
         bool requestPermission = !Configs::IsAdmin();
         if (requestPermission) {
-            if (!get_elevated_permissions()) {
+            if (!get_elevated_permissions(3 /*set vpn mode*/, (void*)&save)) {
                 refresh_status();
                 return;
             }
@@ -1030,9 +1026,10 @@ void MainWindow::set_spmode_vpn(bool enable, bool save) {
     }
 
     Configs::dataStore->spmode_vpn = enable;
-    refresh_status();
-
-    if (Configs::dataStore->started_id >= 0) profile_start(Configs::dataStore->started_id);
+    if (requestAdmin){
+        refresh_status();
+        if (Configs::dataStore->started_id >= 0) profile_start(Configs::dataStore->started_id);
+    }
 }
 
 void MainWindow::UpdateDataView(bool force)

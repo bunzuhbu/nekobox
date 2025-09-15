@@ -70,6 +70,9 @@ Thumbs.db
 *.exe
 
 # Custom
+srslist.h
+srslist
+
 /nekobox
 /build
 CMakeLists.txt.user*
@@ -87,3 +90,4 @@ CMakeLists.txt.user*
 out
 /libs
 /core/server/vendor
+/core/server/gen/*.go
