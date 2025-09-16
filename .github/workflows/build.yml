@@ -114,10 +114,10 @@ jobs:
       matrix:
         include:
           - platform: ubuntu-24.04
-            qt_version: "6.9.0"
+            qt_version: "6.9.2"
             target: amd64
           - platform: ubuntu-24.04-arm
-            qt_version: "6.9.0"
+            qt_version: "6.9.2"
             target: arm64
           - platform: macos-latest
             qt_version: "6.9.0"
@@ -129,10 +129,10 @@ jobs:
             qt_version: "6.2.12"
             target: x86_64
           - platform: windows-2022
-            qt_version: "6.9.0"
+            qt_version: "6.9.2"
             target: x86_64
           - platform: windows-11-arm
-            qt_version: "6.9.0"
+            qt_version: "6.9.2"
             target: arm64
           - platform: windows-2022
             qt_version: "6.2.12"
