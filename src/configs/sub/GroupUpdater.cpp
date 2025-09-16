@@ -609,16 +609,19 @@ namespace Subscription {
                         if (headers.is_mapping()) {
                             for (auto header: headers.as_map()) {
                                 if (Node2QString(header.first).toLower() == "host") {
-                                    bean->stream->host = Node2QString(header.second[0]);
+                                    bean->stream->host = Node2QString(header.second);
                                     break;
                                 }
                             }
                         }
                         auto paths = tcp_http["path"];
-                        for (auto path: paths) {
-                            bean->stream->path = Node2QString(path);
-                            break;
-                        }
+                        if (paths.is_string())
+                            bean->stream->path = Node2QString(paths);
+                        else if (paths.is_sequence())
+                            for (auto path: paths) {
+                                bean->stream->path = Node2QString(path);
+                                break;
+                            }
                     }
                 } else if (type == "anytls") {
                     needFix = true;
