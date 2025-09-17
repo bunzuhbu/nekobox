@@ -247,6 +247,7 @@ jobs:
         shell: cmd
         if: (matrix.platform == 'windows-2022' || matrix.platform == 'windows-11-arm') && matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && github.event.inputs.source != 'y'
         run: |
+          choco install nsis
           cp .\script\windows_installer.nsi .
           makensis windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup.exe
