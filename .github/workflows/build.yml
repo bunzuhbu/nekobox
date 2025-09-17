@@ -250,28 +250,28 @@ jobs:
           export COMPILER="MinGW"
           ./script/deploy_windows.sh ${{ matrix.target }}
       - name: Build Installer with NSIS for windows64
-        shell: bash
+        shell: cmd
         if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup.exe
       - name: Build Installer with NSIS for windows32
-        shell: bash
+        shell: cmd
         if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version == '6.2.12' && matrix.target == 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windows32"  windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup32.exe
       - name: Build Installer with NSIS for windows-arm64
-        shell: bash
+        shell: cmd
         if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windows-arm64" windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup_arm64.exe
       - name: Build Installer with NSIS for windowslegacy64
-        shell: bash
+        shell: cmd
         if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version == '6.2.12' && matrix.target != 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
