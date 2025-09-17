@@ -254,14 +254,14 @@ jobs:
         if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
-          makensis windows_installer.nsi
+          C:\ProgramData\chocolatey\lib\nsis\tools\makensis.exe windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup.exe
       - name: Build Installer with NSIS for windows32
         shell: cmd
         if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version == '6.2.12' && matrix.target == 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
-          makensis "/DDIRECTORY=windows32"  windows_installer.nsi
+          C:\ProgramData\chocolatey\lib\nsis\tools\makensis.exe "/DDIRECTORY=windows32"  windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup32.exe
       - name: Build Installer with NSIS for windows-arm64
         shell: cmd
@@ -275,7 +275,7 @@ jobs:
         if: (matrix.platform == 'windows-latest' || matrix.platform == 'windows-11-arm') && matrix.qt_version == '6.2.12' && matrix.target != 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
-          makensis "/DDIRECTORY=windowslegacy64" windows_installer.nsi
+          C:\ProgramData\chocolatey\lib\nsis\tools\makensis.exe "/DDIRECTORY=windowslegacy64" windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup_legacy.exe
 
       - name: Linux - Install apt dependencies
