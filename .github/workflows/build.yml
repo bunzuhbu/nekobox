@@ -134,7 +134,7 @@ jobs:
           - platform: windows-11-arm
             qt_version: "6.9.2"
             target: arm64
-          - platform: windows-latest
+          - platform: windows-2022
             qt_version: "6.2.12"
             target: i686
       fail-fast: false
@@ -261,7 +261,7 @@ jobs:
         if: contains( matrix.cross_os, 'windows' ) && matrix.qt_version == '6.2.12' && matrix.target == 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
-          "C:\Program Files\NSIS\makensis.exe" "/DDIRECTORY=windows32"  windows_installer.nsi
+          makensis "/DDIRECTORY=windows32"  windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup32.exe
       - name: Build Installer with NSIS for windows-arm64
         shell: cmd
