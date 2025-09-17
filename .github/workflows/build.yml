@@ -149,6 +149,12 @@ jobs:
         with:
           submodules: "recursive"
 
+      - name: Install Nsis
+        if: matrix.platform == 'windows-2022' && github.event.inputs.source != 'y'
+        uses: ConorMacBride/install-package@v1
+        with:
+          choco: nsis
+
       - name: Install mingw
         if: matrix.qt_version == '6.2.12' && (matrix.platform == 'windows-2022' || matrix.platform == 'windows-11-arm') && github.event.inputs.source != 'y'
         uses: bwoodsend/setup-winlibs-action@v1.15
