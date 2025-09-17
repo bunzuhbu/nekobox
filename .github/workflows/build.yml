@@ -150,25 +150,25 @@ jobs:
           submodules: "recursive"
 
       - name: Install Nsis
-        if: contains( matrix.cross_os, 'windows-latest' ) && github.event.inputs.source != 'y'
+        if: contains( matrix.platform, 'windows-latest' ) && github.event.inputs.source != 'y'
         uses: ConorMacBride/install-package@v1
         with:
           choco: nsis
 
       - name: Install mingw
-        if: matrix.qt_version == '6.2.12' && contains( matrix.cross_os, 'windows' ) && github.event.inputs.source != 'y'
+        if: matrix.qt_version == '6.2.12' && contains( matrix.platform, 'windows' ) && github.event.inputs.source != 'y'
         uses: bwoodsend/setup-winlibs-action@v1.15
         with:
           architecture: ${{ matrix.target }}
 
       - name: Install MSVC compiler
-        if: matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && contains( matrix.cross_os, 'windows' ) && github.event.inputs.source != 'y'
+        if: matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && contains( matrix.platform, 'windows' ) && github.event.inputs.source != 'y'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
 
       - name: Install MSVC compiler
-        if: matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && contains( matrix.cross_os, 'windows' ) && github.event.inputs.source != 'y'
+        if: matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && contains( matrix.platform, 'windows' ) && github.event.inputs.source != 'y'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: arm64
@@ -183,7 +183,7 @@ jobs:
  #         arch: x64_arm
 
       - name: Install ninja-build tool
-        if: matrix.qt_version != '6.2.12' && contains( matrix.cross_os, 'windows' ) && github.event.inputs.source != 'y'
+        if: matrix.qt_version != '6.2.12' && contains( matrix.platform, 'windows' ) && github.event.inputs.source != 'y'
         uses: seanmiddleditch/gha-setup-ninja@v6
 
       - name: Download Artifacts
@@ -223,7 +223,7 @@ jobs:
           
       - name: Windows - Generate MakeFile and Build
         shell: bash
-        if: contains( matrix.cross_os, 'windows' ) && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
+        if: contains( matrix.platform, 'windows' ) && matrix.qt_version != '6.2.12' && github.event.inputs.source != 'y'
         run: |
           export CMAKE_PREFIX_PATH=$PWD/qt6/build/lib/cmake
           cd build
@@ -234,7 +234,7 @@ jobs:
           ./script/deploy_windows.sh new-${{ matrix.target }}
       - name: Legacy Windows - Generate MakeFile and Build
         shell: bash
-        if: contains( matrix.cross_os, 'windows' ) && matrix.qt_version == '6.2.12' && github.event.inputs.source != 'y'
+        if: contains( matrix.platform, 'windows' ) && matrix.qt_version == '6.2.12' && github.event.inputs.source != 'y'
         run: |
           curl -L -o qt.7z https://github.com/throneproj/env_windows_legacy/releases/download/latest/qt-${{ matrix.target }}.7z
           7z x qt.7z
@@ -251,28 +251,28 @@ jobs:
           ./script/deploy_windows.sh ${{ matrix.target }}
       - name: Build Installer with NSIS for windows64
         shell: cmd
-        if: contains( matrix.cross_os, 'windows' ) && matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && github.event.inputs.source != 'y'
+        if: contains( matrix.platform, 'windows' ) && matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           "C:\Program Files (x86)\NSIS\makensis.exe" windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup.exe
       - name: Build Installer with NSIS for windows32
         shell: cmd
-        if: contains( matrix.cross_os, 'windows' ) && matrix.qt_version == '6.2.12' && matrix.target == 'i686' && github.event.inputs.source != 'y'
+        if: contains( matrix.platform, 'windows' ) && matrix.qt_version == '6.2.12' && matrix.target == 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windows32"  windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup32.exe
       - name: Build Installer with NSIS for windows-arm64
         shell: cmd
-        if: contains( matrix.cross_os, 'windows' ) && matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && github.event.inputs.source != 'y'
+        if: contains( matrix.platform, 'windows' ) && matrix.qt_version != '6.2.12' && matrix.target == 'arm64' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           makensis "/DDIRECTORY=windows-arm64" windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup_arm64.exe
       - name: Build Installer with NSIS for windowslegacy64
         shell: cmd
-        if: contains( matrix.cross_os, 'windows' ) && matrix.qt_version == '6.2.12' && matrix.target != 'i686' && github.event.inputs.source != 'y'
+        if: contains( matrix.platform, 'windows' ) && matrix.qt_version == '6.2.12' && matrix.target != 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
           "C:\Program Files (x86)\NSIS\makensis.exe" "/DDIRECTORY=windowslegacy64" windows_installer.nsi
