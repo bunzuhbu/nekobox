@@ -64,6 +64,8 @@
 
 #include <srslist.h>
 
+void setAppIcon(Icon::TrayIconStatus, QSystemTrayIcon*);
+
 void UI_InitMainWindow() {
     mainwindow = new MainWindow;
 }
@@ -342,7 +344,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // Setup Tray
     tray = new QSystemTrayIcon(nullptr);
-    tray->setIcon(GetTrayIcon(Icon::NONE));
+    setAppIcon(Icon::NONE, tray);
     auto *trayMenu = new QMenu();
     trayMenu->addAction(ui->actionShow_window);
     trayMenu->addSeparator();
@@ -1304,15 +1306,20 @@ void MainWindow::refresh_status(const QString &traffic_update) {
 
     // refresh title & window icon
     setWindowTitle(make_title(false));
-    if (icon_status_new != icon_status) QApplication::setWindowIcon(GetTrayIcon(Icon::RUNNING));
 
     // refresh tray
     if (tray != nullptr) {
         tray->setToolTip(make_title(true));
-        if (icon_status_new != icon_status) tray->setIcon(Icon::GetTrayIcon(icon_status_new));
+        if (icon_status_new != icon_status) setAppIcon(icon_status_new, tray);
     }
 
     icon_status = icon_status_new;
+}
+
+void setAppIcon(Icon::TrayIconStatus icon_status_new, QSystemTrayIcon *tray){
+    auto icon = Icon::GetTrayIcon(icon_status_new);
+    tray->setIcon(icon);
+    QApplication::setWindowIcon(icon);
 }
 
 void MainWindow::update_traffic_graph(int proxyDl, int proxyUp, int directDl, int directUp)
