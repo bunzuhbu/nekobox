@@ -125,9 +125,6 @@ jobs:
           - platform: macos-latest
             qt_version: "6.9.2"
             target: arm64
-          - platform: macos-latest
-            qt_version: "6.4.3"
-            target: x86_64
           - platform: windows-latest
             qt_version: "6.2.12"
             target: x86_64
