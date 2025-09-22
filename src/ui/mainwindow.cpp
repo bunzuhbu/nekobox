@@ -59,6 +59,7 @@
 #include <3rdparty/QHotkey/qhotkey.h>
 #include <3rdparty/qv2ray/v2/proxy/QvProxyConfigurator.hpp>
 #include <include/global/HTTPRequestHelper.hpp>
+#include "include/global/DeviceDetailsHelper.hpp"
 
 #include "include/sys/macos/MacOS.h"
 
@@ -139,6 +140,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     {
         Configs::dataStore->inbound_socks_port = MkPort();
     }
+
+    //init HWID data
+    runOnNewThread([=, this] {GetDeviceDetails(); });
 
     // Prepare core
     Configs::dataStore->core_port = MkPort();
@@ -2403,24 +2407,28 @@ void MainWindow::CheckUpdate() {
         release_note            = "",
         note_pre_release        = "",
         search                  = "";
-
+#ifdef Q_OS_WIN
+#  ifdef Q_PROCESSOR_ARM_64
+    search = "windows-arm64";
+#  endif
+#endif
 #ifdef Q_OS_WIN32
 #  ifdef Q_OS_WIN64
 #   ifdef Q_PROCESSOR_X86_64
 #    ifndef USE_LEGACY_QT
         search = "windows64";
 #    else
-	    search = "windowslegacy64";
+            search = "windowslegacy64";
 #    endif
 #   else
 #    ifndef USE_LEGACY_QT
         search = "windows-arm64";
 #    else
-	    search = "windowslegacy-arm64";
+            search = "windowslegacy-arm64";
 #    endif
 #   endif
 #  else
-	search = "windows32";
+        search = "windows32";
 #  endif
 #endif
 #ifdef Q_OS_LINUX
@@ -2432,11 +2440,12 @@ void MainWindow::CheckUpdate() {
 #endif
 #ifdef Q_OS_MACOS
 #  ifdef Q_PROCESSOR_X86_64
-	search = "macos-amd64";
+        search = "macos-amd64";
 #  else
-	search = "macos-arm64";
+        search = "macos-arm64";
 #  endif
 #endif
+
 
 
 #ifndef SKIP_JS_UPDATER
