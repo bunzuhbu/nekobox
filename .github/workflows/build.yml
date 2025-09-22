@@ -23,7 +23,7 @@ jobs:
         include:
           - cross_os: linux
             cross_arch: amd64
-            go_version: "1.25.1"
+            go_version: "1.25.0"
           - cross_os: linux
             cross_arch: arm64
             go_version: "1.25.0"
