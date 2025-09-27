@@ -2367,6 +2367,9 @@ bool MainWindow::StopVPNProcess() {
     return true;
 }
 
+#ifndef SKIP_UPDATE_BUTTON
+#ifdef SKIP_JS_UPDATER
+// ```
 bool isNewer(QString assetName) {
     if (QString(NKR_VERSION).isEmpty()) return false;
   //  assetName = assetName.mid(8); // take out nekobox-
@@ -2447,6 +2450,9 @@ bool isNewer(QString assetName) {
     }
     return false;
 }
+// ```
+#endif
+#endif
 
 #ifndef SKIP_UPDATE_BUTTON
 #ifndef SKIP_JS_UPDATER
@@ -2455,10 +2461,10 @@ bool isNewer(QString assetName) {
 #include "include/js_updater.hpp"
 #endif
 void MainWindow::CheckUpdate() {
-
+    bool is_newer = false;
     QString
         archive_name            = "nekobox.zip",
-        assets_version          = "",
+        assets_name             = "",
         release_download_url    = "",
         release_url             = "",
         release_note            = "",
@@ -2528,34 +2534,37 @@ void MainWindow::CheckUpdate() {
         std::thread updater(  []( BlockingQueue<QueuePart>* bQueue,
                                   QString * updater_js,
                                   QString * search,
-                                  QString * assets_version,
+                                  QString * assets_name,
                                   QString * release_download_url,
                                   QString * release_url,
                                   QString * release_note,
                                   QString * note_pre_release,
-                                  QString * archive_name){
+                                  QString * archive_name,
+                                  bool * is_newer){
             jsUpdater(
                 bQueue,
                 updater_js,
                 search,
-                assets_version,
+                assets_name,
                 release_download_url,
                 release_url,
                 release_note,
                 note_pre_release,
-                archive_name
+                archive_name,
+                is_newer
             );
             bQueue->push(QueuePart{"", "", 0});
         },
         &bQueue,
         &updater_js,
         &search,
-        &assets_version,
+        &assets_name,
         &release_download_url,
         &release_url,
         &release_note,
         &note_pre_release,
-        &archive_name);
+        &archive_name,
+        &is_newer);
 
         do {
             QueuePart part = bQueue.pop();
@@ -2607,7 +2616,7 @@ void MainWindow::CheckUpdate() {
                     note_pre_release = release["prerelease"].toBool() ? " (Pre-release)" : "";
                     release_url = release["html_url"].toString();
                     release_note = release["body"].toString();
-                    assets_version = asset["name"].toString();
+                    assets_name = asset["name"].toString();
                     release_download_url = asset["browser_download_url"].toString();
                     exitFlag = true;
                     break;
@@ -2616,17 +2625,17 @@ void MainWindow::CheckUpdate() {
             if (exitFlag) break;
         }
     }
+
+    is_newer = !assets_name.isEmpty();
+    if (is_newer){
+        is_newer = isNewer(assets_name);
+    }
 #endif
 
-    bool is_newer = !assets_version.isEmpty();
-    if (is_newer){
-        is_newer = isNewer(assets_version);
-    }
-
     if (!is_newer){
-        MW_show_log("[Warn]: assets_version is not newer ");
+        MW_show_log("[Warn]: assets version is not newer ");
     } else {
-        MW_show_log("[Warn]: assets_version is newer ");
+        MW_show_log("[Warn]: assets version is newer ");
     }
 
     if (release_download_url.isEmpty() || !is_newer) {
@@ -2639,7 +2648,7 @@ void MainWindow::CheckUpdate() {
     runOnUiThread([=,this] {
         auto allow_updater = !Configs::dataStore->flag_use_appdata;
         QMessageBox box(QMessageBox::Question, QObject::tr("Update") + note_pre_release,
-                        QObject::tr("Update found: %1\nRelease note:\n%2").arg(assets_version, release_note));
+                        QObject::tr("Update found: %1\nRelease note:\n%2").arg(assets_name, release_note));
         //
         QAbstractButton *btn1 = nullptr;
         if (allow_updater) {

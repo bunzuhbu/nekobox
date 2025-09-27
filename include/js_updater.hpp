@@ -372,7 +372,7 @@ static const JSCFunctionListEntry js_global_funcs[] = {
     JS_CFUNC_DEF("translate", 3, translate_message),
 };
 
-void getString(JSContext * ctx, JSValue & global_obj, std::string name, QString * value){
+void getString(JSContext * ctx, /*JSValue & global_obj,*/ std::string name, QString * value){
     JSValue str = JS_Eval(ctx, name.c_str(), name.size(), "updater.js", JS_EVAL_TYPE_GLOBAL);
     if (!JS_IsUndefined(str)){
         const char * strval =  JS_ToCString(ctx, str);
@@ -382,16 +382,25 @@ void getString(JSContext * ctx, JSValue & global_obj, std::string name, QString 
     }
 }
 
+void getBoolean(JSContext * ctx, std::string name, bool * value){
+    JSValue str = JS_Eval(ctx, name.c_str(), name.size(), "updater.js", JS_EVAL_TYPE_GLOBAL);
+    if (!JS_IsUndefined(str)){
+        bool strval = JS_ToBool(ctx, str);
+        *value = strval;
+        JS_FreeValue(ctx, str);
+    }
+}
 
 bool jsUpdater(BlockingQueue<QueuePart> * window,
                QString * file,
                QString * search,
-               QString * assets_version,
+               QString * assets_name,
                QString * release_download_url,
                QString * release_url,
                QString * release_note,
                QString * note_pre_release,
-               QString * archive_name
+               QString * archive_name,
+               bool * is_newer
 ){
 
     size_t pointer = 0;
@@ -412,6 +421,11 @@ bool jsUpdater(BlockingQueue<QueuePart> * window,
     JS_SetPropertyStr(ctx, global_obj, "search", JS_NewString(ctx, search->toUtf8().constData()));
     JS_SetPropertyStr(ctx, global_obj, "archive_name", JS_NewString(ctx, "nekobox.zip"));
     JS_SetPropertyFunctionList(ctx, global_obj, js_global_funcs, countof(js_global_funcs));
+#ifndef NKR_VERSION
+    JS_SetPropertyStr(ctx, global_obj, "NKR_VERSION", JS_NewString(ctx, ""));
+#else
+    JS_SetPropertyStr(ctx, global_obj, "NKR_VERSION", JS_NewString(ctx, NKR_VERSION));
+#endif
 
     // Run a JavaScript script to test the Point class
 //    const char *script = "let p = new HTTPResponse('https://mail.ru'); print('error: '); print(p.error); print('text: '); print(p.text); print(' : ')";
@@ -457,14 +471,14 @@ bool jsUpdater(BlockingQueue<QueuePart> * window,
 
     JS_FreeValue(ctx, result);
 
-    getString(ctx, global_obj, "assets_version", assets_version);
-    getString(ctx, global_obj, "release_download_url", release_download_url);
-    getString(ctx, global_obj, "release_url", release_url);
-    getString(ctx, global_obj, "release_note", release_note);
-    getString(ctx, global_obj, "note_pre_release", note_pre_release);
-    getString(ctx, global_obj, "archive_name", archive_name);
-    getString(ctx, global_obj, "search", search);
-
+    getString(ctx, /*global_obj,*/ "assets_name", assets_name);
+    getString(ctx, /*global_obj,*/ "release_download_url", release_download_url);
+    getString(ctx, /*global_obj,*/ "release_url", release_url);
+    getString(ctx, /*global_obj,*/ "release_note", release_note);
+    getString(ctx, /*global_obj,*/ "note_pre_release", note_pre_release);
+    getString(ctx, /*global_obj,*/ "archive_name", archive_name);
+    getString(ctx, /*global_obj,*/ "search", search);
+    getBoolean(ctx, "is_newer", is_newer);
     /*
      assets_name = JS_ToCString(ctx, );
      release_download_url,
