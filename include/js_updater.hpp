@@ -383,13 +383,13 @@ void getString(JSContext * ctx, /*JSValue & global_obj,*/ std::string name, QStr
 }
 
 void getBoolean(JSContext * ctx, std::string name, bool * value){
-    JSValue str = JS_Eval(ctx, name.c_str(), name.size(), "updater.js", JS_EVAL_TYPE_GLOBAL);
-    if (!JS_IsUndefined(str)){
-        bool strval = JS_ToBool(ctx, str);
-        *value = strval;
-        JS_FreeValue(ctx, str);
-    }
+    std::string expr = "(";
+    expr = expr + name + ") ? \"A\" : \"B\"";
+    QString str = "";
+    getString(ctx, name, &str);
+    *value = (str == "A");
 }
+
 
 bool jsUpdater(BlockingQueue<QueuePart> * window,
                QString * file,

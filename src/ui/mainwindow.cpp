@@ -2472,7 +2472,16 @@ void MainWindow::CheckUpdate() {
         search                  = "";
 
 #define SEARCHDEF(X) search = X; goto end_search_define;
-	
+#define IS_64_BIT (QT_POINTER_SIZE == 8)
+
+#if Q_PROCESSOR_ARM
+#if IS_64_BIT
+#define Q_PROCESSOR_ARM_64
+#else
+#define Q_PROCESSOR_ARM_32
+#endif
+#endif
+
 #ifdef Q_OS_WIN
 #  ifdef Q_PROCESSOR_ARM_64
 #    ifndef USE_LEGACY_QT
@@ -2482,27 +2491,49 @@ void MainWindow::CheckUpdate() {
 #    endif
 #  endif
 #endif
+
 #ifdef Q_OS_WIN32
 #  ifdef Q_OS_WIN64
 #   ifdef Q_PROCESSOR_X86_64
 #    ifndef USE_LEGACY_QT
-    	SEARCHDEF("windows64");
+        SEARCHDEF("windows64");
 #    else
         SEARCHDEF("windowslegacy64");
 #    endif
-#   endif	
-#  else
+#   endif
+#  endif
+#  ifdef Q_PROCESSOR_X86_32
         SEARCHDEF("windows32");
 #  endif
 #endif
+
 #ifdef Q_OS_LINUX
 #  ifdef Q_PROCESSOR_X86_64
         SEARCHDEF("linux-amd64");
 #  endif
+#  ifdef Q_PROCESSOR_ARM_32
+        SEARCHDEF("linux-arm32");
+#  endif
 #  ifdef Q_PROCESSOR_ARM_64
         SEARCHDEF("linux-arm64");
 #  endif
+#  ifdef Q_PROCESSOR_X86_32
+        SEARCHDEF("linux-i386");
+#  endif
+#  ifdef Q_PROCESSOR_RISCV_32
+        SEARCHDEF("linux-riscv32");
+#  endif
+#  ifdef Q_PROCESSOR_RISCV_64
+        SEARCHDEF("linux-riscv64");
+#  endif
+#  ifdef Q_PROCESSOR_MIPS_32
+        SEARCHDEF("linux-mips32");
+#  endif
+#  ifdef Q_PROCESSOR_MIPS_64
+        SEARCHDEF("linux-mips64");
+#  endif
 #endif
+
 #ifdef Q_OS_MACOS
 #  ifdef Q_PROCESSOR_X86_64
         SEARCHDEF("macos-amd64");
@@ -2511,7 +2542,7 @@ void MainWindow::CheckUpdate() {
         SEARCHDEF("macos-arm64");
 #  endif
 #endif
-	
+
 end_search_define:
 
 #ifndef SKIP_JS_UPDATER
