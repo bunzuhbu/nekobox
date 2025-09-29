@@ -2470,46 +2470,49 @@ void MainWindow::CheckUpdate() {
         release_note            = "",
         note_pre_release        = "",
         search                  = "";
+
+#define SEARCHDEF(X) search = X; goto end_search_define;
+	
 #ifdef Q_OS_WIN
 #  ifdef Q_PROCESSOR_ARM_64
-    search = "windows-arm64";
+#    ifndef USE_LEGACY_QT
+        SEARCHDEF("windows-arm64");
+#    else
+        SEARCHDEF("windowslegacy-arm64");
+#    endif
 #  endif
 #endif
 #ifdef Q_OS_WIN32
 #  ifdef Q_OS_WIN64
 #   ifdef Q_PROCESSOR_X86_64
 #    ifndef USE_LEGACY_QT
-        search = "windows64";
+    	SEARCHDEF("windows64");
 #    else
-            search = "windowslegacy64";
+        SEARCHDEF("windowslegacy64");
 #    endif
-#   else
-#    ifndef USE_LEGACY_QT
-        search = "windows-arm64";
-#    else
-            search = "windowslegacy-arm64";
-#    endif
-#   endif
+#   endif	
 #  else
-        search = "windows32";
+        SEARCHDEF("windows32");
 #  endif
 #endif
 #ifdef Q_OS_LINUX
 #  ifdef Q_PROCESSOR_X86_64
-        search = "linux-amd64";
-#  else
-        search = "linux-arm64";
+        SEARCHDEF("linux-amd64");
+#  endif
+#  ifdef Q_PROCESSOR_ARM_64
+        SEARCHDEF("linux-arm64");
 #  endif
 #endif
 #ifdef Q_OS_MACOS
 #  ifdef Q_PROCESSOR_X86_64
-        search = "macos-amd64";
-#  else
-        search = "macos-arm64";
+        SEARCHDEF("macos-amd64");
+#  endif
+#  ifdef Q_PROCESSOR_ARM_64
+        SEARCHDEF("macos-arm64");
 #  endif
 #endif
-
-
+	
+end_search_define:
 
 #ifndef SKIP_JS_UPDATER
     BlockingQueue<QueuePart> bQueue;
