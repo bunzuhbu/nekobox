@@ -3,6 +3,9 @@
 #include <include/global/GuiUtils.hpp>
 
 #include "include/ui/mainwindow_interface.h"
+#include <include/global/keyvaluerange.h>
+#include <QAction>
+
 
 DialogHotkey::DialogHotkey(QWidget *parent, const QList<QAction*>& actions) : QDialog(parent), ui(new Ui::DialogHotkey) {
     ui->setupUi(this);
