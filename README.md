@@ -63,7 +63,8 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [ninja-build](https://ninja-build.org/)
 - [codeclysm/extract](https://github.com/codeclysm/extract)
 - [shlex](https://github.com/google/shlex)
-  
+- [URLParser](https://github.com/dongbum/URLParser)
+
 ## FAQ
 **Why does my Anti-Virus detect NekoBox as malware?** <br/>
 NekoBox's built-in update functionallity downloads the new release, removes the old files and replaces them with the new ones, which is quite simliar to what malwares do, remove your files and replace them with an encrypted version of your files.
