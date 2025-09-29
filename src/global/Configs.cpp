@@ -375,7 +375,7 @@ namespace Configs {
     bool Shortcuts::Save()
     {
         keyVal.clear();
-        for (auto [k, v] : shortcuts.asKeyValueRange())
+        for (auto [k, v] : asKeyValueRange(shortcuts))
         {
             if (v.isEmpty()) continue;
             keyVal << k << v.toString();
