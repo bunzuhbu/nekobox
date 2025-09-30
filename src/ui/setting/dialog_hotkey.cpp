@@ -43,7 +43,7 @@ void DialogHotkey::accept()
     Configs::dataStore->hotkey_system_proxy_menu = ui->system_proxy->keySequence().toString();
     Configs::dataStore->hotkey_toggle_system_proxy = ui->toggle_proxy->keySequence().toString();
 
-    for (auto [kseq, actionID] : seqEdit2ID.asKeyValueRange())
+    for (auto [kseq, actionID] : asKeyValueRange(seqEdit2ID))
     {
         Configs::dataStore->shortcuts->shortcuts[actionID] = kseq->keySequence();
     }
