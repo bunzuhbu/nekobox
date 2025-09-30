@@ -62,8 +62,9 @@ func Updater() {
 	}
 
 	// remove old file
-	removeAll("./*.dll")
+	removeAll("./*.dll")	
 	removeAll("./*.dmp")
+	removeAll("./*.js")
 
 	// update move
 	err = Mv("./nekobox_update/nekobox", "./")
