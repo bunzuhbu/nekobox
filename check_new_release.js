@@ -76,12 +76,19 @@ function isNewer(assetName) {
     return false;
 }
 
+
+release_array = [];
+is_newer = false;
+exitFlag = false;
+stopFlag = false;
+note_pre_release = '';
+release_url = '';
+release_note = '';
+assets_name = '';
+release_download_url = '';
+
 if (!resp.error){
     let array = JSON.parse(resp.text);
-    let release_array = [];
-    let is_newer = false;
-    let exitFlag = false;
-    let stopFlag = false;
 
     for (let release of array){
         if (!allow_beta_update) {

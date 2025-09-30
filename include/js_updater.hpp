@@ -386,7 +386,9 @@ void getBoolean(JSContext * ctx, std::string name, bool * value){
     std::string expr = "(";
     expr = expr + name + ") ? \"A\" : \"B\"";
     QString str = "";
-    getString(ctx, name, &str);
+    getString(ctx, expr, &str);
+    std::cout << expr << std::endl;
+    std::cout << str.toStdString() << std::endl;
     *value = (str == "A");
 }
 

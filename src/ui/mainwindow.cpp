@@ -2633,7 +2633,7 @@ end_search_define:
         }
         QTextStream in(&file);
         updater_js = in.readAll().toUtf8().constData();
-        std::cout << updater_js.toStdString() << std::endl;
+
         file.close();
     }
 
