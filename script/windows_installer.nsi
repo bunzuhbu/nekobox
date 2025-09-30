@@ -35,8 +35,8 @@ Section "Install"
   !endif
 
 
-  CreateShortcut "$desktop\nekobox.lnk" "$instdir\nekobox.exe"
-  CreateShortcut "$SMPROGRAMS\nekobox.lnk" "$INSTDIR\nekobox.exe" "" "$INSTDIR\nekobox.exe" 0
+  CreateShortcut "$desktop\nekobox.lnk" "$INSTDIR\nekobox.exe" "-appdata" "$INSTDIR\nekobox.exe" 0
+  CreateShortcut "$SMPROGRAMS\nekobox.lnk" "$INSTDIR\nekobox.exe" "-appdata" "$INSTDIR\nekobox.exe" 0
 
   WriteRegStr HKCU "Software\nekobox" "InstallPath" "$INSTDIR"
 
