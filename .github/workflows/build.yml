@@ -478,4 +478,5 @@ jobs:
         shell: bash
         run: |
           cd ./script/
-          bash -x chocolatey_push.sh
+          export CHOCOLATEY_API_KEY=${{ secrets.CHOCOLATEY_API_TOKEN }}
+          source chocolatey_push.sh
