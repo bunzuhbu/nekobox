@@ -10,6 +10,11 @@ Supports Windows 11/10/8/7 (arm64, i386, x86_64) / Linux / MacOS (arm64, x86_64)
 ### OBS repository
 [NekoBox repository](https://software.opensuse.org//download.html?project=home%3Ajuzbun%3ANekoBox&package=nekobox) for various linux distributions ([OpenSUSE](https://get.opensuse.org/), [Fedora](https://fedoraproject.org/), [Mageia](https://www.mageia.org/), [Debian](https://www.debian.org/), [Raspbian](https://www.raspberrypi.com/software/), [Ubuntu](https://ubuntu.com/), [Arch](https://archlinux.org/)).
 
+### Chocolatey Package
+
+[![Chocolatey Package For Windows](https://img.shields.io/chocolatey/dt/nekobox?style=flat-square&logo=chocolatey&label=downloads-total
+)](https://community.chocolatey.org/packages/nekobox)
+
 ## Supported protocols
 
 - SOCKS
