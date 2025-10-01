@@ -475,7 +475,7 @@ jobs:
         if: github.event.inputs.publish == 'r'
         with:
           choco: curl jq yq sed
-        shell: bash
+      - shell: bash
         run: |
           cd ./script/
           export INPUT_VERSION=${{ github.event.inputs.tag }}
