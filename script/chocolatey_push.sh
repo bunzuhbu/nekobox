@@ -3,8 +3,8 @@ asset_x86="$(echo "$text"  | jq '.assets[] | select(.browser_download_url | ends
 asset_x64="$(echo "$text"  | jq '.assets[] | select(.browser_download_url | endswith("windows64-installer.exe"))')"
 url_x86="$(echo "$asset_x86" | jq -r '.browser_download_url')"
 url_x64="$(echo "$asset_x64" | jq -r '.browser_download_url')"
-sha_x86="$(echo "$asset_x86" | jq -r '.digest')"
-sha_x64="$(echo "$asset_x64" | jq -r '.digest')"
+sha_x86="$(echo "$asset_x86" | jq -r '.digest' | sed 's~sha256:~~g')"
+sha_x64="$(echo "$asset_x64" | jq -r '.digest' | sed 's~sha256:~~g')"
 
 # 'https://github.com/qr243vbi/nekobox/releases/download/@VERSION@/nekobox-@VERSION@-windows32-installer.exe'
 # 'https://github.com/qr243vbi/nekobox/releases/download/@VERSION@/nekobox-@VERSION@-windows64-installer.exe'
