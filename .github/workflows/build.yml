@@ -39,12 +39,12 @@ jobs:
           - cross_os: windowslegacy
             cross_arch: 386
             go_version: "1.25.0"
-          - cross_os: darwin
-            cross_arch: amd64
-            go_version: "1.25.0"
-          - cross_os: darwin
-            cross_arch: arm64
-            go_version: "1.25.0"
+   #       - cross_os: darwin
+    #        cross_arch: amd64
+     #       go_version: "1.25.0"
+      #    - cross_os: darwin
+       #     cross_arch: arm64
+        #    go_version: "1.25.0"
           - cross_os: public
             cross_arch: public
             go_version: "1.25.0"
@@ -119,12 +119,12 @@ jobs:
           - platform: ubuntu-24.04-arm
             qt_version: "6.9.2"
             target: arm64
-          - platform: macos-latest
-            qt_version: "6.9.2"
-            target: x86_64
-          - platform: macos-latest
-            qt_version: "6.9.2"
-            target: arm64
+   #       - platform: macos-latest
+    #        qt_version: "6.9.2"
+     #       target: x86_64
+      #    - platform: macos-latest
+       #     qt_version: "6.9.2"
+        #    target: arm64
           - platform: windows-latest
             qt_version: "6.2.12"
             target: x86_64
