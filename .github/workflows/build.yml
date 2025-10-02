@@ -462,25 +462,25 @@ jobs:
           install -Dm644 oscrc "$HOME"/.config/osc/oscrc
           osc token --trigger "${{ secrets.OBS_HOOK_TOKEN }}" ||:
 
-  publish_chocolatey:
-    name: Publish Chocolatey Package
-    runs-on: windows-latest
-    needs:
-      - publish
-    permissions:
-      contents: read
-      actions: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ConorMacBride/install-package@v1
-        if: github.event.inputs.publish == 'r' && github.event.inputs.source != 'y'
-        with:
-          choco: curl jq yq sed
-      - name: Upload Chocolatey Package
-        shell: bash
-        if: github.event.inputs.publish == 'r' && github.event.inputs.source != 'y'
-        run: |
-          cd ./script/
-          export INPUT_VERSION=${{ github.event.inputs.tag }}
-          export CHOCOLATEY_API_KEY=${{ secrets.CHOCOLATEY_API_TOKEN }}
-          source chocolatey_push.sh
+  # publish_chocolatey:
+  #   name: Publish Chocolatey Package
+  #   runs-on: windows-latest
+  #   needs:
+  #     - publish
+  #   permissions:
+  #     contents: read
+  #     actions: read
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: ConorMacBride/install-package@v1
+  #       if: github.event.inputs.publish == 'r' && github.event.inputs.source != 'y'
+  #       with:
+  #         choco: curl jq yq sed
+  #     - name: Upload Chocolatey Package
+  #       shell: bash
+  #       if: github.event.inputs.publish == 'r' && github.event.inputs.source != 'y'
+  #       run: |
+  #         cd ./script/
+  #         export INPUT_VERSION=${{ github.event.inputs.tag }}
+  #         export CHOCOLATEY_API_KEY=${{ secrets.CHOCOLATEY_API_TOKEN }}
+  #         source chocolatey_push.sh
