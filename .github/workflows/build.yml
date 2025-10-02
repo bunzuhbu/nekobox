@@ -434,7 +434,7 @@ jobs:
         run: |
           ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" deployment
 
-  trigger_obs:
+  webhook:
     name: Trigger Open Build Service
     runs-on: ubuntu-latest
     needs:
@@ -444,13 +444,12 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v4
-      - name: Trigger Open Build Service
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         if: github.event.inputs.publish == 'r'
         with:
           python-version: '3.13'
           cache: 'pip' # caching pip dependencies
-        run: |
+      - run: |
           pip install osc
           echo '[general]' > oscrc
           echo 'apiurl=https://api.opensuse.org' >> oscrc
@@ -461,26 +460,3 @@ jobs:
           ####
           install -Dm644 oscrc "$HOME"/.config/osc/oscrc
           osc token --trigger "${{ secrets.OBS_HOOK_TOKEN }}" ||:
-
-  # publish_chocolatey:
-  #   name: Publish Chocolatey Package
-  #   runs-on: windows-latest
-  #   needs:
-  #     - publish
-  #   permissions:
-  #     contents: read
-  #     actions: read
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: ConorMacBride/install-package@v1
-  #       if: github.event.inputs.publish == 'r' && github.event.inputs.source != 'y'
-  #       with:
-  #         choco: curl jq yq sed
-  #     - name: Upload Chocolatey Package
-  #       shell: bash
-  #       if: github.event.inputs.publish == 'r' && github.event.inputs.source != 'y'
-  #       run: |
-  #         cd ./script/
-  #         export INPUT_VERSION=${{ github.event.inputs.tag }}
-  #         export CHOCOLATEY_API_KEY=${{ secrets.CHOCOLATEY_API_TOKEN }}
-  #         source chocolatey_push.sh
