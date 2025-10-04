@@ -99,7 +99,6 @@ message SpeedTestRequest {
   optional bool test_upload = 6 [default = false];
   optional bool simple_download = 7 [default = false];
   optional string simple_download_addr = 8 [default = ""];
-  optional int32 timeout_ms = 9 [default = 0];
 }
 
 message SpeedTestResult {
