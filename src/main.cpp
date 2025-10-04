@@ -58,7 +58,7 @@ void loadTranslate(const QString& locale) {
     }
 }
 
-#define LOCAL_SERVER_PREFIX "nekobox-"
+#define LOCAL_SERVER_PREFIX "throne-"
 
 int main(int argc, char* argv[]) {
     // Core dump
@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
         QFontDatabase::setApplicationEmojiFontFamilies(fontFamilies);
     } else
     {
-        qDebug() << "could not load noto font!";
+        qDebug() << "could not load emoji font!";
     }
 #endif
 
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
     // dirs & clean
     auto wd = QDir(QApplication::applicationDirPath());
     if (Configs::dataStore->flag_use_appdata) {
-        QApplication::setApplicationName("nekobox");
+        QApplication::setApplicationName("Throne");
         if (!Configs::dataStore->appdataDir.isEmpty()) {
             wd.setPath(Configs::dataStore->appdataDir);
         } else {
