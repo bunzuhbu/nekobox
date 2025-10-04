@@ -125,10 +125,10 @@ jobs:
           - platform: macos-latest
             qt_version: "6.9.2"
             target: arm64
-          - platform: windows-latest
+          - platform: windows-2022
             qt_version: "6.2.12"
             target: x86_64
-          - platform: windows-latest
+          - platform: windows-2022
             qt_version: "6.9.2"
             target: x86_64
           - platform: windows-11-arm
@@ -252,7 +252,7 @@ jobs:
         if: contains( matrix.platform, 'windows' ) && matrix.qt_version != '6.2.12' && matrix.target == 'x86_64' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
-          "C:\Program Files (x86)\NSIS\makensis.exe" windows_installer.nsi
+          makensis.exe windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup.exe
       - name: Build Installer with NSIS for windows32
         shell: cmd
@@ -273,7 +273,7 @@ jobs:
         if: contains( matrix.platform, 'windows' ) && matrix.qt_version == '6.2.12' && matrix.target != 'i686' && github.event.inputs.source != 'y'
         run: |
           cp .\script\windows_installer.nsi .
-          "C:\Program Files (x86)\NSIS\makensis.exe" "/DDIRECTORY=windowslegacy64" windows_installer.nsi
+          makensis "/DDIRECTORY=windowslegacy64" windows_installer.nsi
           install -D nekobox_setup.exe deployment/nekobox_setup_legacy.exe
 
       - name: Linux - Install apt dependencies
