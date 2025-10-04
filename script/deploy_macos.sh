@@ -23,15 +23,13 @@ cd *darwin-$ARCH
 tar xvzf artifacts.tgz -C ../../
 cd ../..
 
-mv deployment/macos-$ARCH/* $BUILD/nekobox.app/Contents/MacOS
+mv deployment/macos-$ARCH/* $BUILD/Throne.app/Contents/MacOS
 
-#### copy srslist ####
-cp srslist $BUILD/nekobox.app/Contents/MacOS/srslist
 #### deploy qt & DLL runtime => .app ####
 pushd $BUILD
-macdeployqt nekobox.app -verbose=3
+macdeployqt Throne.app -verbose=3
 popd
 
-codesign --force --deep --sign - $BUILD/nekobox.app
+codesign --force --deep --sign - $BUILD/Throne.app
 
-mv $BUILD/nekobox.app $DEST
+mv $BUILD/Throne.app $DEST

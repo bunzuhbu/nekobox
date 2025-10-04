@@ -18,6 +18,7 @@
 #ifdef Q_OS_WIN
 #include "include/sys/windows/MiniDump.h"
 #include "include/sys/windows/eventHandler.h"
+#include "include/sys/windows/WinVersion.h"
 #include <qfontdatabase.h>
 #endif
 #ifdef Q_OS_LINUX
@@ -57,7 +58,7 @@ void loadTranslate(const QString& locale) {
     }
 }
 
-#define LOCAL_SERVER_PREFIX "nekobox-"
+#define LOCAL_SERVER_PREFIX "throne-"
 
 int main(int argc, char* argv[]) {
     // Core dump
@@ -71,14 +72,18 @@ int main(int argc, char* argv[]) {
 
 #if !defined(Q_OS_MACOS) && (QT_VERSION >= QT_VERSION_CHECK(6,9,0))
     // Load the emoji fonts
+#ifdef Q_OS_WIN
+    int fontId = QFontDatabase::addApplicationFont(WinVersion::IsBuildNumGreaterOrEqual(BuildNumber::Windows_11_22H2) ? ":/font/notoEmoji" : ":/font/Twemoji");
+#else
     int fontId = QFontDatabase::addApplicationFont(":/font/notoEmoji");
+#endif
     if (fontId >= 0)
     {
         QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
         QFontDatabase::setApplicationEmojiFontFamilies(fontFamilies);
     } else
     {
-        qDebug() << "could not load noto font!";
+        qDebug() << "could not load emoji font!";
     }
 #endif
 
@@ -112,7 +117,7 @@ int main(int argc, char* argv[]) {
     // dirs & clean
     auto wd = QDir(QApplication::applicationDirPath());
     if (Configs::dataStore->flag_use_appdata) {
-        QApplication::setApplicationName("nekobox");
+        QApplication::setApplicationName("Throne");
         if (!Configs::dataStore->appdataDir.isEmpty()) {
             wd.setPath(Configs::dataStore->appdataDir);
         } else {

@@ -30,7 +30,7 @@ namespace Configs {
 
         //
 
-        QString TonekoboxShareLink(const QString &type);
+        QString ToNekorayShareLink(const QString &type);
 
         void ResolveDomainToIP(const std::function<void()> &onFinished);
 

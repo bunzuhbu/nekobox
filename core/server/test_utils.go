@@ -24,6 +24,7 @@ var SpTQuerier SpeedTestResultQuerier
 var URLReporter URLTestReporter
 
 const URLTestTimeout = 3 * time.Second
+const FetchServersTimeout = 8 * time.Second
 const MaxConcurrentTests = 100
 
 type URLTestResult struct {
@@ -52,14 +53,15 @@ func (u *URLTestReporter) Results() []*URLTestResult {
 }
 
 type SpeedTestResult struct {
-	Tag           string
-	DlSpeed       string
-	UlSpeed       string
-	Latency       int32
-	ServerName    string
-	ServerCountry string
-	Error         error
-	Cancelled     bool
+	Tag                string
+	DlSpeed            string
+	UlSpeed            string
+	Latency            int32
+	ServerName         string
+	ServerCountry      string
+	ServerCountryEmoji string
+	Error              error
+	Cancelled          bool
 }
 
 type SpeedTestResultQuerier struct {
@@ -84,7 +86,10 @@ func (s *SpeedTestResultQuerier) setIsRunning(isRunning bool) {
 	s.isRunning = isRunning
 }
 
-func BatchURLTest(ctx context.Context, i *boxbox.Box, outboundTags []string, url string, maxConcurrency int, twice bool) []*URLTestResult {
+func BatchURLTest(ctx context.Context, i *boxbox.Box, outboundTags []string, url string, maxConcurrency int, twice bool, timeout time.Duration) []*URLTestResult {
+	if timeout <= 0 {
+		timeout = URLTestTimeout
+	}
 	outbounds := service.FromContext[adapter.OutboundManager](i.Context())
 	resMap := make(map[string]*URLTestResult)
 	resAccess := sync.Mutex{}
@@ -113,11 +118,11 @@ func BatchURLTest(ctx context.Context, i *boxbox.Box, outboundTags []string, url
 				}
 				client := &http.Client{
 					Transport: &http.Transport{
-						DialContext: func(_ context.Context, network string, addr string) (net.Conn, error) {
+						DialContext: func(ctx context.Context, network string, addr string) (net.Conn, error) {
 							return outbound.DialContext(ctx, "tcp", metadata.ParseSocksaddr(addr))
 						},
 					},
-					Timeout: URLTestTimeout,
+					Timeout: timeout,
 				}
 				// to properly measure muxed configs, let's do the test twice
 				duration, err := urlTest(ctx, client, url)
@@ -148,8 +153,6 @@ func BatchURLTest(ctx context.Context, i *boxbox.Box, outboundTags []string, url
 }
 
 func urlTest(ctx context.Context, client *http.Client, url string) (time.Duration, error) {
-	ctx, cancel := context.WithTimeout(ctx, URLTestTimeout)
-	defer cancel()
 	begin := time.Now()
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -169,7 +172,7 @@ func getNetDialer(dialer func(ctx context.Context, network string, destination m
 	}
 }
 
-func BatchSpeedTest(ctx context.Context, i *boxbox.Box, outboundTags []string, testDl, testUl bool, simpleDL bool, simpleAddress string) []*SpeedTestResult {
+func BatchSpeedTest(ctx context.Context, i *boxbox.Box, outboundTags []string, testDl, testUl bool, simpleDL bool, simpleAddress string, timeout time.Duration) []*SpeedTestResult {
 	outbounds := service.FromContext[adapter.OutboundManager](i.Context())
 	results := make([]*SpeedTestResult, 0)
 
@@ -189,9 +192,9 @@ func BatchSpeedTest(ctx context.Context, i *boxbox.Box, outboundTags []string, t
 
 		var err error
 		if simpleDL {
-			err = simpleDownloadTest(ctx, getNetDialer(outbound.DialContext), res, simpleAddress)
+			err = simpleDownloadTest(ctx, getNetDialer(outbound.DialContext), res, simpleAddress, timeout)
 		} else {
-			err = speedTestWithDialer(ctx, getNetDialer(outbound.DialContext), res, testDl, testUl)
+			err = speedTestWithDialer(ctx, getNetDialer(outbound.DialContext), res, testDl, testUl, timeout)
 		}
 		if err != nil && !errors.Is(err, context.Canceled) {
 			res.Error = err
@@ -208,14 +211,17 @@ func BatchSpeedTest(ctx context.Context, i *boxbox.Box, outboundTags []string, t
 	return results
 }
 
-func simpleDownloadTest(ctx context.Context, dialer func(ctx context.Context, network string, address string) (net.Conn, error), res *SpeedTestResult, testURL string) error {
+func simpleDownloadTest(ctx context.Context, dialer func(ctx context.Context, network string, address string) (net.Conn, error), res *SpeedTestResult, testURL string, timeout time.Duration) error {
+	if timeout <= 0 {
+		timeout = URLTestTimeout
+	}
 	client := &http.Client{
 		Transport: &http.Transport{
 			DialContext: func(ctx context.Context, network string, addr string) (net.Conn, error) {
 				return dialer(ctx, network, addr)
 			},
 		},
-		Timeout: URLTestTimeout,
+		Timeout: timeout,
 	}
 
 	res.ServerName = "N/A"
@@ -268,13 +274,15 @@ func simpleDownloadTest(ctx context.Context, dialer func(ctx context.Context, ne
 	}
 }
 
-func speedTestWithDialer(ctx context.Context, dialer func(ctx context.Context, network string, address string) (net.Conn, error), res *SpeedTestResult, testDl, testUl bool) error {
+func speedTestWithDialer(ctx context.Context, dialer func(ctx context.Context, network string, address string) (net.Conn, error), res *SpeedTestResult, testDl, testUl bool, timeout time.Duration) error {
 	clt := speedtest.New(speedtest.WithUserConfig(&speedtest.UserConfig{
 		DialContextFunc: dialer,
 		PingMode:        speedtest.HTTP,
 		MaxConnections:  8,
 	}))
-	srv, err := clt.FetchServerListContext(ctx)
+	fetchCtx, cancel := context.WithTimeout(ctx, FetchServersTimeout)
+	defer cancel()
+	srv, err := clt.FetchServerListContext(fetchCtx)
 	if err != nil {
 		return err
 	}
@@ -288,6 +296,12 @@ func speedTestWithDialer(ctx context.Context, dialer func(ctx context.Context, n
 	}
 	res.ServerName = srv[0].Name
 	res.ServerCountry = srv[0].Country
+	countryEmoji := internal.GetCountryEmojiByName(srv[0].Country)
+	if countryEmoji == "" {
+		fmt.Println("Failed to get country emoji for", srv[0].Name)
+	} else {
+		res.ServerCountryEmoji = countryEmoji
+	}
 
 	done := make(chan struct{})
 
@@ -297,14 +311,18 @@ func speedTestWithDialer(ctx context.Context, dialer func(ctx context.Context, n
 	go func() {
 		defer func() { close(done) }()
 		if testDl {
-			err = srv[0].DownloadTestContext(ctx)
+			timeoutCtx, cancel := context.WithTimeout(ctx, timeout)
+			defer cancel()
+			err = srv[0].DownloadTestContext(timeoutCtx)
 			if err != nil && !errors.Is(err, context.Canceled) {
 				res.Error = err
 				return
 			}
 		}
 		if testUl {
-			err = srv[0].UploadTestContext(ctx)
+			timeoutCtx, cancel := context.WithTimeout(ctx, timeout)
+			defer cancel()
+			err = srv[0].UploadTestContext(timeoutCtx)
 			if err != nil && !errors.Is(err, context.Canceled) {
 				res.Error = err
 				return
