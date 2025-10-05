@@ -38,10 +38,12 @@ namespace Configs
         if (latency < 0) {
             return Qt::red;
         } else if (latency > 0) {
-            if (latency <= 100) {
+            if (latency <= 120) {
                 return Qt::green;
-            } else if (latency <= 300){
+            } else if (latency <= 250){
                 return Qt::darkGreen;
+            } else if (latency <= 420){
+                return Qt::darkYellow;
             } else {
                 return Qt::darkGray;
             }
