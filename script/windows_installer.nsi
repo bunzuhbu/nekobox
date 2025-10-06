@@ -33,8 +33,10 @@ Section /o "Updater" SID_UPDATER
   # Install the updater component if selected
   !ifdef DIRECTORY
     File ".\deployment\${DIRECTORY}\updater.exe"
+    File ".\deployment\${DIRECTORY}\check_new_release.js"
   !else
     File ".\deployment\windows64\updater.exe"
+    File ".\deployment\windows64\check_new_release.js"
   !endif
 SectionEnd
 
@@ -50,9 +52,9 @@ Section "Install"
   SetOverwrite on
 
   !ifdef DIRECTORY
-    File /r /x "updater.exe" ".\deployment\${DIRECTORY}\*"
+    File /r /x "check_new_release.js" /x "updater.exe" ".\deployment\${DIRECTORY}\*"
   !else
-    File /r /x "updater.exe" ".\deployment\windows64\*"
+    File /r /x "check_new_release.js" /x "updater.exe" ".\deployment\windows64\*"
   !endif
 
 
