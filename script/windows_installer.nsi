@@ -26,7 +26,9 @@ RequestExecutionLevel user
 
 !include Sections.nsh
 
-Section "Updater" SID_UPDATER
+Section /o "Updater" SID_UPDATER
+  SetOutPath "$INSTDIR"
+  SetOverwrite on
   # Install the updater component if selected
   !ifdef DIRECTORY
     File ".\deployment\${DIRECTORY}\updater.exe"
@@ -40,6 +42,8 @@ ${If} ${Silent}
     !insertmacro UnselectSection ${SID_UPDATER}
 ${EndIf}
 FunctionEnd
+
+Page components
 
 Section "Install"
   SetOutPath "$INSTDIR"
