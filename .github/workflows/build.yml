@@ -449,7 +449,10 @@ jobs:
         with:
           python-version: '3.13'
           cache: 'pip' # caching pip dependencies
-      - run: |
+      - name: Trigger Open Build Service
+        shell: bash
+        if: github.event.inputs.publish == 'r'
+        run: |
           pip install osc
           echo '[general]' > oscrc
           echo 'apiurl=https://api.opensuse.org' >> oscrc
