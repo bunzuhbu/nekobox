@@ -24,7 +24,9 @@ RequestExecutionLevel user
 
 !insertmacro MUI_LANGUAGE "English"
 
-Section /o "Updater" SecUpdater
+!include Sections.nsh
+
+Section "Updater" SID_UPDATER
   # Install the updater component if selected
   !ifdef DIRECTORY
     File ".\deployment\${DIRECTORY}\updater.exe"
@@ -32,6 +34,12 @@ Section /o "Updater" SecUpdater
     File ".\deployment\windows64\updater.exe"
   !endif
 SectionEnd
+
+Function .onInit
+${If} ${Silent}
+    !insertmacro UnselectSection ${SID_UPDATER}
+${EndIf}
+FunctionEnd
 
 Section "Install"
   SetOutPath "$INSTDIR"
