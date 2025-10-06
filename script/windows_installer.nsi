@@ -18,6 +18,7 @@ RequestExecutionLevel user
 !addplugindir .\script\
 
 !insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -43,7 +44,6 @@ ${If} ${Silent}
 ${EndIf}
 FunctionEnd
 
-Page components
 
 Section "Install"
   SetOutPath "$INSTDIR"
