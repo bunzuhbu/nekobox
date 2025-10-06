@@ -485,5 +485,5 @@ jobs:
           cd ./script/
           export INPUT_VERSION=${{ github.event.inputs.tag }}
           export CHOCOLATEY_API_KEY=${{ secrets.CHOCOLATEY_API_TOKEN }}
-          source chocolatey_push.sh
+          bash -x chocolatey_push.sh
 
