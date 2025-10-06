@@ -24,14 +24,25 @@ RequestExecutionLevel user
 
 !insertmacro MUI_LANGUAGE "English"
 
+Section /o "Updater" SecUpdater
+  # Install the updater component if selected
+  !ifdef DIRECTORY
+    File ".\deployment\${DIRECTORY}\updater.exe"
+  !else
+    File ".\deployment\windows64\updater.exe"
+  !endif
+SectionEnd
+
 Section "Install"
   SetOutPath "$INSTDIR"
   SetOverwrite on
 
   !ifdef DIRECTORY
     File /r ".\deployment\${DIRECTORY}\*"
+    File /x ".\deployment\${DIRECTORY}\updater.exe"
   !else
     File /r ".\deployment\windows64\*"
+    File /x ".\deployment\windows64\updater.exe"
   !endif
 
 
