@@ -38,11 +38,9 @@ Section "Install"
   SetOverwrite on
 
   !ifdef DIRECTORY
-    File /r ".\deployment\${DIRECTORY}\*"
-    File /x ".\deployment\${DIRECTORY}\updater.exe"
+    File /r /x "updater.exe" ".\deployment\${DIRECTORY}\*"
   !else
-    File /r ".\deployment\windows64\*"
-    File /x ".\deployment\windows64\updater.exe"
+    File /r /x "updater.exe" ".\deployment\windows64\*"
   !endif
 
 
