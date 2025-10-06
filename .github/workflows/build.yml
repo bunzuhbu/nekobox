@@ -477,7 +477,7 @@ jobs:
       - uses: ConorMacBride/install-package@v1
         if: github.event.inputs.publish == 'r' && github.event.inputs.source != 'y'
         with:
-          choco: curl jq yq sed
+          choco: curl jq sed
       - name: Upload Chocolatey Package
         shell: bash
         if: github.event.inputs.publish == 'r' && github.event.inputs.source != 'y'

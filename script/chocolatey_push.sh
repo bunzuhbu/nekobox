@@ -20,7 +20,7 @@ fi
 (
 cd nekobox
 
-sed -i "s~@URL_x86@~${url_x86}~g; s~@URL_x64@~${url_x64}~g; s~@SHA_x86@~${sha_x86}~g; s~@SHA_x64@~${sha_x64}~g; " tools/chocolateyinstall.ps1
+sed -i "s~@URL_x86@~${url_x86}~g;s~@URL_x64@~${url_x64}~g;s~@SHA_x86@~${sha_x86}~g;s~@SHA_x64@~${sha_x64}~g;" tools/chocolateyinstall.ps1
 sed -i "s~<version>.*</version>~<version>${INPUT_VERSION}</version>~g;" nekobox.nuspec
 
 #cat "${nekobox_yaml}" | yq e "(.package.metadata.version) = \"$INPUT_VERSION\" | (.package.metadata.summary) = \"Nekobox For PC\" | (.package.metadata.tags) = \"nekobox proxy\" | (.package.metadata.description) = \"The Original NekoBox Rebranded\" | (.package.metadata.authors) = \"qr243vbi\" | (.package.metadata.projectUrl) = \"https://github.com/qr243vbi/nekobox\""  -p xml -o xml > "${nekobox_yaml}"
