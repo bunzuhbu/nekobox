@@ -36,7 +36,7 @@ wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/1-al
 chmod +x linuxdeploy-$ARCH1.AppImage linuxdeploy-plugin-qt-$ARCH1.AppImage
 
 export EXTRA_QT_PLUGINS="iconengines;wayland-shell-integration;wayland-decoration-client;"
-export EXTRA_PLATFORM_PLUGINS="libqwayland-generic.so;"
+export EXTRA_PLATFORM_PLUGINS="libqwayland.so;"
 ./linuxdeploy-$ARCH1.AppImage --appdir $DEST --executable $DEST/nekobox --plugin qt
 rm linuxdeploy-$ARCH1.AppImage linuxdeploy-plugin-qt-$ARCH1.AppImage
 cd $DEST
@@ -47,7 +47,7 @@ rm -r ./usr/plugins
 mkdir ./usr/plugins
 mkdir ./usr/plugins/platforms
 cp $QT_PLUGIN_PATH/platforms/libqxcb.so ./usr/plugins/platforms
-cp $QT_PLUGIN_PATH/platforms/libqwayland-generic.so ./usr/plugins/platforms
+cp $QT_PLUGIN_PATH/platforms/libqwayland.so ./usr/plugins/platforms
 cp -r $QT_PLUGIN_PATH/platformthemes ./usr/plugins
 cp -r $QT_PLUGIN_PATH/imageformats ./usr/plugins
 cp -r $QT_PLUGIN_PATH/iconengines ./usr/plugins
@@ -55,7 +55,7 @@ cp -r $QT_PLUGIN_PATH/wayland-shell-integration ./usr/plugins
 cp -r $QT_PLUGIN_PATH/wayland-decoration-client ./usr/plugins
 cp -r $QT_PLUGIN_PATH/tls ./usr/plugins
 patchelf --set-rpath '$ORIGIN/../../lib' ./usr/plugins/platforms/libqxcb.so
-patchelf --set-rpath '$ORIGIN/../../lib' ./usr/plugins/platforms/libqwayland-generic.so
+patchelf --set-rpath '$ORIGIN/../../lib' ./usr/plugins/platforms/libqwayland.so
 patchelf --set-rpath '$ORIGIN/../../lib' ./usr/plugins/platformthemes/libqgtk3.so
 patchelf --set-rpath '$ORIGIN/../../lib' ./usr/plugins/platformthemes/libqxdgdesktopportal.so
 
