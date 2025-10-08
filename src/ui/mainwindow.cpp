@@ -250,16 +250,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->menubar->setVisible(false);
 #ifndef SKIP_UPDATE_BUTTON
     connect(ui->toolButton_update, &QToolButton::clicked, this, [=,this] { runOnNewThread([=,this] { CheckUpdate(); }); });
-    if ((!QFile::exists(QApplication::applicationDirPath() + "/updater")
-      && !QFile::exists(QApplication::applicationDirPath() + "/updater.exe"))
 #ifndef SKIP_JS_UPDATER
-      || !QFile::exists(QApplication::applicationDirPath() + "/check_new_release.js")
-#endif
+	if (
+       !QFile::exists(QApplication::applicationDirPath() + "/check_new_release.js")
     ) {
-#endif
         ui->toolButton_update->hide();
-#ifndef SKIP_UPDATE_BUTTON
     }
+#endif
+#else
+    ui->toolButton_update->hide();
 #endif
 
     // setup connection UI
@@ -2818,7 +2817,14 @@ end_search_define:
         //
         QAbstractButton *btn1 = nullptr;
         if (allow_updater) {
-            btn1 = box.addButton(QObject::tr("Update"), QMessageBox::AcceptRole);
+			if (
+				QFile::exists(QApplication::applicationDirPath() + "/updater") ||
+				QFile::exists(QApplication::applicationDirPath() + "/updater.exe")
+			) {
+            	btn1 = box.addButton(QObject::tr("Update"), QMessageBox::AcceptRole);
+			} else {
+				allow_updater = false;
+			}
         }
         QAbstractButton *btn2 = box.addButton(QObject::tr("Open in browser"), QMessageBox::AcceptRole);
         box.addButton(QObject::tr("Close"), QMessageBox::RejectRole);

@@ -18,7 +18,7 @@ RequestExecutionLevel user
 !addplugindir .\script\
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_COMPONENTS
+#!insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -27,18 +27,16 @@ RequestExecutionLevel user
 
 !include Sections.nsh
 
-Section /o "Updater" SID_UPDATER
-  SetOutPath "$INSTDIR"
-  SetOverwrite on
+#Section /o "Updater" SID_UPDATER
+#  SetOutPath "$INSTDIR"
+#  SetOverwrite on
   # Install the updater component if selected
-  !ifdef DIRECTORY
-    File ".\deployment\${DIRECTORY}\updater.exe"
-    File ".\deployment\${DIRECTORY}\check_new_release.js"
-  !else
-    File ".\deployment\windows64\updater.exe"
-    File ".\deployment\windows64\check_new_release.js"
-  !endif
-SectionEnd
+#  !ifdef DIRECTORY
+#    File ".\deployment\${DIRECTORY}\updater.exe"
+#  !else
+#    File ".\deployment\windows64\updater.exe"
+#  !endif
+#SectionEnd
 
 Function .onInit
 ${If} ${Silent}
@@ -52,9 +50,9 @@ Section "Install"
   SetOverwrite on
 
   !ifdef DIRECTORY
-    File /r /x "check_new_release.js" /x "updater.exe" ".\deployment\${DIRECTORY}\*"
+    File /r /x "updater.exe" ".\deployment\${DIRECTORY}\*"
   !else
-    File /r /x "check_new_release.js" /x "updater.exe" ".\deployment\windows64\*"
+    File /r /x "updater.exe" ".\deployment\windows64\*"
   !endif
 
 
