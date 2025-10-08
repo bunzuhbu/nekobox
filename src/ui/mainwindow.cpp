@@ -340,6 +340,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->proxyListTable->setTabKeyNavigation(false);
 
     // search box
+    connect(shortcut_ctrl_f, &QShortcut::activated, this, [=, this]
+    {
+        ui->search_input->setFocus();
+    });
     connect(ui->search_input, &QLineEdit::textChanged, this, [=,this](const QString& currentText)
     {
        searchString = currentText;
