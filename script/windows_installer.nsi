@@ -6,7 +6,7 @@ Name "nekobox"
     OutFile "nekobox_setup.exe"
 !endif
 InstallDir $APPDATA\nekobox
-RequestExecutionLevel user
+RequestExecutionLevel admin
 
 !include MUI2.nsh
 !define MUI_ICON "res\nekobox.ico"
@@ -18,32 +18,11 @@ RequestExecutionLevel user
 !addplugindir .\script\
 
 !insertmacro MUI_PAGE_WELCOME
-#!insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_LANGUAGE "English"
-
-!include Sections.nsh
-
-#Section /o "Updater" SID_UPDATER
-#  SetOutPath "$INSTDIR"
-#  SetOverwrite on
-  # Install the updater component if selected
-#  !ifdef DIRECTORY
-#    File ".\deployment\${DIRECTORY}\updater.exe"
-#  !else
-#    File ".\deployment\windows64\updater.exe"
-#  !endif
-#SectionEnd
-
-Function .onInit
-${If} ${Silent}
-    !insertmacro UnselectSection ${SID_UPDATER}
-${EndIf}
-FunctionEnd
-
 
 Section "Install"
   SetOutPath "$INSTDIR"
@@ -54,7 +33,6 @@ Section "Install"
   !else
     File /r /x "updater.exe" ".\deployment\windows64\*"
   !endif
-
 
   CreateShortcut "$desktop\nekobox.lnk" "$INSTDIR\nekobox.exe" "-appdata" "$INSTDIR\nekobox.exe" 0
   CreateShortcut "$SMPROGRAMS\nekobox.lnk" "$INSTDIR\nekobox.exe" "-appdata" "$INSTDIR\nekobox.exe" 0
@@ -81,3 +59,7 @@ Section "Uninstall"
 
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\nekobox"
 SectionEnd
+
+
+
+
