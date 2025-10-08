@@ -257,8 +257,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->toolButton_update->hide();
     }
 #endif
-#endif
-#ifdef SKIP_UPDATE_BUTTON
+#else
     ui->toolButton_update->hide();
 #endif
 
