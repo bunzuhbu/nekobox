@@ -250,16 +250,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->menubar->setVisible(false);
 #ifndef SKIP_UPDATE_BUTTON
     connect(ui->toolButton_update, &QToolButton::clicked, this, [=,this] { runOnNewThread([=,this] { CheckUpdate(); }); });
-    if ((!QFile::exists(QApplication::applicationDirPath() + "/updater")
-      && !QFile::exists(QApplication::applicationDirPath() + "/updater.exe"))
 #ifndef SKIP_JS_UPDATER
-      || !QFile::exists(QApplication::applicationDirPath() + "/check_new_release.js")
-#endif
+	if (
+       !QFile::exists(QApplication::applicationDirPath() + "/check_new_release.js")
     ) {
-#endif
         ui->toolButton_update->hide();
-#ifndef SKIP_UPDATE_BUTTON
     }
+#endif
+#endif
+#ifdef SKIP_UPDATE_BUTTON
+    ui->toolButton_update->hide();
 #endif
 
     // setup connection UI
