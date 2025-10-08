@@ -2845,7 +2845,14 @@ end_search_define:
         //
         QAbstractButton *btn1 = nullptr;
         if (allow_updater) {
-            btn1 = box.addButton(QObject::tr("Update"), QMessageBox::AcceptRole);
+			if (
+				QFile::exists(QApplication::applicationDirPath() + "/updater") ||
+				QFile::exists(QApplication::applicationDirPath() + "/updater.exe")
+			) {
+            	btn1 = box.addButton(QObject::tr("Update"), QMessageBox::AcceptRole);
+			} else {
+				allow_updater = false;
+			}
         }
         QAbstractButton *btn2 = box.addButton(QObject::tr("Open in browser"), QMessageBox::AcceptRole);
         box.addButton(QObject::tr("Close"), QMessageBox::RejectRole);
