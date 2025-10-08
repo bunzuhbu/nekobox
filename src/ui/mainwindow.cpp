@@ -340,12 +340,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->proxyListTable->setTabKeyNavigation(false);
 
     // search box
-    setSearchState(false);
-    connect(shortcut_ctrl_f, &QShortcut::activated, this, [=, this]
-    {
-        setSearchState(true);
-        ui->search_input->setFocus();
-    });
     connect(ui->search_input, &QLineEdit::textChanged, this, [=,this](const QString& currentText)
     {
        searchString = currentText;
@@ -357,7 +351,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             select_mode = false;
             refresh_status();
         }
-        if (searchEnabled) setSearchState(false);
+        if (ui->search_input->hasFocus()) ui->search_input->clear();
     });
 
     // refresh
@@ -1328,31 +1322,6 @@ void MainWindow::UpdateConnectionListWithRecreate(const QList<Stats::ConnectionM
         row++;
     }
     ui->connections->setUpdatesEnabled(true);
-}
-
-void MainWindow::setSearchState(bool enable)
-{
-    searchEnabled = enable;
-    if (enable)
-    {
-        ui->data_view->hide();
-        ui->search_input->show();
-        adjustSize();
-    } else
-    {
-        ui->search_input->blockSignals(true);
-        ui->search_input->clear();
-        ui->search_input->blockSignals(false);
-
-        ui->search_input->hide();
-        ui->data_view->show();
-        adjustSize();
-        if (!searchString.isEmpty())
-        {
-            searchString.clear();
-            refresh_proxy_list(-1);
-        }
-    }
 }
 
 QList<std::shared_ptr<Configs::ProxyEntity>> MainWindow::filterProfilesList(const QList<int>& profiles)
