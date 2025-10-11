@@ -340,8 +340,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->proxyListTable->setTabKeyNavigation(false);
 
     // search box
+    setSearchState(false);
     connect(shortcut_ctrl_f, &QShortcut::activated, this, [=, this]
     {
+        setSearchState(true);
         ui->search_input->setFocus();
     });
     connect(ui->search_input, &QLineEdit::textChanged, this, [=,this](const QString& currentText)
@@ -355,7 +357,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             select_mode = false;
             refresh_status();
         }
-        if (ui->search_input->hasFocus()) ui->search_input->clear();
+        if (searchEnabled) setSearchState(false);
     });
 
     // refresh
@@ -1172,7 +1174,7 @@ void MainWindow::UpdateDataView(bool force)
         ).arg(currentSptProfileName,
             currentTestResult.dl_speed.value().c_str(),
             currentTestResult.ul_speed.value().c_str(),
-            currentTestResult.server_country_emoji.value().c_str(),
+            CountryCodeToFlag(CountryNameToCode(QString::fromStdString(currentTestResult.server_country.value()))),
             currentTestResult.server_country.value().c_str(),
             currentTestResult.server_name.value().c_str());
     }
@@ -1328,6 +1330,31 @@ void MainWindow::UpdateConnectionListWithRecreate(const QList<Stats::ConnectionM
     ui->connections->setUpdatesEnabled(true);
 }
 
+void MainWindow::setSearchState(bool enable)
+{
+    searchEnabled = enable;
+    if (enable)
+    {
+        ui->data_view->hide();
+        ui->search_input->show();
+        adjustSize();
+    } else
+    {
+        ui->search_input->blockSignals(true);
+        ui->search_input->clear();
+        ui->search_input->blockSignals(false);
+
+        ui->search_input->hide();
+        ui->data_view->show();
+        adjustSize();
+        if (!searchString.isEmpty())
+        {
+            searchString.clear();
+            refresh_proxy_list(-1);
+        }
+    }
+}
+
 QList<std::shared_ptr<Configs::ProxyEntity>> MainWindow::filterProfilesList(const QList<int>& profiles)
 {
     QList<std::shared_ptr<Configs::ProxyEntity>> res;
@@ -1339,7 +1366,9 @@ QList<std::shared_ptr<Configs::ProxyEntity>> MainWindow::filterProfilesList(cons
             MW_show_log("Null profile, maybe data is corrupted");
             continue;
         }
-        if (searchString.isEmpty() || profile->bean->name.contains(searchString, Qt::CaseInsensitive) || profile->bean->serverAddress.contains(searchString, Qt::CaseInsensitive)) res.append(profile);
+        if (searchString.isEmpty() || profile->bean->name.contains(searchString, Qt::CaseInsensitive) || profile->bean->serverAddress.contains(searchString, Qt::CaseInsensitive)
+            || (searchString.startsWith("CODE:") && searchString.mid(5) == profile->test_country))
+            res.append(profile);
     }
     return res;
 }
