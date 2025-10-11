@@ -13,7 +13,7 @@ RequestExecutionLevel admin
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE "Welcome to nekobox Installer"
 !define MUI_WELCOMEPAGE_TEXT "This wizard will guide you through the installation of nekobox."
-!define MUI_FINISHPAGE_RUN "$INSTDIR\nekobox.exe"
+!define MUI_FINISHPAGE_RUN "$INSTDIR\nekobox.exe -appdata"
 !define MUI_FINISHPAGE_RUN_TEXT "Launch nekobox"
 !addplugindir .\script\
 
