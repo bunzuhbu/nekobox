@@ -1067,6 +1067,7 @@ bool isPowerShellAvailable() {
         bool found = (process.exitCode() == 0);
 
         FOUND_ALREADY = found;
+        SEARCHED = true;
         return found;
     } else {
         return FOUND_ALREADY;
