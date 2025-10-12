@@ -4,6 +4,14 @@
 #include <QElapsedTimer>
 #include <QProcess>
 
+#undef ELEVATE_METHOD
+#ifdef Q_OS_LINUX
+#define ELEVATE_METHOD
+#endif
+#ifdef Q_OS_WIN
+#define ELEVATE_METHOD
+#endif
+
 namespace Configs_sys {
     class CoreProcess : public QProcess
     {
@@ -22,7 +30,7 @@ namespace Configs_sys {
 
         void Restart();
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
+#ifdef ELEVATE_METHOD
         void elevateCoreProcessProgram();
 #endif
 
@@ -41,7 +49,7 @@ namespace Configs_sys {
         bool started = false;
         bool crashed = false;
 
-#ifdef defined(Q_OS_LINUX) || defined(Q_OS_WIN)
+#ifdef ELEVATE_METHOD
         bool coreProcessProgramElevated = false;
 #endif
     };
