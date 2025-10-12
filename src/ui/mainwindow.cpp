@@ -1060,16 +1060,13 @@ bool isPowerShellAvailable() {
     static bool FOUND_ALREADY = false;
 
     if (!SEARCHED){
-        SEARCHED = true;
-        TCHAR* path = new TCHAR[MAX_PATH];
+        QStringList args = { "where", "powershell" };
+        QProcess process;
+        process.start(args.takeFirst(), args);
+        process.waitForFinished();
+        bool found = (process.exitCode() == 0);
 
-        DWORD result = SearchPath(NULL, TEXT("powershell.exe"), NULL, MAX_PATH, path, NULL);
-
-        bool found = (result > 0); // If result > 0, PowerShell was found
-
-        delete[] path;
         FOUND_ALREADY = found;
-
         return found;
     } else {
         return FOUND_ALREADY;
