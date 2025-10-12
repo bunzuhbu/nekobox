@@ -22,7 +22,7 @@ namespace Configs_sys {
 
         void Restart();
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
         void elevateCoreProcessProgram();
 #endif
 
@@ -41,7 +41,7 @@ namespace Configs_sys {
         bool started = false;
         bool crashed = false;
 
-#ifdef Q_OS_LINUX
+#ifdef defined(Q_OS_LINUX) || defined(Q_OS_WIN)
         bool coreProcessProgramElevated = false;
 #endif
     };

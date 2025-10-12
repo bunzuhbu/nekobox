@@ -112,4 +112,33 @@ namespace Configs_sys {
         }
     }
 #endif
+
+#ifdef Q_OS_WIN
+void CoreProcess::elevateCoreProcessProgram(){
+    if (!coreProcessProgramElevated){
+        arguments.prepend(program);
+        arguments.prepend( "&{ param($program);\n\
+function Convert-ToPSSafeString {\n\
+    param (\n\
+        [Parameter(Mandatory = $true)]\n\
+        [string]$InputString\n\
+    )\n\
+    if ($InputString -notmatch \"'\") {\n\
+        return \"'$InputString'\"\n\
+    }\n\
+    $escaped = $InputString -replace '([`\"$])', '`$1'\n\
+    return \"`\"$escaped`\"\"\n\
+}\n\
+if (-not $args) {\n\
+  Start-Process -FilePath \"$program\" -Wait -Verb RunAs\n\
+} else {\n\
+  $joined = ($args | ForEach-Object { Convert-ToPSSafeString $_ }) -join \" \"\n\
+  Start-Process -FilePath \"$program\" -ArgumentList \"$joined\" -Wait -Verb RunAs\n\
+} }"    );
+        arguments.prepend("-Command");
+        program = "powershell";
+        coreProcessProgramElevated = true;
+    }
+}
+#endif
 } // namespace Configs_sys

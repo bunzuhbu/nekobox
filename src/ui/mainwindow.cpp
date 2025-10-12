@@ -1052,6 +1052,32 @@ void MainWindow::toggle_system_proxy() {
     }
 }
 
+
+#ifdef Q_OS_WIN
+
+bool isPowerShellAvailable() {
+    static bool SEARCHED = false;
+    static bool FOUND_ALREADY = false;
+
+    if (!SEARCHED){
+        SEARCHED = true;
+        TCHAR* path = new TCHAR[MAX_PATH];
+
+        DWORD result = SearchPath(NULL, TEXT("powershell.exe"), NULL, MAX_PATH, path, NULL);
+
+        bool found = (result > 0); // If result > 0, PowerShell was found
+
+        delete[] path;
+        FOUND_ALREADY = found;
+
+        return found;
+    } else {
+        return FOUND_ALREADY;
+    }
+}
+
+#endif
+
 bool MainWindow::get_elevated_permissions(int reason, void * pointer) {
     if (Configs::dataStore->disable_privilege_req)
     {
@@ -1068,7 +1094,6 @@ bool MainWindow::get_elevated_permissions(int reason, void * pointer) {
     if (n == QMessageBox::Yes) {
         StopVPNProcess();
         core_process->elevateCoreProcessProgram();
-  //      runOnNewThread([=,this]
         {
             if (reason == 3){
                 bool save = false;
@@ -1078,15 +1103,29 @@ bool MainWindow::get_elevated_permissions(int reason, void * pointer) {
                 set_spmode_vpn(true, save, false);
             }
         }
-  //      );
         return false;
     }
 #endif
 #ifdef Q_OS_WIN
     auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please give the core root privileges"), QMessageBox::Yes | QMessageBox::No);
     if (n == QMessageBox::Yes) {
-        this->exit_reason = reason;
-        on_menu_exit_triggered();
+        if (!isPowerShellAvailable()){
+            this->exit_reason = reason;
+            on_menu_exit_triggered();
+        } else {
+            StopVPNProcess();
+            core_process->elevateCoreProcessProgram();
+            {
+                if (reason == 3){
+                    bool save = false;
+                    if (pointer != nullptr){
+                        save = *((bool*) pointer);
+                    }
+                    set_spmode_vpn(true, save, false);
+                }
+            }
+            return false;
+        }
     }
 #endif
 
