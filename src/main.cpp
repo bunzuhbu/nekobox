@@ -68,9 +68,8 @@ int main(int argc, char* argv[]) {
 
     if (argc > 3) {
         QString arg1 = argv[1];
-        QString arg2 = argv[2];
-        QString program = argv[3];
         if (arg1 == "sudo") {
+            QString arg2 = argv[2];
             int flag = WinCommander::SW_SHOWMINIMIZED;
             if (arg2 == "hide") {
                 flag = WinCommander::SW_HIDE;
@@ -79,14 +78,17 @@ int main(int argc, char* argv[]) {
             } else if (arg2 != "minimized") {
                 goto main_label_1;
             }
-            QStringList arguments;
-            if (argc != 4) {
-                for (int i = 4; i < argc; i ++) {
-                    QString argument = argv[i];
-                    arguments += argument;
+            {
+                QString program = argv[3];
+                QStringList arguments;
+                if (argc != 4) {
+                    for (int i = 4; i < argc; i ++) {
+                        QString argument = argv[i];
+                        arguments += argument;
+                    }
                 }
+                return (int) WinCommander::runProcessElevated(program, arguments, "", flag, true);
             }
-            return (int) WinCommander::runProcessElevated(program, arguments, "", flag, true);
         }
         main_label_1:
     }
