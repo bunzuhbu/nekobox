@@ -117,24 +117,18 @@ namespace Configs_sys {
 void CoreProcess::elevateCoreProcessProgram(){
     if (!coreProcessProgramElevated){
         QFile file(QApplication::applicationDirPath() + "/run_admin.ps1");
-
-        if (!file.exists()) {
-            goto skip1;
+        if (file.exists()) {
+            if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QTextStream in(&file);
+                QString run_admin = in.readAll().toUtf8().constData();
+                file.close();
+                arguments.prepend(program);
+                arguments.prepend(run_admin);
+                arguments.prepend("-Command");
+                program = "powershell";
+                coreProcessProgramElevated = true;
+            }
         }
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            goto skip1;
-        }
-
-        QTextStream in(&file);
-        QString run_admin = in.readAll().toUtf8().constData();
-        file.close();
-        arguments.prepend(program);
-        arguments.prepend(run_admin);
-        arguments.prepend("-Command");
-        program = "powershell";
-        coreProcessProgramElevated = true;
-
-        skip1:
     }
 }
 #endif
