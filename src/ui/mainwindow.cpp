@@ -1084,8 +1084,24 @@ bool MainWindow::get_elevated_permissions(int reason, void * pointer) {
 #ifdef Q_OS_WIN
     auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please give the core root privileges"), QMessageBox::Yes | QMessageBox::No);
     if (n == QMessageBox::Yes) {
+
+#   ifdef USE_LEGACY_QT
         this->exit_reason = reason;
         on_menu_exit_triggered();
+#   else
+        StopVPNProcess();
+        core_process->elevateCoreProcessProgram();
+        {
+            if (reason == 3){
+                bool save = false;
+                if (pointer != nullptr){
+                    save = *((bool*) pointer);
+                }
+                set_spmode_vpn(true, save, false);
+            }
+        }
+        return false;
+#   endif
     }
 #endif
 
