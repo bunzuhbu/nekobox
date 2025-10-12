@@ -42,7 +42,6 @@ cp srslist $DEST/srslist
 
 #### copy exe ####
 cp $CURDIR/check_new_release.js $DEST
-cp $CURDIR/run_admin.ps1 $DEST
 cp $BUILD/nekobox.exe $DEST
 
 if [[ "$COMPILER" != "MinGW" ]]
