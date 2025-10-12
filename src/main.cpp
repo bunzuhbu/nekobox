@@ -76,9 +76,9 @@ int main(int argc, char* argv[]) {
             } else if (arg2 == "normal") {
                 flag = WinCommander::SW_NORMAL;
             } else if (arg2 != "minimized") {
-                goto main_label_1;
+                flag = -90;
             }
-            {
+            if (flag != -90){
                 QString program = argv[3];
                 QStringList arguments;
                 if (argc != 4) {
@@ -90,7 +90,6 @@ int main(int argc, char* argv[]) {
                 return (int) WinCommander::runProcessElevated(program, arguments, "", flag, true);
             }
         }
-        main_label_1:
     }
 #endif
 
