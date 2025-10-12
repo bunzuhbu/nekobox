@@ -64,7 +64,9 @@ func Updater() {
 	// remove old file
 	removeAll("./*.dll")	
 	removeAll("./*.dmp")
-	removeAll("./*.js")
+
+	os.RemoveAll("./run_admin.ps1")
+	os.RemoveAll("./check_new_release.js")
 
 	// update move
 	err = Mv("./nekobox_update/nekobox", "./")

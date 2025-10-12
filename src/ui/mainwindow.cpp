@@ -1058,7 +1058,6 @@ void MainWindow::toggle_system_proxy() {
 bool isPowerShellAvailable() {
     static bool SEARCHED = false;
     static bool FOUND_ALREADY = false;
-
     if (!SEARCHED){
         QStringList args = { "where", "powershell" };
         QProcess process;

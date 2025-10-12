@@ -5,10 +5,21 @@ Name "nekobox"
 !else
     OutFile "nekobox_setup.exe"
 !endif
-InstallDir $APPDATA\nekobox
+InstallDir $PROGRAMFILES\nekobox
 RequestExecutionLevel admin
 
 !include MUI2.nsh
+!include LogicLib.nsh
+!include x64.nsh
+
+Function .onInit
+    ${If} ${RunningX64}
+        StrCpy $INSTDIR "$PROGRAMFILES64\nekobox"
+    ${Else}
+        StrCpy $INSTDIR "$PROGRAMFILES\nekobox"
+    ${EndIf}
+FunctionEnd
+
 !define MUI_ICON "res\nekobox.ico"
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE "Welcome to nekobox Installer"
