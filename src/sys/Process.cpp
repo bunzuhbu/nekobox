@@ -122,7 +122,8 @@ void CoreProcess::elevateCoreProcessProgram(){
                 QTextStream in(&file);
                 QString run_admin = in.readAll().toUtf8().constData();
                 file.close();
-                arguments.prepend("\"" + program + "\"");
+                QString arg1 = "\"" + program + "\"";
+                arguments.prepend(arg1);
                 arguments.prepend(run_admin);
                 arguments.prepend("-Command");
                 program = "powershell";
