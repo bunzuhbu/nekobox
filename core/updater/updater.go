@@ -65,7 +65,7 @@ func Updater() {
 	removeAll("./*.dll")	
 	removeAll("./*.dmp")
 
-	os.RemoveAll("./run_admin.ps1")
+	// os.RemoveAll("./run_admin.ps1")
 	os.RemoveAll("./check_new_release.js")
 
 	// update move

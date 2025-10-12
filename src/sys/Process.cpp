@@ -114,23 +114,14 @@ namespace Configs_sys {
 #endif
 
 #ifdef Q_OS_WIN
-void CoreProcess::elevateCoreProcessProgram(){
-    if (!coreProcessProgramElevated){
-        QFile file(QApplication::applicationDirPath() + "/run_admin.ps1");
-        if (file.exists()) {
-            if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                QTextStream in(&file);
-                QString run_admin = in.readAll().toUtf8().constData();
-                file.close();
-                QString arg1 = "\"" + program + "\"";
-                arguments.prepend(arg1);
-                arguments.prepend(run_admin);
-                arguments.prepend("-Command");
-                program = "powershell";
-                coreProcessProgramElevated = true;
-            }
+    void CoreProcess::elevateCoreProcessProgram(){
+        if (!coreProcessProgramElevated){
+            arguments.prepend(program);
+            arguments.prepend("hide");
+            arguments.prepend("sudo");
+            program = QCoreApplication::applicationFilePath();
+            coreProcessProgramElevated = true;
         }
     }
-}
 #endif
 } // namespace Configs_sys

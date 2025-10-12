@@ -1053,28 +1053,6 @@ void MainWindow::toggle_system_proxy() {
 }
 
 
-#ifdef Q_OS_WIN
-
-bool isPowerShellAvailable() {
-    static bool SEARCHED = false;
-    static bool FOUND_ALREADY = false;
-    if (!SEARCHED){
-        QStringList args = { "where", "powershell" };
-        QProcess process;
-        process.start(args.takeFirst(), args);
-        process.waitForFinished();
-        bool found = (process.exitCode() == 0);
-
-        FOUND_ALREADY = found;
-        SEARCHED = true;
-        return found;
-    } else {
-        return FOUND_ALREADY;
-    }
-}
-
-#endif
-
 bool MainWindow::get_elevated_permissions(int reason, void * pointer) {
     if (Configs::dataStore->disable_privilege_req)
     {
@@ -1106,23 +1084,8 @@ bool MainWindow::get_elevated_permissions(int reason, void * pointer) {
 #ifdef Q_OS_WIN
     auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please give the core root privileges"), QMessageBox::Yes | QMessageBox::No);
     if (n == QMessageBox::Yes) {
-        if (!isPowerShellAvailable()){
-            this->exit_reason = reason;
-            on_menu_exit_triggered();
-        } else {
-            StopVPNProcess();
-            core_process->elevateCoreProcessProgram();
-            {
-                if (reason == 3){
-                    bool save = false;
-                    if (pointer != nullptr){
-                        save = *((bool*) pointer);
-                    }
-                    set_spmode_vpn(true, save, false);
-                }
-            }
-            return false;
-        }
+        this->exit_reason = reason;
+        on_menu_exit_triggered();
     }
 #endif
 

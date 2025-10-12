@@ -16,6 +16,7 @@
 #include "include/ui/mainwindow_interface.h"
 
 #ifdef Q_OS_WIN
+#include "3rdparty/WinCommander.hpp"
 #include "include/sys/windows/MiniDump.h"
 #include "include/sys/windows/eventHandler.h"
 #include "include/sys/windows/WinVersion.h"
@@ -64,6 +65,31 @@ int main(int argc, char* argv[]) {
     // Core dump
 #ifdef Q_OS_WIN
     Windows_SetCrashHandler();
+
+    if (argc > 3) {
+        QString arg1 = argv[1];
+        QString arg2 = argv[2];
+        QString program = argv[3];
+        if (arg1 == "sudo") {
+            int flag = WinCommander::SW_SHOWMINIMIZED;
+            if (arg2 == "hide") {
+                flag = WinCommander::SW_HIDE;
+            } else if (arg2 == "normal") {
+                flag = WinCommander::SW_NORMAL;
+            } else if (arg2 != "minimized") {
+                goto main_label_1;
+            }
+            QStringList arguments;
+            if (argc != 4) {
+                for (int i = 4; i < argc; i ++) {
+                    QString argument = argv[i];
+                    arguments += argument;
+                }
+            }
+            return (int) WinCommander::runProcessElevated(program, arguments, "", flag, true);
+        }
+        main_label_1:
+    }
 #endif
 
     QApplication::setAttribute(Qt::AA_DontUseNativeDialogs);
