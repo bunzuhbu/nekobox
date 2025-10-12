@@ -66,34 +66,34 @@ int main(int argc, char* argv[]) {
 #ifdef Q_OS_WIN
     Windows_SetCrashHandler();
 
-    if (argc > 3) {
+    if (argc >= 4) {
         QString arg1 = argv[1];
-        if (arg1 == "sudo") {
-
-            QString arg2 = argv[2];
-            int flag = WinCommander::SW_SHOWMINIMIZED;
-            if (arg2 == "hide") {
-                flag = WinCommander::SW_HIDE;
-            } else if (arg2 == "normal") {
-                flag = WinCommander::SW_NORMAL;
-            } else if (arg2 != "minimized") {
-                flag = -90;
-            };
-            if (flag != -90){
-                QString program = argv[3];
-                QStringList arguments;
-                if (argc != 4) {
-                    for (int i = 4; i < argc; i ++) {
-                        QString argument = argv[i];
-                        arguments += argument;
-                    }
-                }
-                return (int) WinCommander::runProcessElevated(program, arguments, "", flag, true);
-            };
-
+        QStringList arguments;
+        int flag = WinCommander::SW_SHOWMINIMIZED;
+        if (arg1 != "sudo") {
+            goto skip_sudo;
         }
-
+        arg1 = argv[2];
+        if (arg2 == "hide") {
+            flag = WinCommander::SW_HIDE;
+        } else if (arg2 == "normal") {
+            flag = WinCommander::SW_NORMAL;
+        } else if (arg2 != "minimized") {
+            goto skip_sudo;
+        }
+        if (argc != 4) {
+            for (int i = 4; i < argc; i ++) {
+                arg1 = argv[i];
+                arguments += arg1;
+            }
+        }
+        arg1 = argv[3];
+        {
+            return (int) WinCommander::runProcessElevated(arg1, arguments, "", flag, true);
+        }
     }
+    skip_sudo:
+
 #endif
 
     QApplication::setAttribute(Qt::AA_DontUseNativeDialogs);
