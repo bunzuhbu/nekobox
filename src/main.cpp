@@ -74,11 +74,11 @@ int main(int argc, char* argv[]) {
             goto skip_sudo;
         }
         arg1 = argv[2];
-        if (arg2 == "hide") {
+        if (arg1 == "hide") {
             flag = WinCommander::SW_HIDE;
-        } else if (arg2 == "normal") {
+        } else if (arg1 == "normal") {
             flag = WinCommander::SW_NORMAL;
-        } else if (arg2 != "minimized") {
+        } else if (arg1 != "minimized") {
             goto skip_sudo;
         }
         if (argc != 4) {
