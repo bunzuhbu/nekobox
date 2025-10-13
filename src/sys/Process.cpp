@@ -117,9 +117,8 @@ namespace Configs_sys {
     void CoreProcess::elevateCoreProcessProgram(){
         if (!coreProcessProgramElevated){
             arguments.prepend(program);
-            arguments.prepend("hide");
-            arguments.prepend("sudo");
-            program = QCoreApplication::applicationFilePath();
+            arguments.prepend("--");
+            program = "sudo";
             coreProcessProgramElevated = true;
         }
     }
