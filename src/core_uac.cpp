@@ -1,3 +1,10 @@
+#define SW_HIDE SW_HIDE_QA
+#define SW_NORMAL SW_NORMAL_QA
+#define SW_SHOWMINIMIZED SW_SHOWMINIMIZED_QA
+#include <3rdparty/WinCommander.hpp>
+#undef SW_HIDE
+#undef SW_NORMAL
+#undef SW_SHOWMINIMIZED
 #include "include/core_uac.h"
 #include <tuple>
 #include <windows.h>
@@ -7,13 +14,6 @@
 #include <fstream>
 #include <istream>
 #include <QString>
-#define SW_HIDE SW_HIDE_QA
-#define SW_NORMAL SW_NORMAL_QA
-#define SW_SHOWMINIMIZED SW_SHOWMINIMIZED_QA
-#include <3rdparty/WinCommander.hpp>
-#undef SW_HIDE
-#undef SW_NORMAL
-#undef SW_SHOWMINIMIZED
 
 
 QString getRandomString(int length)
