@@ -65,7 +65,8 @@ void loadTranslate(const QString& locale) {
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QUuid>
-
+#include <QProcess>
+#include <iostream>
 
 void startPipeServer(const QString &name, std::ostream &outputStream) {
     QLocalServer::removeServer(name);  // Important: remove stale socket
@@ -130,7 +131,6 @@ int startSocketClient(int argc, char *argv[]){
         return 1;
     }
 
-    // Start the process
     QProcess process;
     process.setProgram(program);
     process.setArguments(arguments);
