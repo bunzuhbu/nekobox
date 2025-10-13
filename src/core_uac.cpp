@@ -7,6 +7,9 @@
 #include <fstream>
 #include <istream>
 #include <QString>
+#define SW_HIDE SW_HIDE_QA
+#define SW_NORMAL SW_NORMAL_QA
+#define SW_SHOWMINIMIZED SW_SHOWMINIMIZED_QA
 #include <3rdparty/WinCommander.hpp>
 
 
@@ -132,7 +135,7 @@ int runCoreUACMode(int argc, char *argv[]){
     arguments << perr_path;
     arguments << "-redirect-output";
     arguments << pout_path;
-    int ret = (int) WinCommander::runProcessElevated(program, arguments, "", WinCommander::SW_HIDE, true);
+    int ret = (int) WinCommander::runProcessElevated(program, arguments, "", WinCommander::SW_HIDE_QA, true);
     auto th1 = startStreamThread(perr, std::cerr);
     auto th2 = startStreamThread(pout, std::cout);
     CloseHandle(perr);
