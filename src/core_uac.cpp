@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <istream>
+#include <QString>
 #include <3rdparty/WinCommander.hpp>
 
 
