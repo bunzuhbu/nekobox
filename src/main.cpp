@@ -9,7 +9,6 @@
 #include <QLocalSocket>
 #include <QLocalServer>
 #include <QThread>
-#include <3rdparty/WinCommander.hpp>
 
 #include "include/global/Configs.hpp"
 
@@ -63,6 +62,13 @@ void loadTranslate(const QString& locale) {
 
 #ifdef Q_OS_WIN
 #include <tuple>
+#include <windows.h>
+#include <QRandomGenerator>
+#include <ostream>
+#include <iostream>
+#include <fstream>
+#include <istream>
+
 
 QString getRandomString(int length)
 {
