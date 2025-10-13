@@ -15,7 +15,6 @@
 #include "include/ui/mainwindow_interface.h"
 
 #ifdef Q_OS_WIN
-#include "3rdparty/WinCommander.hpp"
 #include "include/sys/windows/MiniDump.h"
 #include "include/sys/windows/eventHandler.h"
 #include "include/sys/windows/WinVersion.h"
@@ -68,6 +67,8 @@ void loadTranslate(const QString& locale) {
 #include <iostream>
 #include <fstream>
 #include <istream>
+#include <3rdparty/WinCommander.hpp>
+#include "3rdparty/WinCommander.hpp"
 
 
 QString getRandomString(int length)
