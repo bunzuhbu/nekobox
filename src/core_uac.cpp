@@ -14,6 +14,7 @@
 #include <fstream>
 #include <istream>
 #include <QString>
+#include <QDebug>
 
 
 QString getRandomString(int length)
