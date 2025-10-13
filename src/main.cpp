@@ -61,39 +61,172 @@ void loadTranslate(const QString& locale) {
 
 #define LOCAL_SERVER_PREFIX "nekobox-"
 
+#ifdef Q_OS_WIN
+#include <QLocalServer>
+#include <QLocalSocket>
+#include <QUuid>
+
+
+void startPipeServer(const QString &name, std::ostream &outputStream) {
+    QLocalServer::removeServer(name);  // Important: remove stale socket
+
+    QLocalServer *server = new QLocalServer();
+
+    if (!server->listen(name)) {
+        qCritical() << "Could not listen on" << name;
+        return;
+    }
+
+    QObject::connect(server, &QLocalServer::newConnection, [server, &outputStream]() {
+        QLocalSocket *client = server->nextPendingConnection();
+        QObject::connect(client, &QLocalSocket::readyRead, [client, &outputStream]() {
+            QByteArray data = client->readAll();
+            outputStream << data.toStdString();
+            outputStream.flush();
+        });
+        QObject::connect(client, &QLocalSocket::disconnected, client, &QLocalSocket::deleteLater);
+    });
+}
+
+QString generateUniqueSocketName(const QString &prefix) {
+    return prefix + "_" + QUuid::createUuid().toString(QUuid::Id128);
+}
+
+int startSocketClient(int argc, char *argv[]){
+    QString name;
+    if (argc < 5){
+        return -1000;
+    } else {
+        name = argv[1];
+        if (name != "SocketClient") {
+            return -1000;
+        }
+    }
+
+    QCoreApplication app(argc, argv);
+    QString stdout_path = argv[2];
+    QString stderr_path = argv[3];
+    QString program = argv[4];
+    QStringList arguments;
+
+    for (int i = 5; i < argc; i ++){
+        name = argv[i];
+        arguments << name;
+    }
+
+    // Connect to stdout pipe
+    QLocalSocket stdoutSocket;
+    stdoutSocket.connectToServer(stdout_path);
+    if (!stdoutSocket.waitForConnected(3000)) {
+        qCritical() << "Failed to connect to stdout pipe:" << stdoutSocket.errorString();
+        return 1;
+    }
+
+    // Connect to stderr pipe
+    QLocalSocket stderrSocket;
+    stderrSocket.connectToServer(stderr_path);
+    if (!stderrSocket.waitForConnected(3000)) {
+        qCritical() << "Failed to connect to stderr pipe:" << stderrSocket.errorString();
+        return 1;
+    }
+
+    // Start the process
+    QProcess process;
+    process.setProgram(program);
+    process.setArguments(arguments);
+    process.setProcessChannelMode(QProcess::SeparateChannels);
+
+    process.start();
+
+    if (!process.waitForStarted(5000)) {
+        qCritical() << "Failed to start process.";
+        return 1;
+    }
+
+    // Read from process and write to corresponding sockets
+    while (process.state() != QProcess::NotRunning) {
+        process.waitForReadyRead(100);
+
+        QByteArray out = process.readAllStandardOutput();
+        if (!out.isEmpty()) {
+            stdoutSocket.write(out);
+            stdoutSocket.flush();
+        }
+
+        QByteArray err = process.readAllStandardError();
+        if (!err.isEmpty()) {
+            stderrSocket.write(err);
+            stderrSocket.flush();
+        }
+    }
+
+    process.waitForFinished();
+
+    stdoutSocket.flush();
+    stdoutSocket.disconnectFromServer();
+
+    stderrSocket.flush();
+    stderrSocket.disconnectFromServer();
+    return process.exitCode();
+}
+
+int startSocketServer(int argc, char *argv[]) {
+    QString name;
+    if (argc < 4){
+        return -1000;
+    } else {
+        name = argv[1];
+        if (name != "sudo") {
+            return -1000;
+        }
+    }
+
+    QCoreApplication app(argc, argv);
+
+    // 🎲 Generate unique names
+    const QString outSock = generateUniqueSocketName("stdout");
+    const QString errSock = generateUniqueSocketName("stderr");
+
+    startPipeServer(outSock, std::cout);
+    startPipeServer(errSock, std::cerr);
+
+    // 🚀 Launch Program B with the random socket names
+    name = argv[2];
+    int flag = WinCommander::SW_SHOWMINIMIZED;
+    if (name == "hide") {
+        flag = WinCommander::SW_HIDE;
+    } else if (name == "normal") {
+        flag = WinCommander::SW_NORMAL;
+    } else if (name != "minimized") {
+        return -1000;
+    }
+
+    QStringList arguments;
+    arguments << "SocketClient";
+    arguments << outSock << errSock;
+
+    for (int i = 3 ; i < argc ; i++){
+        arguments << argv[i];
+    }
+
+    return (int) WinCommander::runProcessElevated(QApplication::applicationFilePath(), arguments, "", flag, true);
+}
+
+
+#endif
+
 int main(int argc, char* argv[]) {
     // Core dump
 #ifdef Q_OS_WIN
     Windows_SetCrashHandler();
-
-    if (argc >= 4) {
-        QString arg1 = argv[1];
-        QStringList arguments;
-        int flag = WinCommander::SW_SHOWMINIMIZED;
-        if (arg1 != "sudo") {
-            goto skip_sudo;
-        }
-        arg1 = argv[2];
-        if (arg1 == "hide") {
-            flag = WinCommander::SW_HIDE;
-        } else if (arg1 == "normal") {
-            flag = WinCommander::SW_NORMAL;
-        } else if (arg1 != "minimized") {
-            goto skip_sudo;
-        }
-        if (argc != 4) {
-            for (int i = 4; i < argc; i ++) {
-                arg1 = argv[i];
-                arguments += arg1;
-            }
-        }
-        arg1 = argv[3];
-        {
-            return (int) WinCommander::runProcessElevated(arg1, arguments, "", flag, true);
-        }
+    int ret_code = startSocketServer(argc, argv);
+    if (ret_code != -1000){
+        return ret_code;
     }
-    skip_sudo:
-
+    ret_code = startSocketClient(argc, argv);
+    if (ret_code != -1000){
+        return ret_code;
+    }
 #endif
 
     QApplication::setAttribute(Qt::AA_DontUseNativeDialogs);
