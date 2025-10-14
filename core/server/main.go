@@ -22,8 +22,33 @@ import (
 func RunCore() {
 	_port := flag.Int("port", 19810, "")
 	_debug := flag.Bool("debug", false, "")
+	redirectOutput := flag.String("redirect-output", "", "Path to redirect stdout (e.g. named pipe or file)")
+	redirectError := flag.String("redirect-error", "", "Path to redirect stderr (e.g. named pipe or file)")
+
 	flag.CommandLine.Parse(os.Args[1:])
 	debug = *_debug
+
+	// Redirect stdout if flag is provided
+	if *redirectOutput != "" {
+		outFile, err := os.OpenFile(*redirectOutput, os.O_WRONLY, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to open output redirect target: %v\n", err)
+			os.Exit(1)
+		}
+		defer outFile.Close()
+		os.Stdout = outFile
+	}
+
+	// Redirect stderr if flag is provided
+	if *redirectError != "" {
+		errFile, err := os.OpenFile(*redirectError, os.O_WRONLY, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to open error redirect target: %v\n", err)
+			os.Exit(1)
+		}
+		defer errFile.Close()
+		os.Stderr = errFile
+	}
 
 	go func() {
 		parent, err := os.FindProcess(os.Getppid())
