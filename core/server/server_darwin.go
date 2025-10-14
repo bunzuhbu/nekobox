@@ -2,6 +2,7 @@ package main
 
 import (
 	"Core/gen"
+	"os"
 )
 
 func (s *server) SetSystemDNS(in *gen.SetSystemDNSRequest, out *gen.EmptyResp) error {
