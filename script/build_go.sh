@@ -53,7 +53,7 @@ export CGO_ENABLED=0
 #### Go: updater ####
 [ "$GOOS" == "darwin" ] || [ "$SKIP_UPDATER" == y ] || (
 cd core/updater
-$GOCMD mod tidy
+[ "$GO_MOD_TIDY" == yes ] && $GOCMD mod tidy
 $GOCMD build -o $DEST/updater"${EXT}" -trimpath -ldflags "-w -s"
 ) ||:
 
@@ -64,6 +64,6 @@ cd gen
 protoc -I . --go_out=. --protorpc_out=. libcore.proto
 ) || :
 VERSION_SINGBOX="${VERSION_SINGBOX:-$(go list -m -f '{{.Version}}' github.com/sagernet/sing-box)}"
-$GOCMD mod tidy
+[ "$GO_MOD_TIDY" == yes ] && $GOCMD mod tidy
 $GOCMD build -v -o $DEST/nekobox_core$EXT -trimpath -ldflags "-w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}'" -tags "$TAGS"
 popd
