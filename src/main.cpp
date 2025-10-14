@@ -202,6 +202,10 @@ int main(int argc, char* argv[]) {
     // Core dump
 #ifdef Q_OS_WIN
     Windows_SetCrashHandler();
+	int ret_code = runCoreUACMode(argc, argv);
+	if (ret_code != -1000){
+		return ret_code;
+	}
 #endif
 
     QApplication::setAttribute(Qt::AA_DontUseNativeDialogs);
