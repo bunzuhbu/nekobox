@@ -10,8 +10,10 @@ import (
 	"github.com/natefinch/npipe"
 	"io"
 	"os"
-	"sync"
+	"sync"    
+	"golang.org/x/sys/windows"
 	"log"
+	"unsafe"
 )
 
 const letters = "abcdefghijklmnopqrstuvwxyz"
@@ -104,4 +106,38 @@ func runAdmin(_port * int, _debug * bool) int {
     }
 	
 	return code
+}
+
+func isElevated() (bool, error) {
+    var token windows.Token
+    err := windows.OpenProcessToken(windows.CurrentProcess(), windows.TOKEN_QUERY, &token)
+    if err != nil {
+        return false, err
+    }
+    defer token.Close()
+
+    var elevation uint32
+    var outLen uint32
+    err = windows.GetTokenInformation(
+        token,
+        windows.TokenElevation,
+        (*byte)(unsafe.Pointer(&elevation)),
+        uint32(unsafe.Sizeof(elevation)),
+        &outLen,
+    )
+    if err != nil {
+        return false, err
+    }
+
+    return elevation != 0, nil
+}
+
+func (s *server) IsPrivileged(in *gen.EmptyReq, out *gen.IsPrivilegedResponse) error {
+	elevated, err := isElevated()
+	if err != nil {
+		out.HasPrivilege = To(false)
+		return err
+	}
+	out.HasPrivilege = To(elevated)
+	return nil
 }

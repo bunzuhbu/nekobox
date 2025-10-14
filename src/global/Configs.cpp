@@ -438,9 +438,14 @@ namespace Configs {
 
         bool admin = false;
 #ifdef Q_OS_WIN
+#ifdef USE_LEGACY_QT
         admin = Windows_IsInAdmin();
         dataStore->windows_set_admin = admin;
-#else
+#define SKIP_ASK_CORE
+#endif
+#endif 
+
+#ifndef SKIP_ASK_CORE
         bool ok;
         auto isPrivileged = API::defaultClient->IsPrivileged(&ok);
         admin = ok && isPrivileged;
