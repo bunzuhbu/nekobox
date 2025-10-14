@@ -8,7 +8,7 @@ func (s *server) SetSystemDNS(in *gen.SetSystemDNSRequest, out *gen.EmptyResp) e
 	return nil
 }
 
-func runAdmin(int * _port, bool * _debug) int {
+func runAdmin(_port * int, _debug * bool) int {
 	return 0
 }
 
