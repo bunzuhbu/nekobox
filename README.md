@@ -69,6 +69,7 @@ Various formats are supported, including share links, JSON array of outbounds an
 - [codeclysm/extract](https://github.com/codeclysm/extract)
 - [shlex](https://github.com/google/shlex)
 - [URLParser](https://github.com/dongbum/URLParser)
+- [npipe](https://github.com/NullYing/npipe)
 
 ## FAQ
 **Why does my Anti-Virus detect NekoBox as malware?** <br/>
