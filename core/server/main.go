@@ -19,36 +19,8 @@ import (
 	C "github.com/sagernet/sing-box/constant"
 )
 
-func RunCore() {
-	_port := flag.Int("port", 19810, "")
-	_debug := flag.Bool("debug", false, "")
-	redirectOutput := flag.String("redirect-output", "", "Path to redirect stdout (e.g. named pipe or file)")
-	redirectError := flag.String("redirect-error", "", "Path to redirect stderr (e.g. named pipe or file)")
-
-	flag.CommandLine.Parse(os.Args[1:])
+func RunCore(_port * int, _debug * bool) {
 	debug = *_debug
-
-	// Redirect stdout if flag is provided
-	if *redirectOutput != "" {
-		outFile, err := os.OpenFile(*redirectOutput, os.O_WRONLY, 0)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to open output redirect target: %v\n", err)
-			os.Exit(1)
-		}
-		defer outFile.Close()
-		os.Stdout = outFile
-	}
-
-	// Redirect stderr if flag is provided
-	if *redirectError != "" {
-		errFile, err := os.OpenFile(*redirectError, os.O_WRONLY, 0)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to open error redirect target: %v\n", err)
-			os.Exit(1)
-		}
-		defer errFile.Close()
-		os.Stderr = errFile
-	}
 
 	go func() {
 		parent, err := os.FindProcess(os.Getppid())
@@ -89,6 +61,34 @@ func RunCore() {
 }
 
 func main() {
+	_port := flag.Int("port", 19810, "")
+	_debug := flag.Bool("debug", false, "")
+	redirectOutput := flag.String("redirect-output", "", "Path to redirect stdout (e.g. named pipe or file)")
+	redirectError := flag.String("redirect-error", "", "Path to redirect stderr (e.g. named pipe or file)")
+
+	flag.CommandLine.Parse(os.Args[1:])
+	// Redirect stdout if flag is provided
+	if *redirectOutput != "" {
+		outFile, err := os.OpenFile(*redirectOutput, os.O_WRONLY, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to open output redirect target: %v\n", err)
+			os.Exit(1)
+		}
+		defer outFile.Close()
+		os.Stdout = outFile
+	}
+
+	// Redirect stderr if flag is provided
+	if *redirectError != "" {
+		errFile, err := os.OpenFile(*redirectError, os.O_WRONLY, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to open error redirect target: %v\n", err)
+			os.Exit(1)
+		}
+		defer errFile.Close()
+		os.Stderr = errFile
+	}
+	
 	fmt.Println("sing-box:", C.Version)
 	fmt.Println()
 	runtimeDebug.SetMemoryLimit(2 * 1024 * 1024 * 1024) // 2GB
@@ -105,6 +105,6 @@ func main() {
 	}()
 
 	testCtx, cancelTests = context.WithCancel(context.Background())
-	RunCore()
+	RunCore(_port, _debug)
 	return
 }
