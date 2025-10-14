@@ -90,7 +90,7 @@ jobs:
         if: steps.cache-common.outputs.cache-hit != 'true' && matrix.cross_os != 'public' && github.event.inputs.source != 'y'
         shell: bash
         run: |
-          SKIP_UPDATER=${{ github.event.inputs.updater }} GOOS=${{ matrix.cross_os }} GOARCH=${{ matrix.cross_arch }} ./script/build_go.sh
+          GO_MOD_TIDY=yes SKIP_UPDATER=${{ github.event.inputs.updater }} GOOS=${{ matrix.cross_os }} GOARCH=${{ matrix.cross_arch }} ./script/build_go.sh
       - name: Build vendor
         if: steps.cache-common.outputs.cache-hit != 'true' && matrix.cross_os == 'public'
         shell: bash
