@@ -116,9 +116,7 @@ namespace Configs_sys {
 #ifdef Q_OS_WIN
     void CoreProcess::elevateCoreProcessProgram(){
         if (!coreProcessProgramElevated){
-            arguments.prepend(program);
-            arguments.prepend("sudo");
-            program = QApplication::applicationFilePath();
+            arguments.prepend("-admin");
             coreProcessProgramElevated = true;
         }
     }

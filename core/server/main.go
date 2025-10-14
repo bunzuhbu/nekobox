@@ -61,12 +61,20 @@ func RunCore(_port * int, _debug * bool) {
 }
 
 func main() {
+	var _admin *bool = new(bool);
+	*_admin = false;
 	_port := flag.Int("port", 19810, "")
 	_debug := flag.Bool("debug", false, "")
+	
+	if runtime.GOOS == "windows" {
+		_admin = flag.Bool("admin", false, "Run in admin mode")
+	}
+	
 	redirectOutput := flag.String("redirect-output", "", "Path to redirect stdout (e.g. named pipe or file)")
 	redirectError := flag.String("redirect-error", "", "Path to redirect stderr (e.g. named pipe or file)")
 
 	flag.CommandLine.Parse(os.Args[1:])
+
 	// Redirect stdout if flag is provided
 	if *redirectOutput != "" {
 		outFile, err := os.OpenFile(*redirectOutput, os.O_WRONLY, 0)
@@ -89,6 +97,13 @@ func main() {
 		os.Stderr = errFile
 	}
 	
+	
+	if runtime.GOOS == "windows" {
+		if *_admin{
+			os.Exit(runAdmin(_port, _debug))
+		}
+	}
+	
 	fmt.Println("sing-box:", C.Version)
 	fmt.Println()
 	runtimeDebug.SetMemoryLimit(2 * 1024 * 1024 * 1024) // 2GB
@@ -105,6 +120,7 @@ func main() {
 	}()
 
 	testCtx, cancelTests = context.WithCancel(context.Background())
+
 	RunCore(_port, _debug)
 	return
 }

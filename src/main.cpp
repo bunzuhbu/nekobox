@@ -65,74 +65,11 @@ void loadTranslate(const QString& locale) {
     }
 }
 
-#ifdef Q_OS_WIN
-#include <QCoreApplication>
-#include <QLocalServer>
-#include <QLocalSocket>
-#include <QDataStream>
-#include <QDebug>
-
-int run_sudo(int argc, char ** argv) {
-    const wchar_t* pipeName = L"\\\\.\\pipe\\MyNamedPipe"; // Named pipe name
-	std::wcout << pipeName;
-    // Create the named pipe
-    HANDLE hPipe = CreateNamedPipe(
-        pipeName,                       // Pipe name
-        PIPE_ACCESS_INBOUND,           // Read access
-        PIPE_TYPE_BYTE | PIPE_WAIT,     // Byte-type pipe and blocking mode
-        1,                               // Max. instances
-        1024,                            // Output buffer size
-        1024,                            // Input buffer size
-        0,                               // Client time-out
-        NULL);                           // Default security attributes
-
-    if (hPipe == INVALID_HANDLE_VALUE) {
-        std::cerr << "Error creating named pipe: " << GetLastError() << std::endl;
-        return 1;
-    }
-
-    std::cout << "Named pipe created. Waiting for a client to connect..." << std::endl;
-
-    // Wait for a client to connect
-    if (ConnectNamedPipe(hPipe, NULL) == FALSE) {
-        std::cerr << "Error connecting to named pipe: " << GetLastError() << std::endl;
-        CloseHandle(hPipe);
-        return 1;
-    }
-    std::cout << "Client connected." << std::endl;
-
-    // Buffer to store incoming data
-    char buffer[128];
-    DWORD bytesRead;
-
-    // Read from the pipe
-    if (ReadFile(hPipe, buffer, sizeof(buffer) - 1, &bytesRead, NULL)) {
-        buffer[bytesRead] = '\0'; // Null-terminate the string
-        std::cout << "Received from client: " << buffer << std::endl;
-    } else {
-        std::cerr << "Error reading from named pipe: " << GetLastError() << std::endl;
-    }
-
-    // Close the pipe
-    CloseHandle(hPipe);
-    return 0;
-}
-#endif
-
 #define LOCAL_SERVER_PREFIX "nekobox-"
 
 int main(int argc, char** argv) {
     // Core dump
 #ifdef Q_OS_WIN
-
-	if (argc >= 5){
-		QString sudo_name = argv[1];
-		if (sudo_name == "sudo"){
-			std::cout <<"HELLO WORLD"<<std::endl;
-			return run_sudo(argc-2, argv+2);
-		}
-	}
-
     Windows_SetCrashHandler();
 #endif
 
