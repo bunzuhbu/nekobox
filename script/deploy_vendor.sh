@@ -13,6 +13,8 @@ curl -fLso "$DEPLOYMENT/srslist" "https://raw.githubusercontent.com/throneproj/r
 go mod tidy
 go mod vendor
 mv -T vendor "$DEPLOYMENT/vendor"
+mv go.mod "$DEPLOYMENT/go.mod"
+mv go.sum "$DEPLOYMENT/go.sum"
 curl https://api.github.com/repos/sagernet/sing-box/releases/latest | jq -r '.name' > "$DEPLOYMENT/Sagernet.SingBox.Version.txt"
 popd
 
