@@ -5,14 +5,17 @@ go 1.23.6
 require (
 	github.com/Mahdi-zarei/speedtest-go v1.7.12
 	github.com/NullYing/npipe v0.0.0-20250430055250-2d2a4d962cf7
+	github.com/chai2010/protorpc v0.0.0-00010101000000-000000000000
 	github.com/dustin/go-humanize v1.0.1
 	github.com/gofrs/uuid/v5 v5.3.2
+	github.com/golang/protobuf v1.5.4
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
 	github.com/sagernet/sing v0.7.10
 	github.com/sagernet/sing-box v1.12.8
 	github.com/sagernet/sing-tun v0.7.2
 	github.com/spf13/cobra v1.9.1
 	golang.org/x/sys v0.35.0
+	google.golang.org/protobuf v1.36.6
 )
 
 replace github.com/sagernet/sing-box => github.com/throneproj/sing-box v1.11.16-0.20250923115053-308d2d6fe6a9
@@ -128,7 +131,6 @@ require (
 	golang.zx2c4.com/wireguard/windows v0.5.3 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250324211829-b45e905df463 // indirect
 	google.golang.org/grpc v1.73.0 // indirect
-	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 	lukechampine.com/blake3 v1.3.0 // indirect
 )
