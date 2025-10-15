@@ -49,7 +49,7 @@ func handlePipe(pipeName string, output io.Writer, wg *sync.WaitGroup) {
 	}
 	defer ln.Close()
 
-	log.Printf("Waiting for client on pipe: %s\n", pipeName)
+	//log.Printf("Waiting for client on pipe: %s\n", pipeName)
 	conn, err := ln.Accept()
 	if err != nil {
 		log.Fatalf("Accept error on %s: %v\n", pipeName, err)
