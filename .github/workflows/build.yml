@@ -353,6 +353,10 @@ jobs:
           rm -rfv core/server/vendor ||:
           mv deployment/Sagernet.SingBox.Version.txt SingBox.Version
           mv -T deployment/vendor core/server/vendor
+          rm core/server/go.mod
+          rm core/server/go.sum
+          mv deployment/go.mod core/server/
+          mv deployment/go.sum core/server/
           mv deployment/gen/*.go core/server/gen/
           mv deployment/srslist* ./
           git add -f srslist* core/server/gen/*.go core/server/vendor SingBox.Version
