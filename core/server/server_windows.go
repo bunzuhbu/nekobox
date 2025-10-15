@@ -68,8 +68,8 @@ func handlePipe(pipeName string, output io.Writer, wg *sync.WaitGroup) {
 func runAdmin(_port * int, _debug * bool) int {
 	randstr, _ := RandString(6);
 	
-	stdout_pipe := `\\.\pipe\nekobox_core_output_pipe_` + randstr
-	stderr_pipe := `\\.\pipe\nekobox_core_error_pipe_` + randstr
+	stdout_pipe := `\\.\pipe\nekobox_core_stdout_` + randstr
+	stderr_pipe := `\\.\pipe\nekobox_core_stderr_` + randstr
 	flag := ""
 	if (*_debug){
 		flag = " \"-debug\""
