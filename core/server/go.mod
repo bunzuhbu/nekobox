@@ -5,7 +5,7 @@ go 1.23.6
 require (
 	github.com/Mahdi-zarei/speedtest-go v1.7.12
 	github.com/NullYing/npipe v0.0.0-20250430055250-2d2a4d962cf7
-	github.com/chai2010/protorpc v0.0.0-00010101000000-000000000000
+	github.com/chai2010/protorpc v1.1.4
 	github.com/dustin/go-humanize v1.0.1
 	github.com/gofrs/uuid/v5 v5.3.2
 	github.com/golang/protobuf v1.5.4
@@ -21,8 +21,6 @@ require (
 replace github.com/sagernet/sing-box => github.com/throneproj/sing-box v1.11.16-0.20250923115053-308d2d6fe6a9
 
 replace github.com/sagernet/wireguard-go => github.com/throneproj/wireguard-go v0.0.1-beta.7.0.20250728063157-408bba78ad26
-
-replace github.com/chai2010/protorpc => ../protorpc
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
@@ -50,6 +48,7 @@ require (
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/godbus/dbus/v5 v5.1.1-0.20230522191255-76236955d466 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/btree v1.1.3 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/nftables v0.3.0 // indirect
