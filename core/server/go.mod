@@ -22,6 +22,8 @@ replace github.com/sagernet/sing-box => github.com/throneproj/sing-box v1.11.16-
 
 replace github.com/sagernet/wireguard-go => github.com/throneproj/wireguard-go v0.0.1-beta.7.0.20250728063157-408bba78ad26
 
+replace github.com/chai2010/protorpc => ../protorpc
+
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/ajg/form v1.5.1 // indirect
