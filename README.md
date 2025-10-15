@@ -80,7 +80,7 @@ Also the `System DNS` feature will change your system's DNS settings, which is a
 The "msvcp140.dll not found" error usually means that the Microsoft Visual C++ Redistributable is missing or corrupted. To fix this, try install or reinstall the Microsoft Visual C++ Redistributable from the official Microsoft website
 [Official Microsoft website for Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 
-**Does NekoBox really need to be run in UAC mode on Windows?**
+**Does NekoBox really need to be run in UAC mode on Windows?** <br/>
 No, that is not necessary. NekoBox restarts nekobox_core in UAC mode if TUN mode is selected and NekoBox is not already running with administrator privileges. NekoBox requests UAC confirmation to restart the core.
 
 **Is setting the `SUID` bit really needed on Linux?** <br/>
