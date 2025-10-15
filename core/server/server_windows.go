@@ -52,16 +52,16 @@ func handlePipe(pipeName string, output io.Writer, wg *sync.WaitGroup) {
 	log.Printf("Waiting for client on pipe: %s\n", pipeName)
 	conn, err := ln.Accept()
 	if err != nil {
-		log.Printf("Accept error on %s: %v\n", pipeName, err)
+		log.Fatalf("Accept error on %s: %v\n", pipeName, err)
 		return
 	}
 	defer conn.Close()
 
-	fmt.Printf("Client connected to %s\n", pipeName)
+//	fmt.Printf("Client connected to %s\n", pipeName)
 
 	_, err = io.Copy(output, conn)
 	if err != nil {
-		log.Printf("Error copying from %s: %v\n", pipeName, err)
+		log.Fatalf("Error copying from %s: %v\n", pipeName, err)
 	}
 }
 
