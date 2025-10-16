@@ -19,10 +19,7 @@ import (
 	C "github.com/sagernet/sing-box/constant"
 )
 
-func RunCore() {
-	_port := flag.Int("port", 19810, "")
-	_debug := flag.Bool("debug", false, "")
-	flag.CommandLine.Parse(os.Args[1:])
+func RunCore(_port * int, _debug * bool) {
 	debug = *_debug
 
 	go func() {
@@ -64,6 +61,49 @@ func RunCore() {
 }
 
 func main() {
+	var _admin *bool = new(bool);
+	*_admin = false;
+	_port := flag.Int("port", 19810, "")
+	_debug := flag.Bool("debug", false, "")
+	
+	if runtime.GOOS == "windows" {
+		_admin = flag.Bool("admin", false, "Run in admin mode")
+	}
+	
+	redirectOutput := flag.String("redirect-output", "", "Path to redirect stdout (e.g. named pipe or file)")
+	redirectError := flag.String("redirect-error", "", "Path to redirect stderr (e.g. named pipe or file)")
+
+	flag.CommandLine.Parse(os.Args[1:])
+
+	// Redirect stdout if flag is provided
+	if *redirectOutput != "" {
+		outFile, err := os.OpenFile(*redirectOutput, os.O_WRONLY, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to open output redirect target: %v\n", err)
+			os.Exit(1)
+		}
+		defer outFile.Close()
+		os.Stdout = outFile
+	}
+
+	// Redirect stderr if flag is provided
+	if *redirectError != "" {
+		errFile, err := os.OpenFile(*redirectError, os.O_WRONLY, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to open error redirect target: %v\n", err)
+			os.Exit(1)
+		}
+		defer errFile.Close()
+		os.Stderr = errFile
+	}
+	
+	
+	if runtime.GOOS == "windows" {
+		if *_admin{
+			os.Exit(runAdmin(_port, _debug))
+		}
+	}
+	
 	fmt.Println("sing-box:", C.Version)
 	fmt.Println()
 	runtimeDebug.SetMemoryLimit(2 * 1024 * 1024 * 1024) // 2GB
@@ -80,6 +120,7 @@ func main() {
 	}()
 
 	testCtx, cancelTests = context.WithCancel(context.Background())
-	RunCore()
+
+	RunCore(_port, _debug)
 	return
 }
