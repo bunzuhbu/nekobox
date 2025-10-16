@@ -1,3 +1,4 @@
+
 #include <csignal>
 
 #include <QApplication>
@@ -9,18 +10,24 @@
 #include <QLocalSocket>
 #include <QLocalServer>
 #include <QThread>
-#include <3rdparty/WinCommander.hpp>
-
-#include "include/global/Configs.hpp"
-
-#include "include/ui/mainwindow_interface.h"
 
 #ifdef Q_OS_WIN
+
+#include <3rdparty/WinCommander.hpp>
+#include <windows.h>
+
+#include <iostream>
 #include "include/sys/windows/MiniDump.h"
 #include "include/sys/windows/eventHandler.h"
 #include "include/sys/windows/WinVersion.h"
 #include <qfontdatabase.h>
 #endif
+
+
+#include "include/global/Configs.hpp"
+
+#include "include/ui/mainwindow_interface.h"
+
 #ifdef Q_OS_LINUX
 #include "include/sys/linux/desktopinfo.h"
 #include <qfontdatabase.h>
@@ -58,9 +65,9 @@ void loadTranslate(const QString& locale) {
     }
 }
 
-#define LOCAL_SERVER_PREFIX "throne-"
+#define LOCAL_SERVER_PREFIX "nekobox-"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char** argv) {
     // Core dump
 #ifdef Q_OS_WIN
     Windows_SetCrashHandler();
@@ -83,7 +90,7 @@ int main(int argc, char* argv[]) {
         QFontDatabase::setApplicationEmojiFontFamilies(fontFamilies);
     } else
     {
-        qDebug() << "could not load emoji font!";
+        qDebug() << "could not load noto font!";
     }
 #endif
 
@@ -117,7 +124,7 @@ int main(int argc, char* argv[]) {
     // dirs & clean
     auto wd = QDir(QApplication::applicationDirPath());
     if (Configs::dataStore->flag_use_appdata) {
-        QApplication::setApplicationName("Throne");
+        QApplication::setApplicationName("nekobox");
         if (!Configs::dataStore->appdataDir.isEmpty()) {
             wd.setPath(Configs::dataStore->appdataDir);
         } else {
@@ -182,7 +189,7 @@ int main(int argc, char* argv[]) {
     {
         Configs::dataStore->windows_set_admin = false; // so that if permission denied, we will run as user on the next run
         Configs::dataStore->Save();
-        WinCommander::runProcessElevated(QApplication::applicationFilePath(), {}, "", WinCommander::SW_NORMAL, false);
+        WinCommander::runProcessElevated(QApplication::applicationFilePath(), {}, "", SW_NORMAL, false);
         QApplication::quit();
         return 0;
     }

@@ -100,4 +100,25 @@ namespace Configs_sys {
         restarting = false;
     }
 
+#ifdef Q_OS_LINUX
+    void CoreProcess::elevateCoreProcessProgram(){
+        if (!coreProcessProgramElevated){
+            arguments.prepend(program);
+            arguments.prepend("exec \"$0\" \"$@\"");
+            arguments.prepend("-c");
+            arguments.prepend("sh");
+            program = "pkexec";
+            coreProcessProgramElevated = true;
+        }
+    }
+#endif
+
+#ifdef Q_OS_WIN
+    void CoreProcess::elevateCoreProcessProgram(){
+        if (!coreProcessProgramElevated){
+            arguments.prepend("-admin");
+            coreProcessProgramElevated = true;
+        }
+    }
+#endif
 } // namespace Configs_sys
