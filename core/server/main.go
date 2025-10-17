@@ -68,8 +68,9 @@ func main() {
 	
 	if runtime.GOOS == "windows" {
 		_admin = flag.Bool("admin", false, "Run in admin mode")
-		_waitpid = flag.Int("waitpid", 0, "After pid finished, force quit")
 	}
+
+	_waitpid = flag.Int("waitpid", 0, "After pid finished, force quit")
 	
 	redirectOutput := flag.String("redirect-output", "", "Path to redirect stdout (e.g. named pipe or file)")
 	redirectError := flag.String("redirect-error", "", "Path to redirect stderr (e.g. named pipe or file)")
@@ -103,18 +104,19 @@ func main() {
 		if *_admin{
 			os.Exit(runAdmin(_port, _debug))
 		}
-		pid := *_waitpid;
-		if (pid != 0){
-			go func() {
-				err := WaitForProcessExit(pid)
-				if err != nil {
-					fmt.Println("Error waiting for process:", err)
-				} else {
-					fmt.Println("Process exited.")
-				}
-				os.Exit(1) // Exit the whole program when done
-			}()
-		}
+	}
+
+	pid := *_waitpid;
+	if (pid != 0){
+		go func() {
+			err := WaitForProcessExit(pid)
+			if err != nil {
+				fmt.Println("Error waiting for process:", err)
+			} else {
+				fmt.Println("Process exited.")
+			}
+			os.Exit(1) // Exit the whole program when done
+		}()
 	}
 	
 	fmt.Println("sing-box:", C.Version)
