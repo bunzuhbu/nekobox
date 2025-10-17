@@ -74,8 +74,8 @@ func runAdmin(_port * int, _debug * bool) int {
 	if (*_debug){
 		flag = " \"-debug\""
 	}
-	formattedString := fmt.Sprintf("Start-Process \"%s\" -ArgumentList '-port %d -redirect-output \"%s\" -redirect-error \"%s\"%s' -WindowStyle Hidden -Verb RunAs -Wait", 
-		os.Args[0], *_port, stdout_pipe, stderr_pipe, flag)
+	formattedString := fmt.Sprintf("Start-Process \"%s\" -ArgumentList '-waitpid %d -port %d -redirect-output \"%s\" -redirect-error \"%s\"%s' -WindowStyle Hidden -Verb RunAs -Wait", 
+		os.Getpid(), os.Args[0], *_port, stdout_pipe, stderr_pipe, flag)
 	
 	var wg sync.WaitGroup
 
