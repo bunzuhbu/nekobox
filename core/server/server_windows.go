@@ -74,8 +74,16 @@ func runAdmin(_port * int, _debug * bool) int {
 	if (*_debug){
 		flag = " \"-debug\""
 	}
-	formattedString := fmt.Sprintf("Start-Process \"%s\" -ArgumentList '-waitpid %d -port %d -redirect-output \"%s\" -redirect-error \"%s\"%s' -WindowStyle Hidden -Verb RunAs -Wait", 
-		os.Getpid(), os.Args[0], *_port, stdout_pipe, stderr_pipe, flag)
+	fmt.Println("SOMETHING WILL HAPPEN")
+	var pid int
+	pid = os.Getpid();
+	fmt.Println(pid)
+	
+	formattedString := fmt.Sprintf("Start-Process \"%s\" -ArgumentList '-port %d -waitpid %d -redirect-output \"%s\" -redirect-error \"%s\"%s' -WindowStyle Hidden -Verb RunAs -Wait", 
+		 os.Args[0], *_port, pid, stdout_pipe, stderr_pipe, flag)
+		
+	fmt.Println(formattedString)
+	fmt.Println("STARTED");
 	
 	var wg sync.WaitGroup
 
