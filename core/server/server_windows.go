@@ -132,6 +132,26 @@ func isElevated() (bool, error) {
     return elevation != 0, nil
 }
 
+// WaitForProcessExit waits for a Windows process (by PID) to exit.
+func WaitForProcessExit(pid int) error {
+	handle, err := windows.OpenProcess(windows.SYNCHRONIZE, false, uint32(pid))
+	if err != nil {
+		return fmt.Fatalf("failed to open process with PID %d: %w", pid, err)
+	}
+	defer windows.CloseHandle(handle)
+
+	status, err := windows.WaitForSingleObject(handle, windows.INFINITE)
+	if err != nil {
+		return fmt.Fatalf("wait failed: %w", err)
+	}
+
+	if status != windows.WAIT_OBJECT_0 {
+		return fmt.Fatalf("unexpected wait status: %d", status)
+	}
+
+	return nil
+}
+
 func (s *server) IsPrivileged(in *gen.EmptyReq, out *gen.IsPrivilegedResponse) error {
 	elevated, err := isElevated()
 	if err != nil {

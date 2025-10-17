@@ -17,3 +17,7 @@ func (s *server) IsPrivileged(in *gen.EmptyReq, out *gen.IsPrivilegedResponse) e
 	out.HasPrivilege = To(os.Geteuid() == 0)
 	return nil
 }
+
+func WaitForProcessExit (pid int) error{
+	return nil
+}

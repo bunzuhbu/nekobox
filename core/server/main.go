@@ -61,13 +61,14 @@ func RunCore(_port * int, _debug * bool) {
 }
 
 func main() {
-	var _admin *bool = new(bool);
-	*_admin = false;
+	var _admin *bool;
+	var _waitpid *int;
 	_port := flag.Int("port", 19810, "")
 	_debug := flag.Bool("debug", false, "")
 	
 	if runtime.GOOS == "windows" {
 		_admin = flag.Bool("admin", false, "Run in admin mode")
+		_waitpid = flag.Int("waitpid", 0, "After pid finished, force quit")
 	}
 	
 	redirectOutput := flag.String("redirect-output", "", "Path to redirect stdout (e.g. named pipe or file)")
@@ -101,6 +102,18 @@ func main() {
 	if runtime.GOOS == "windows" {
 		if *_admin{
 			os.Exit(runAdmin(_port, _debug))
+		}
+		pid := *_waitpid;
+		if (pid != 0){
+			go func() {
+				err := WaitForProcessExit(pid)
+				if err != nil {
+					fmt.Println("Error waiting for process:", err)
+				} else {
+					fmt.Println("Process exited.")
+				}
+				os.Exit(1) // Exit the whole program when done
+			}()
 		}
 	}
 	
