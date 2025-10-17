@@ -136,17 +136,17 @@ func isElevated() (bool, error) {
 func WaitForProcessExit(pid int) error {
 	handle, err := windows.OpenProcess(windows.SYNCHRONIZE, false, uint32(pid))
 	if err != nil {
-		return log.Fatalf("failed to open process with PID %d: %w", pid, err)
+		return log.Fatalf("failed to open process with PID %d: %v", pid, err)
 	}
 	defer windows.CloseHandle(handle)
 
 	status, err := windows.WaitForSingleObject(handle, windows.INFINITE)
 	if err != nil {
-		return log.Fatalf("wait failed: %w", err)
+		return log.Fatalf("wait failed: %v", err)
 	}
 
 	if status != windows.WAIT_OBJECT_0 {
-		return log.Fatalf("unexpected wait status: %d", status)
+		return log.Fatalf("unexpected wait status: %v", status)
 	}
 
 	return nil
