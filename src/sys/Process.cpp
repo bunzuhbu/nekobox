@@ -20,7 +20,7 @@ namespace Configs_sys {
         program = core_path;
         arguments = args;
         arguments << "-waitpid";
-        arguments << QCoreApplication::applicationPid();
+        arguments << QString::number(QCoreApplication::applicationPid());
 
         connect(this, &QProcess::readyReadStandardOutput, this, [&]() {
             auto log = readAllStandardOutput();
