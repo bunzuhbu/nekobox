@@ -3,8 +3,10 @@ package main
 import (
 	"Core/gen"
 	"os"
-	"syscall"
+	"os/exec"
 	"fmt"
+	"time"
+	"syscall"
 )
 
 func (s *server) SetSystemDNS(in *gen.SetSystemDNSRequest, out *gen.EmptyResp) error {
@@ -21,11 +23,16 @@ func (s *server) IsPrivileged(in *gen.EmptyReq, out *gen.IsPrivilegedResponse) e
 }
 
 func WaitForProcessExit (pid int) error{
-	var wstatus syscall.WaitStatus
-	_, err := syscall.Wait4(pid, &wstatus, 0, nil)
-	if err != nil {
-		return fmt.Errorf("Error waiting for process %d: %s\n", pid, err)
+	// Wait for the process to terminate
+	for {
+		// Send signal 0 to check if the process exists
+		err := syscall.Kill(pid, syscall.Signal(0))
+		if err != nil {
+			if err == syscall.ESRCH { // No such process
+				return nil
+			}
+			return fmt.Errorf("Error checking process status: %v", err)
+		}
+		time.Sleep(1 * time.Second) // Poll every second
 	}
-
-	return nil
 }
