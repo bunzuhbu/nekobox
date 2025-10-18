@@ -27,11 +27,11 @@ func WaitForProcessExit (pid int) error{
 		// Send signal 0 to check if the process exists
 		err := syscall.Kill(pid, syscall.Signal(0))
 		if err != nil {
-			if err == syscall.ESRCH { // No such process
+			if err == syscall.ESRCH {
 				return nil
 			}
 			return fmt.Errorf("Error checking process status: %v", err)
 		}
-		time.Sleep(1 * time.Second) // Poll every second
+		time.Sleep(0.5 * time.Second)
 	}
 }

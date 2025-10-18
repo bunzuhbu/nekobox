@@ -994,17 +994,15 @@ void MainWindow::prepare_exit()
     Configs::dataStore->save_control_no_save = true; // don't change datastore after this line
     profile_stop(false, true);
 
-#ifdef Q_OS_WIN
-    QMutex coreKillMu;
-    coreKillMu.lock();
-    runOnThread([=, this, &coreKillMu]()
-    {
-        core_process->Kill();
-        coreKillMu.unlock();
-    }, DS_cores);
-    coreKillMu.lock();
-    coreKillMu.unlock();
-#endif
+ //   QMutex coreKillMu;
+ //   coreKillMu.lock();
+ //   runOnThread([=, this, &coreKillMu]()
+ //   {
+ //       core_process->Kill();
+ //       coreKillMu.unlock();
+ //   }, DS_cores);
+ //   coreKillMu.lock();
+ //   coreKillMu.unlock();
 
     mu_exit.unlock();
     qDebug() << "prepare exit done!";
