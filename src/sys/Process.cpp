@@ -7,6 +7,10 @@
 #include <QCoreApplication>
 #include "include/ui/mainwindow.h"
 
+#ifndef Q_OS_WIN
+#include <unistd.h>
+#endif
+
 namespace Configs_sys {
     CoreProcess::~CoreProcess() {
     }
@@ -19,9 +23,10 @@ namespace Configs_sys {
     CoreProcess::CoreProcess(const QString &core_path, const QStringList &args) {
         program = core_path;
         arguments = args;
+#ifndef Q_OS_WIN
         arguments << "-waitpid";
-        arguments << QString::number(QCoreApplication::applicationPid());
-
+        arguments << QString::number(getpid());
+#endif
         connect(this, &QProcess::readyReadStandardOutput, this, [&]() {
             auto log = readAllStandardOutput();
             if (!Configs::dataStore->core_running) {
