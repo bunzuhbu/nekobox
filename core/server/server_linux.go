@@ -32,6 +32,6 @@ func WaitForProcessExit (pid int) error{
 			}
 			return fmt.Errorf("Error checking process status: %v", err)
 		}
-		time.Sleep(0.5 * time.Second)
+		time.Sleep(442 * time.Millisecond)
 	}
 }
