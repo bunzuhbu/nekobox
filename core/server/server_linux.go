@@ -3,7 +3,6 @@ package main
 import (
 	"Core/gen"
 	"os"
-	"os/exec"
 	"fmt"
 	"time"
 	"syscall"
