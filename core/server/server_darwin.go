@@ -4,6 +4,7 @@ import (
 	"Core/gen"
 	"os"
 	"syscall"
+	"fmt"
 )
 
 func (s *server) SetSystemDNS(in *gen.SetSystemDNSRequest, out *gen.EmptyResp) error {
