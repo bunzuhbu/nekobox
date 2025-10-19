@@ -19,10 +19,8 @@ namespace Configs_sys {
     CoreProcess::CoreProcess(const QString &core_path, const QStringList &args) {
         program = core_path;
         arguments = args;
-#ifndef Q_OS_WIN
         arguments << "-waitpid";
         arguments << QString::number(QCoreApplication::applicationPid());
-#endif
 
         connect(this, &QProcess::readyReadStandardOutput, this, [&]() {
             auto log = readAllStandardOutput();
