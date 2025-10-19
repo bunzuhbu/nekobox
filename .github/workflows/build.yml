@@ -8,6 +8,9 @@ on:
       publish:
         description: "r for normal release, p for prerelease, leave empty to not publish anything"
         required: false
+      text:
+        description: "Release Description"
+        required: false
       source:
         description: "skip building binaries, distribute only unified source"
         required: false
@@ -432,11 +435,11 @@ jobs:
       - name: PreRelease
         if: github.event.inputs.publish == 'p'
         run: |
-          ./ghr -prerelease -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" deployment
+          ./ghr -prerelease -delete -t "${{ github.token }}" -b "${{ github.event.inputs.text }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" deployment
       - name: Release
         if: github.event.inputs.publish == 'r'
         run: |
-          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" deployment
+          ./ghr -delete -t "${{ github.token }}" -b "${{ github.event.inputs.text }}" -n "${{ github.event.inputs.tag }}" "${{ github.event.inputs.tag }}" deployment
 
   webhook:
     name: Trigger Open Build Service
