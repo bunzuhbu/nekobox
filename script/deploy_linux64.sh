@@ -24,7 +24,7 @@ cp srslist $DEST/srslist
 cp $BUILD/nekobox $DEST
 
 #### copy nekobox.png ####
-cp ./res/public/nekobox.png $DEST
+cp ./res/nekobox.ico $DEST/nekobox.ico
 
 cd download-artifact
 cd *linux-$ARCH
