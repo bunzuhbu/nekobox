@@ -439,7 +439,7 @@ namespace Configs {
 
         bool admin = false;
 #ifdef Q_OS_WIN
-#ifdef USE_LEGACY_QT
+#ifdef EXIT_IF_UAC_REQUIRED
         admin = Windows_IsInAdmin();
         dataStore->windows_set_admin = admin;
 #define SKIP_ASK_CORE

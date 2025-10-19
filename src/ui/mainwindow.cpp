@@ -1090,7 +1090,7 @@ bool MainWindow::get_elevated_permissions(int reason, void * pointer) {
     auto n = QMessageBox::warning(GetMessageBoxParent(), software_name, tr("Please give the core root privileges"), QMessageBox::Yes | QMessageBox::No);
     if (n == QMessageBox::Yes) {
 
-#   ifdef USE_LEGACY_QT
+#   ifdef EXIT_IF_UAC_REQUIRED
         this->exit_reason = reason;
         on_menu_exit_triggered();
 #   else
