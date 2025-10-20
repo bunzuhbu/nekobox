@@ -83,6 +83,19 @@ func main() {
 
 	flag.CommandLine.Parse(os.Args[1:])
 
+	// Redirect stderr if flag is provided
+	if *redirectError != "" {
+		errFile, err := os.OpenFile(*redirectError, os.O_WRONLY, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to open error redirect target: %v\n", err)
+			os.Exit(1)
+		}
+		defer errFile.Close()
+		os.Stderr = errFile
+		log.SetOutput(errFile)
+	}
+
+	
 	// Redirect stdout if flag is provided
 	if *redirectOutput != "" {
 		outFile, err := os.OpenFile(*redirectOutput, os.O_WRONLY, 0)
@@ -93,18 +106,7 @@ func main() {
 		defer outFile.Close()
 		os.Stdout = outFile
 	}
-
-	// Redirect stderr if flag is provided
-	if *redirectError != "" {
-		errFile, err := os.OpenFile(*redirectError, os.O_WRONLY, 0)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to open error redirect target: %v\n", err)
-			os.Exit(1)
-		}
-		defer errFile.Close()
-		os.Stderr = errFile
-	}
-
+	
 	pid := *_waitpid;
 	if (pid != 0){
 		go func() {
