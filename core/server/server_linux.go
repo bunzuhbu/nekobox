@@ -12,8 +12,8 @@ func (s *server) SetSystemDNS(in *gen.SetSystemDNSRequest, out *gen.EmptyResp) e
 	return nil
 }
 
-func runAdmin(_port * int, _debug * bool) int {
-	return 0
+func runAdmin(_port * int, _debug * bool) (int, error) {
+	return 0, nil
 }
 
 func (s *server) IsPrivileged(in *gen.EmptyReq, out *gen.IsPrivilegedResponse) error {
