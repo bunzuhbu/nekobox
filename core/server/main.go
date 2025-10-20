@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"runtime"
 	runtimeDebug "runtime/debug"
@@ -17,6 +18,7 @@ import (
 
 	_ "Core/internal/distro/all"
 	C "github.com/sagernet/sing-box/constant"
+	_ "net/http/pprof"
 )
 
 func RunCore(_port * int, _debug * bool) {
@@ -41,6 +43,10 @@ func RunCore(_port * int, _debug * bool) {
 		}
 	}()
 	boxmain.DisableColor()
+
+	go func() {
+		log.Println(http.ListenAndServe("127.0.0.1:54862", nil))
+	}()
 
 	// RPC
 	go func() {
