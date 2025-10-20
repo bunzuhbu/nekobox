@@ -83,7 +83,7 @@ func main() {
 
 	flag.CommandLine.Parse(os.Args[1:])
 
-	// Redirect stderr if flag is provided
+	// Redirect stderr and logs if flag is provided
 	if *redirectError != "" {
 		errFile, err := os.OpenFile(*redirectError, os.O_WRONLY, 0)
 		if err != nil {
@@ -94,7 +94,6 @@ func main() {
 		os.Stderr = errFile
 		log.SetOutput(errFile)
 	}
-
 	
 	// Redirect stdout if flag is provided
 	if *redirectOutput != "" {
