@@ -98,17 +98,6 @@ func main() {
 		defer errFile.Close()
 		os.Stderr = errFile
 	}
-	
-	
-	if runtime.GOOS == "windows" {
-		if *_admin{
-			code, err := runAdmin(_port, _debug)
-            if (err != nil){
-                fmt.Fprintf(os.Stderr, "Failed to run as admin: %v\n", err)
-            }
-            os.Exit(code)
-		}
-	}
 
 	pid := *_waitpid;
 	if (pid != 0){
@@ -123,8 +112,7 @@ func main() {
 		}()
 	}
 	
-	fmt.Println("sing-box:", C.Version)
-	fmt.Println()
+	
 	runtimeDebug.SetMemoryLimit(2 * 1024 * 1024 * 1024) // 2GB
 	go func() {
 		var memStats runtime.MemStats
@@ -137,6 +125,19 @@ func main() {
 			}
 		}
 	}()
+	
+	if runtime.GOOS == "windows" {
+		if *_admin{
+			code, err := runAdmin(_port, _debug)
+            if (err != nil){
+                fmt.Fprintf(os.Stderr, "Failed to run as admin: %v\n", err)
+            }
+            os.Exit(code)
+		}
+	}
+	
+	fmt.Println("sing-box:", C.Version)
+	fmt.Println()
 
 	testCtx, cancelTests = context.WithCancel(context.Background())
 
