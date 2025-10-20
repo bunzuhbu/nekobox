@@ -15,7 +15,6 @@ import (
 	"strconv"
 	"syscall"
 	"time"
-
 	_ "Core/internal/distro/all"
 	C "github.com/sagernet/sing-box/constant"
 	_ "net/http/pprof"
